@@ -1,0 +1,3 @@
+select * from notice;
+
+select notice_content from notice where notice_nr = ;
