@@ -10,6 +10,7 @@ public class EndSettlement {
 	/*적립금*/
 	private Integer depositMoney;
 	private String itemName;
+	//private String itemImageUrl;
 	private String itemImageUrl;
 	/*구매총금액*/
 	private Integer purchasePrice;
@@ -17,6 +18,26 @@ public class EndSettlement {
 	private Integer shippingPrice;
 	/*최종정산금액*/
 	private Integer settleAmount;
+	
+//	public EndSettlement(String gkooId, 
+//			LocalDate date,
+//			int transactionMoney,
+//			Integer depositMoney,
+//			String itemName,
+//			String itemImageUrl,
+//			Integer purchasePrice,
+//			Integer shippingPrice,
+//			Integer settleAmount ) {
+//		this.gkooId = gkooId;
+//		this.date= date;
+//		this.transactionMoney = transactionMoney;
+//		this.depositMoney = depositMoney;
+//		this.itemName = itemName;
+//		this.itemImageUrl = itemImageUrl;
+//		this.purchasePrice = purchasePrice;
+//		this.shippingPrice = shippingPrice;
+//		this.settleAmount = settleAmount;
+//	}
 	
 	public EndSettlement(String gkooId, 
 			LocalDate date,
@@ -86,7 +107,7 @@ public class EndSettlement {
 	public void setItemImageUrl(String itemUrl) {
 		this.itemImageUrl = itemUrl;
 	}
-
+	
 	public Integer getPurchasePrice() {
 		return this.purchasePrice;
 	}

@@ -1,24 +1,20 @@
 package mypage;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import dataBase.ConnectionDB;
-import motherj.noticeModule.Notice;
 
 public class EndSettlementDAO {
 	
 	private Statement statement = null;
-	private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
     private Connection conn;
     
@@ -33,6 +29,7 @@ public class EndSettlementDAO {
 //	private int purchasePrice;
 //	private int shippingPrice;
 //	private int settleAmount;
+	
 	public List<EndSettlement> getSettlementListFromLocal() {
 		List<EndSettlement> settlementList = new ArrayList<EndSettlement>();
 
@@ -87,14 +84,12 @@ public class EndSettlementDAO {
 			close();
 		}
 		
-		
 		return settlementList;
 	}
 	
 	private List<EndSettlement> writeResultSettlementListSet(ResultSet rs) throws SQLException {
 		List<EndSettlement> settlementList =  new ArrayList<EndSettlement>();
 		
-		//EndSettlement settlement = new EndSettlement();
 		while (rs.next()) {
 			EndSettlement settlement = new EndSettlement();
 			
@@ -112,7 +107,7 @@ public class EndSettlementDAO {
 			settlement.setItemName(rs.getString("item_name"));
 			
 			/*상품아이디와 상품url을 같게 설정함*/
-			settlement.setItemImageUrl(rs.getString("item_id"));
+			settlement.setItemImageUrl(ImageTransform.getImageBase64(rs.getString("item_id")));
 			
 			settlement.setPurchasePrice(rs.getInt("purchasePrice"));
 			
@@ -141,7 +136,7 @@ public class EndSettlementDAO {
 			
 			settlement.setItemName(rs.getString("item_name"));
 
-			settlement.setItemImageUrl(rs.getString("itemFotoUrl"));
+			settlement.setItemImageUrl(ImageTransform.getImageBase64(rs.getString("item_id")));
 			
 			settlement.setPurchasePrice(rs.getInt("purchasePrice"));
 			

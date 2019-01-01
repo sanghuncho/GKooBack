@@ -6,8 +6,8 @@ motherj\noticeModule\NoticeDAO.class
 mypage\EndSettlementDAO.class
 mypage\EndSettlementController.class
 motherj\noticeModule\Greeting.class
+mypage\ImageTransform.class
 motherj\noticeModule\NoticeController.class
-mypage\ItemFoto.class
 dataBase\ConnectionDB.class
 motherj\noticeModule\Notice.class
 mypage\EndSettlement.class

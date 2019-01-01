@@ -54,7 +54,7 @@ public class PurchaseOrderDAO {
 			order.setProductName(rs.getString("productname"));
 			
 			/*상품아이디와 상품url을 같게 설정함*/
-			order.setProductImageUrl(rs.getString("gkooid"));
+			order.setProductImageUrl(ImageTransform.getImageBase64(rs.getString("gkooid")));
 			
 			order.setProductPrice(rs.getInt("productprice"));
 			
