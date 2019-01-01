@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>motherjbackend</groupId>
-  <artifactId>motherJ</artifactId>
-  <packaging>jar</packaging>
+  <groupId>GKooBackend</groupId>
+  <artifactId>gkoo</artifactId>
+  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   
   <name>motherJ Maven Webapp</name>
@@ -14,11 +14,7 @@
     <artifactId>spring-boot-starter-parent</artifactId>
   	<version>2.0.3.RELEASE</version>
   </parent>
- 
-  <properties>
-  	<start-class>motherj.application.Application</start-class>
-  </properties>
-
+  
   <dependencies>
     <dependency>
       	<groupId>junit</groupId>
@@ -32,21 +28,24 @@
     	<version>2.0.3.RELEASE</version>        
     </dependency>
     <dependency>
+	   <groupId>org.springframework.boot</groupId>
+	   <artifactId>spring-boot-starter-tomcat</artifactId>
+	   <scope>provided</scope>
+	</dependency>
+	<dependency>
         <groupId>com.jayway.jsonpath</groupId>
     	<artifactId>json-path</artifactId>  
     </dependency>
-    
-    <dependency>
-	    <groupId>com.sun.mail</groupId>
-	    <artifactId>javax.mail</artifactId>
-	    <version>1.6.2</version>
-  	</dependency>
   	<dependency>
 	    <groupId>org.keycloak</groupId>
 	    <artifactId>keycloak-spring-boot-starter</artifactId>
 	    <version>4.8.1.Final</version>
 	</dependency>
-
+	<dependency>
+    <groupId>postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>9.1-901-1.jdbc4</version>
+	</dependency>
   </dependencies>
   
   <build>
@@ -54,9 +53,9 @@
   		<plugin>
         	<groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+        </plugin>
     </plugins>
-    <finalName>motherJ</finalName>
+    <finalName>gkoo</finalName>
   </build>
   <repositories>
   	<repository>

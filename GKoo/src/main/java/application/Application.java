@@ -10,10 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule" })
 public class Application extends SpringBootServletInitializer  {
 
-	@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(Application.class);
-    }
+//	@Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(Application.class);
+//    }
 	
 	public static void main(String[] args) throws Exception {
 
