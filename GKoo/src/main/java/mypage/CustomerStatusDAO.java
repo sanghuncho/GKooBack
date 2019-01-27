@@ -29,19 +29,65 @@ public class CustomerStatusDAO {
 		return customer;
 	}
 	
-	public CustomerStatus getCustomerStatusFromDB() throws SQLException{
+	public void checkGkooId(String username) throws SQLException {
+		resultSet = null;
 		ConnectionDB.connectSQL();
 		Connection conn = ConnectionDB.getConnectInstance();
+		String query = "select count(gkoo_id) from customer where gkoo_id = ?";
+		PreparedStatement psmt = conn.prepareStatement(query);
+		psmt.setString(1, username);
 		
-		CustomerStatus customerStatus = null;
 		try {
-			this.statement = conn.createStatement();
+			resultSet = psmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
+		while(resultSet.next()) {
+			if(resultSet.getInt(1) == 0) {
+				System.out.println("It needs to register");
+				registerGkooIdInDB(username);
+				
+			} else {
+				System.out.println("already exist!!");
+			}	
+		}
+		close();
+	}
+	
+	public void registerGkooIdInDB(String username) throws SQLException {
+		ConnectionDB.connectSQL();
+		Connection conn = ConnectionDB.getConnectInstance();
+		
+		String query = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
+				+ "VALUES (?, 0, 0, 1000)";
+		PreparedStatement psmt = null;
 		try {
-			resultSet = this.statement.executeQuery("select * from customerstatus");
+			psmt = conn.prepareStatement(query);
+			psmt.setString(1, username);
+			psmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	public CustomerStatus getCustomerStatusFromDB(String username) throws SQLException{
+		resultSet = null;
+		ConnectionDB.connectSQL();
+		Connection conn = ConnectionDB.getConnectInstance();
+		String query = "select * from customerstatus where gkoo_id = ?";
+		PreparedStatement psmt = null;
+				
+		CustomerStatus customerStatus = null;
+		try {
+			psmt = conn.prepareStatement(query);
+			psmt.setString(1, username);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		try {
+			resultSet = psmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -61,7 +107,7 @@ public class CustomerStatusDAO {
 		
 		while (rs.next()) {
 			
-			status.setCustomerId(rs.getString("gkooaddress"));
+			status.setCustomerId(rs.getString("gkoo_id"));
 			
 			status.setInsuranceAmount(rs.getInt("insuranceamount"));
 			
