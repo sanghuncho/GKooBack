@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 
 
-@SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule" })
+@SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule", "shippingService" })
 public class Application extends SpringBootServletInitializer  {
 
 	@Override

@@ -11,7 +11,10 @@ motherj\noticeModule\NoticeController.class
 dataBase\ConnectionDB.class
 motherj\noticeModule\Notice.class
 mypage\EndSettlement.class
+shippingService\ShippingServiceDAO.class
 mypage\CustomerStatus.class
+shippingService\ShippingRequestController.class
+shippingService\ShippingServiceModel.class
 mypage\PurchaseOrderDAO.class
 mypage\CustomerStatusDAO.class
 motherj\noticeModule\GreetingController.class
