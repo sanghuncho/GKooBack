@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ShippingServiceModel {
-	
+	//
 	private String shopUrl;
 	private String easyship;
 	
