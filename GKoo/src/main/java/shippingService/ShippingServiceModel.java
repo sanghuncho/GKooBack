@@ -1,5 +1,7 @@
 package shippingService;
 
+import java.util.ArrayList;
+
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -34,6 +36,9 @@ public class ShippingServiceModel {
 	private String deliveryAddress;
 	private String detailAddress;
 	private String deliveryMessage;
+	
+	//additional product
+	private ArrayList<String> shopUrlList = new ArrayList<>(); 
 
 	public String getShopUrl() {
 		return shopUrl;
@@ -205,5 +210,9 @@ public class ShippingServiceModel {
 	
 	public void setDeliveryMessage(String deliveryMessage) {
 		this.deliveryMessage = deliveryMessage;
+	}
+	
+	public void setShopUrlList(ArrayList<String> shopList) {
+		this.shopUrlList.addAll(shopList);
 	}
 }

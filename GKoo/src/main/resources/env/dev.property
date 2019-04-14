@@ -1,5 +1,8 @@
-POSTGRE_DB_USER = postgres
-POSTGRE_DB_PASSWORD = motherj
+POSTGRE_DB_LOCAL_USER = postgres
+POSTGRE_DB_LOCAL_PASSWORD = mother*
+
+KEYCLOAK_LOCAL_ADMIN = m
+KEYCLOAK_LOCAL_PASSWORD = 306**
 
 direct launch spring : http://localhost:8080/notice on chrome, not internet exp
 

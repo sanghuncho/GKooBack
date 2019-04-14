@@ -33,6 +33,10 @@ public class CustomerStatusDAO {
 		resultSet = null;
 		ConnectionDB.connectSQL();
 		Connection conn = ConnectionDB.getConnectInstance();
+		
+		/**
+	     *ToDo: memberID must be registered also in customer.
+	     */
 		String query = "select count(gkoo_id) from customer where gkoo_id = ?";
 		PreparedStatement psmt = conn.prepareStatement(query);
 		psmt.setString(1, username);
@@ -59,6 +63,9 @@ public class CustomerStatusDAO {
 		ConnectionDB.connectSQL();
 		Connection conn = ConnectionDB.getConnectInstance();
 		
+		/**
+	     *ToDo: customer needs to also register.
+	     */
 		String query = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
 				+ "VALUES (?, 0, 0, 1000)";
 		PreparedStatement psmt = null;
