@@ -21,13 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import util.MemberProfile;
+import util.OrderID;
 import util.TimeStamp;
 
 @RestController
 public class ShippingRequestController {
 	
-	@Autowired
-	private ShippingServiceModel shippingModel;
+	/**
+     *Todo: using spring annotation 
+     */
 			
 	public ShippingRequestController() {}
 	
@@ -35,29 +37,31 @@ public class ShippingRequestController {
 	@RequestMapping(value = "/createshippingservice", method = RequestMethod.POST)
 	public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
 	
+		ShippingServiceModel shippingModel = new ShippingServiceModel();
+		ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
+		
 		String memberId = MemberProfile.getMemberID(request);
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
+        int orderId = OrderID.generateOrderID();
+        shippingModel.setMemberId(memberId);
+        shippingModel.setTimeStamp(timeStamp);
+        shippingModel.setOrderId(orderId);
         
-        /**
-	     *Todo: setProduct , setReceiver
-	     *if there are more products, then add the products in list 
-	     */
-		shippingModel.setShopUrl(data[0].get("shopUrl").toString());
-		shippingModel.setEasyship(data[1].get("easyship").toString());
-		
-		shippingModel.setTrackingTitle(data[2].get("trackingTitle").toString());
-		shippingModel.setTrackingNumber(data[3].get("trackingNumber").toString());
-		shippingModel.setCategoryTitle(data[4].get("categoryTitle").toString());
-		
-		shippingModel.setItemTitle(data[5].get("itemTitle").toString());
-		shippingModel.setBrandName(data[6].get("brandName").toString());
-		shippingModel.setItemName(data[7].get("itemName").toString());
-		
 		/**
 	     *Todo: amount and price
 	     */
-		shippingModel.setTotalPrice(data[8].get("totalPrice").toString());
+        shippingModel.addProduct(data);
+
+        /**
+	     *From here additional product, other list should be implemented.
+	     *ToDO: set-method and add-method integrated
+	     */
+		shippingModel.setShopUrlList(transformArrayList("shopUrlList", data[22].get("shopUrlList").toString()));
+		shippingModel.addMoreProducts();
 		
+		/**
+	     *ToDO: move to shippingServiceModel
+	     */
 		shippingModel.setReceiverNameByKorea(data[9].get("receiverNameByKorea").toString());
 		shippingModel.setOwnerContent(data[10].get("setOwnerContent").toString());
 		shippingModel.setReceiverNameByEnglish(data[11].get("receiverNameByEnglish").toString());
@@ -75,11 +79,7 @@ public class ShippingRequestController {
 		shippingModel.setDetailAddress(data[20].get("detailAddress").toString());
 		shippingModel.setDeliveryMessage(data[21].get("deliveryMessage").toString());
 		
-		/**
-	     *From here additional product, other list should be implemented.
-	     */
-		shippingModel.setShopUrlList(transformArrayList("shopUrlList", data[22].get("shopUrlList").toString()));
-		
+		shipServiceDao.createShippingServiceDB(shippingModel);
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}

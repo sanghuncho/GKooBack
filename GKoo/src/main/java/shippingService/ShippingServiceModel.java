@@ -1,24 +1,16 @@
 package shippingService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ShippingServiceModel {
-	//
-	private String shopUrl;
-	private String easyship;
 	
-	private String trackingTitle;
-	private String trackingNumber;
-	private String categoryTitle;
-
-	private String itemTitle;
-	private String brandName;
-	private String itemName;
-	
-	private String totalPrice;
+	private String memberId;
+	private String timeStamp;
+	private int orderId;
 	
 	private String receiverNameByKorea;
 	private String setOwnerContent;
@@ -37,76 +29,49 @@ public class ShippingServiceModel {
 	private String detailAddress;
 	private String deliveryMessage;
 	
+	private ArrayList<ShippingProduct> shippingProductList = new ArrayList<>();
+	
+	public ArrayList<ShippingProduct> getShippingProductList(){
+		
+		/**
+	     *Todo: immutable guava, return type heap?
+	     */
+		return shippingProductList;
+	}
+	public ShippingServiceModel() {}
+	
+	/**
+     *Todo: implement other list.
+     */
+	
 	//additional product
 	private ArrayList<String> shopUrlList = new ArrayList<>(); 
 
-	public String getShopUrl() {
-		return shopUrl;
+	public void addProduct(HashMap<String, Object>[] data) {
+		ShippingProduct product = new ShippingProduct();
+		product.setShopUrl(data[0].get("shopUrl").toString());
+		product.setEasyship(data[1].get("easyship").toString());
+		
+		product.setTrackingTitle(data[2].get("trackingTitle").toString());
+		product.setTrackingNumber(data[3].get("trackingNumber").toString());
+		product.setCategoryTitle(data[4].get("categoryTitle").toString());
+		
+		product.setItemTitle(data[5].get("itemTitle").toString());
+		product.setBrandName(data[6].get("brandName").toString());
+		product.setItemName(data[7].get("itemName").toString());
+		product.setAmount("1");
+		product.setPrice("6");
+		product.setTotalPrice(data[8].get("totalPrice").toString());
+		shippingProductList.add(product);
 	}
 	
-	public void setShopUrl(String shopUrl) {
-		this.shopUrl = shopUrl;
-	}
-	
-	public String getEasyship() {
-		return easyship;
-	}
-	
-	public void setEasyship(String easyship) {
-		this.easyship = easyship;
-	}
-	
-	public String getTrackingTitle() {
-		return trackingTitle;
-	}
-	
-	public void setTrackingTitle(String trackingTitle) {
-		this.trackingTitle = trackingTitle;
-	}
-
-	public String getTrackingNumber() {
-		return trackingNumber;
-	}
-	
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
-	}
-	
-	public String getCategoryTitle() {
-		return categoryTitle;
-	}
-	
-	public void setCategoryTitle(String categoryTitle) {
-		this.categoryTitle = categoryTitle;
-	}
-	public String getItemTitle() {
-		return itemTitle;
-	}
-	
-	public void setItemTitle(String itemTitle) {
-		this.itemTitle = itemTitle;
-	}
-	
-	public String getBrandName() {
-		return brandName;
-	}
-	
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
-	}
-	public String getItemName() {
-		return itemName;
-	}
-	
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-	public String getTotalPrice() {
-		return totalPrice;
-	}
-	
-	public void setTotalPrice(String totalPrice) {
-		this.totalPrice = totalPrice;
+	public void addMoreProducts() {
+		for(int i=0; i < shopUrlList.size(); i++ ) {
+			ShippingProduct product = new ShippingProduct();
+			product.setShopUrl(shopUrlList.get(i));
+			// other list here added
+			shippingProductList.add(product);
+		}
 	}
 	
 	public String getReceiverNameByKorea() {
@@ -214,5 +179,29 @@ public class ShippingServiceModel {
 	
 	public void setShopUrlList(ArrayList<String> shopList) {
 		this.shopUrlList.addAll(shopList);
+	}
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(String timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 }

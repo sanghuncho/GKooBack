@@ -22,10 +22,10 @@ public class CustomerStatusController {
         AccessToken accessToken = ((KeycloakPrincipal<?>) request.getUserPrincipal())
         	    .getKeycloakSecurityContext().getToken();
  
-        String username = accessToken.getPreferredUsername();
-        System.out.println("username: "+ username);
 		CustomerStatusDAO statusDAO = new CustomerStatusDAO();
-		statusDAO.checkGkooId(username);
-		return statusDAO.getCustomerStatusFromDB(username);
+		statusDAO.checkGkooId(accessToken);
+		
+		String memberId = accessToken.getPreferredUsername();
+		return statusDAO.getCustomerStatusFromDB(memberId);
 	}
 }

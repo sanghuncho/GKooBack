@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.keycloak.representations.AccessToken;
+
 import dataBase.ConnectionDB;
 
 public class CustomerStatusDAO {
@@ -20,6 +22,9 @@ public class CustomerStatusDAO {
 	
 	public CustomerStatus getCustomerStatus() {
 		
+		/**
+	     * initial state
+	     */
 		CustomerStatus customer = new CustomerStatus(
 				"gkoo 10001",
 				1000,
@@ -29,14 +34,15 @@ public class CustomerStatusDAO {
 		return customer;
 	}
 	
-	public void checkGkooId(String username) throws SQLException {
+	public void checkGkooId(AccessToken accessToken) throws SQLException {
 		resultSet = null;
 		ConnectionDB.connectSQL();
 		Connection conn = ConnectionDB.getConnectInstance();
 		
-		/**
-	     *ToDo: memberID must be registered also in customer.
-	     */
+		String username = accessToken.getPreferredUsername();
+		String lastname = accessToken.getFamilyName();
+        String firstname = accessToken.getGivenName();
+        
 		String query = "select count(gkoo_id) from customer where gkoo_id = ?";
 		PreparedStatement psmt = conn.prepareStatement(query);
 		psmt.setString(1, username);
@@ -50,7 +56,10 @@ public class CustomerStatusDAO {
 		while(resultSet.next()) {
 			if(resultSet.getInt(1) == 0) {
 				System.out.println("It needs to register");
-				registerGkooIdInDB(username);
+				/**
+			     *ToDo: email should be also stored in DB.
+			     */
+				registerGkooIdInDB(username, lastname, firstname);
 				
 			} else {
 				System.out.println("already exist!!");
@@ -59,20 +68,33 @@ public class CustomerStatusDAO {
 		close();
 	}
 	
-	public void registerGkooIdInDB(String username) throws SQLException {
+	public void registerGkooIdInDB(String username, String lastname, String firstname) throws SQLException {
 		ConnectionDB.connectSQL();
 		Connection conn = ConnectionDB.getConnectInstance();
 		
 		/**
 	     *ToDo: customer needs to also register.
 	     */
-		String query = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
+		String queryStatus = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
 				+ "VALUES (?, 0, 0, 1000)";
 		PreparedStatement psmt = null;
 		try {
-			psmt = conn.prepareStatement(query);
+			psmt = conn.prepareStatement(queryStatus);
 			psmt.setString(1, username);
 			psmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		String queryCustomer = "INSERT INTO customer(gkoo_id, lastname, firstname)"
+				+ "VALUES (?, ?, ?)";
+		PreparedStatement psmt_customer = null;
+		try {
+			psmt_customer = conn.prepareStatement(queryCustomer);
+			psmt_customer.setString(1, username);
+			psmt_customer.setString(2, lastname);
+			psmt_customer.setString(3, firstname);
+			psmt_customer.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 

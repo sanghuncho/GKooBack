@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class OrderID {
 
-	public int generateOrderId() {
+	public static int generateOrderID() {
 		ZoneId zone = ZoneId.of("Asia/Seoul");
 		LocalDate currentDate = LocalDate.now(zone);
 		LocalTime currentTime = LocalTime.now(zone);
@@ -18,6 +18,7 @@ public class OrderID {
 		DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("mmHH");
 		String formattedTime = currentTime.format(formatterTime);
 				
-		return Integer.parseInt(formattedTime.concat(formattedDate));
+		//return Integer.parseInt(formattedTime.concat(formattedDate));
+		return 123;
 	}
 }
