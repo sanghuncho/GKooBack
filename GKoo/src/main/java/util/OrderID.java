@@ -7,18 +7,18 @@ import java.time.format.DateTimeFormatter;
 
 public class OrderID {
 
-	public static int generateOrderID() {
+	public static String generateOrderID() {
 		ZoneId zone = ZoneId.of("Asia/Seoul");
 		LocalDate currentDate = LocalDate.now(zone);
 		LocalTime currentTime = LocalTime.now(zone);
 		
-		DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("ddMMyy");
+		DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyyMMdd");
 		String formattedDate = currentDate.format(formatterDate);
 		
-		DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("mmHH");
+		DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HHmmss");
 		String formattedTime = currentTime.format(formatterTime);
 				
-		//return Integer.parseInt(formattedTime.concat(formattedDate));
-		return 123;
+		System.out.println(formattedDate.concat(formattedTime));
+		return formattedDate.concat(formattedTime);
 	}
 }

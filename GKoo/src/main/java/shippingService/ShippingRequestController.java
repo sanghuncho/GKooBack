@@ -42,7 +42,7 @@ public class ShippingRequestController {
 		
 		String memberId = MemberProfile.getMemberID(request);
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
-        int orderId = OrderID.generateOrderID();
+        String orderId = OrderID.generateOrderID();
         shippingModel.setMemberId(memberId);
         shippingModel.setTimeStamp(timeStamp);
         shippingModel.setOrderId(orderId);

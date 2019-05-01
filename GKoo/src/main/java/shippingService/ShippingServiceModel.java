@@ -10,7 +10,7 @@ public class ShippingServiceModel {
 	
 	private String memberId;
 	private String timeStamp;
-	private int orderId;
+	private String orderId;
 	
 	private String receiverNameByKorea;
 	private String setOwnerContent;
@@ -197,11 +197,11 @@ public class ShippingServiceModel {
 		this.timeStamp = timeStamp;
 	}
 
-	public int getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 }
