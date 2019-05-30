@@ -27,16 +27,17 @@ import util.TimeStamp;
 @RestController
 public class ShippingRequestController {
 	
+	private final double INITIAL_PRICE = 0;
 	/**
      *Todo: using spring annotation 
-     */
-			
+     */		
 	public ShippingRequestController() {}
 	
 	@CrossOrigin(origins = "http://localhost:3000/requestshipping")
 	@RequestMapping(value = "/createshippingservice", method = RequestMethod.POST)
 	public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
 	
+		System.out.println("배송대행 서비스 신청시작");
 		ShippingServiceModel shippingModel = new ShippingServiceModel();
 		ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
 		
@@ -46,7 +47,7 @@ public class ShippingRequestController {
         shippingModel.setMemberId(memberId);
         shippingModel.setTimeStamp(timeStamp);
         shippingModel.setOrderId(orderId);
-        
+        System.out.println("배송대행 서비스주문번호: " + orderId);
 		/**
 	     *Todo: amount and price
 	     */
@@ -61,6 +62,7 @@ public class ShippingRequestController {
 		
 		/**
 	     *ToDO: move to shippingServiceModel
+	     *ToDO: Build pattern
 	     */
 		shippingModel.setReceiverNameByKorea(data[9].get("receiverNameByKorea").toString());
 		shippingModel.setOwnerContent(data[10].get("setOwnerContent").toString());
@@ -78,6 +80,10 @@ public class ShippingRequestController {
 		shippingModel.setDeliveryAddress(data[19].get("deliveryAddress").toString());
 		shippingModel.setDetailAddress(data[20].get("detailAddress").toString());
 		shippingModel.setDeliveryMessage(data[21].get("deliveryMessage").toString());
+		
+		shippingModel.setShippingPrice(INITIAL_PRICE);
+		shippingModel.setShipState(ShippingServiceState.RECEIVE_BOX_READY);
+		shippingModel.setPaymentState(ShippingServiceState.PAYMENT_NOT_READY);
 		
 		shipServiceDao.createShippingServiceDB(shippingModel);
 		HttpHeaders headers = new HttpHeaders();

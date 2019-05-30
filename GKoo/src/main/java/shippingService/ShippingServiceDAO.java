@@ -69,6 +69,29 @@ public class ShippingServiceDAO {
 
 		        }
 		}
+		
+		try {
+			PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_ORDER_STATE);
+			psmt.setString(1, model.getMemberId());
+			psmt.setString(2, String.valueOf(model.getOrderId()));
+			psmt.setDouble(3, model.getShippingPrice());
+			psmt.setInt(4, model.getPaymentState());
+			psmt.setInt(5, model.getShipState());
+			
+			psmt.executeUpdate();
+		} catch (SQLException e) {
+			//Loger
+		} finally {
+			 try {
+		            if (psmt != null) {
+		            	psmt.close();
+		            }
+		        } catch (Exception e) {
+
+		        }
+		}
+
+		
 //		  memberid character varying(50) NOT NULL,
 //		  orderid character varying(50) NOT NULL,
 //		  order_stamp timestamp without time zone NOT NULL,
@@ -131,6 +154,10 @@ public class ShippingServiceDAO {
 			+ "pd_shopurl, pd_trackingtitle, pd_trackingnumber,"
 			+ "pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
 			+ "pd_amount, pd_price, pd_totalprice) values(?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+	
+	private static final String CREATE_SHIPPING_ORDER_STATE = "insert into orderstate(memberId, orderId, ship_price, "
+			+ "pay_state, ship_state) values(?,?,?,?,?)"; 
+	
 	
 	private void close() {
         try {

@@ -29,6 +29,10 @@ public class ShippingServiceModel {
 	private String detailAddress;
 	private String deliveryMessage;
 	
+	private double shippingPrice;
+	private int shipState;
+	private int paymentState;
+	
 	private ArrayList<ShippingProduct> shippingProductList = new ArrayList<>();
 	
 	public ArrayList<ShippingProduct> getShippingProductList(){
@@ -203,5 +207,23 @@ public class ShippingServiceModel {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+	public double getShippingPrice() {
+		return shippingPrice;
+	}
+	public void setShippingPrice(double shippingPrice) {
+		this.shippingPrice = shippingPrice;
+	}
+	public int getShipState() {
+		return shipState;
+	}
+	public void setShipState(ShippingServiceState shipState) {
+		this.shipState = shipState.getStateCode();
+	}
+	public int getPaymentState() {
+		return paymentState;
+	}
+	public void setPaymentState(ShippingServiceState paymentState) {
+		this.paymentState = paymentState.getStateCode();
 	}
 }

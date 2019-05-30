@@ -39,6 +39,8 @@ public class CustomerStatusDAO {
 		ConnectionDB.connectSQL();
 		Connection conn = ConnectionDB.getConnectInstance();
 		
+		/*
+		 * keycloak- config null object username, lastname, firstname*/
 		String username = accessToken.getPreferredUsername();
 		String lastname = accessToken.getFamilyName();
         String firstname = accessToken.getGivenName();
@@ -166,5 +168,4 @@ public class CustomerStatusDAO {
         }
     }
 	
-
 }
