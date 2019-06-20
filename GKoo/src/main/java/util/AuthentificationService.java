@@ -12,4 +12,12 @@ public class AuthentificationService {
         	    .getKeycloakSecurityContext().getToken();
 		return accessToken.getPreferredUsername();
 	}
+	
+	public static String getAuthenficatedFullname(HttpServletRequest request) {
+		AccessToken accessToken = ((KeycloakPrincipal<?>) request.getUserPrincipal())
+        	    .getKeycloakSecurityContext().getToken();
+		/*ToDO: null check*/
+		String fullname = accessToken.getFamilyName() +" "+ accessToken.getGivenName();
+		return fullname;
+	}
 }

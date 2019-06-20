@@ -2,3 +2,4 @@
 2. @RestController over className
 3. Haupklasse nicht gefunden => maven aktualisieren
 4. if the notice of cross-origin shows, let refresh the react application  
+5. fetch-method should be located in keycloak-method

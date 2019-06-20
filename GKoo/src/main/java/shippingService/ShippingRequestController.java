@@ -83,7 +83,7 @@ public class ShippingRequestController {
 		
 		shippingModel.setShippingPrice(INITIAL_PRICE);
 		shippingModel.setShipState(ShippingServiceState.RECEIVE_BOX_READY);
-		shippingModel.setPaymentState(ShippingServiceState.PAYMENT_NOT_READY);
+		shippingModel.setPaymentState(ShippingServiceState.PAYMENT_READY);
 		
 		shipServiceDao.createShippingServiceDB(shippingModel);
 		HttpHeaders headers = new HttpHeaders();

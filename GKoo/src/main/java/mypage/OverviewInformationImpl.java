@@ -5,20 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import dataBase.ConnectionDB;
 
-public class OrderInformationImp implements OrderInformationDAO {
+public class OverviewInformationImpl implements OverviewServiceDAO {
     
-	public OrderInformationImp(){}
+	public OverviewInformationImpl(){}
 	
 	@Override
 	public List<OrderInformation> getOrderInformationFromDB(String username) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "select os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
-				+ "	from ORDERSTATE os, RECIPIENT rp where rp.orderid=os.orderid and os.memberid=?";
+		String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
+				+ "	FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.memberid=?";
 				
 		List<OrderInformation> orderInformationList = new ArrayList<>();
 		try (Connection conn = ConnectionDB.getConnectInstance();
@@ -29,31 +28,31 @@ public class OrderInformationImp implements OrderInformationDAO {
 		} catch (SQLException e) {
 			//Logger
 		}
-		
+			
 		return orderInformationList;
 	}
 	
 	@Override
-	public List<OrderInformation> getWarehouseInformationFromDB(String username) {
+	public List<WarehouseInformation> getWarehouseInformationFromDB(String username) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "select os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
-				+ "	from ORDERSTATE os, RECIPIENT rp where rp.orderid=os.orderid and os.memberid=? and (os.ship_state=1 or os.ship_state=2)";
+		String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
+				+ "	FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.memberid=? AND (os.ship_state=1 or os.ship_state=2)";
 				
-		List<OrderInformation> orderInformationList = new ArrayList<>();
+		List<WarehouseInformation> warehouseInformationList = new ArrayList<>();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
 			psmt.setString(1, username);
 			resultSet = psmt.executeQuery();
-			orderInformationList = writeOrderInformation(resultSet, orderInformationList);
+			warehouseInformationList = writeWarehouseInformation(resultSet, warehouseInformationList);
 		} catch (SQLException e) {
 			//Logger
 		}
 		
-		return orderInformationList;
+		return warehouseInformationList;
 	}
 	
-	private List<OrderInformation> writeOrderInformation(ResultSet rs,List<OrderInformation> orderInformationList) throws SQLException {
+	private List<OrderInformation> writeOrderInformation(ResultSet rs, List<OrderInformation> orderInformationList) throws SQLException {
 		while (rs.next()) {
 			OrderInformation orderInfo = new OrderInformation();
 			orderInfo.setOrderNumber(rs.getString("orderid"));
@@ -68,11 +67,26 @@ public class OrderInformationImp implements OrderInformationDAO {
 		return orderInformationList;
 	}
 	
+	private List<WarehouseInformation> writeWarehouseInformation(ResultSet rs, List<WarehouseInformation> warehouseInformationList) throws SQLException {
+		while (rs.next()) {
+			WarehouseInformation warehouseInfo = new WarehouseInformation();
+			warehouseInfo.setOrderNumber(rs.getString("orderid"));
+			warehouseInfo.setProductInfo(collectProductInfos(warehouseInfo.getOrderNumber()));
+			warehouseInfo.setRecipient(rs.getString("name_kor"));
+			warehouseInfo.setDeliveryPayment(rs.getDouble("ship_price"));
+			warehouseInfo.setDeliveryState(rs.getInt("ship_state"));
+			//ToDo: depends on the local, new impl
+			warehouseInfo.setDeliveryTracking(rs.getString("trackingnr_world"));
+			warehouseInformationList.add(warehouseInfo);
+		}
+		return warehouseInformationList;
+	}
+	
 	private String collectProductInfos(String orderId) {
 		List<String> products = new ArrayList<>();
 		ResultSet resultSet = null;
 		
-		final String GET_PRODUCTS_NAME = "select pd_itemtitle from PRODUCT where orderid=?";
+		final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM PRODUCT WHERE orderid=?";
 		
 		ConnectionDB.connectSQL();
 		try (Connection conn = ConnectionDB.getConnectInstance();
