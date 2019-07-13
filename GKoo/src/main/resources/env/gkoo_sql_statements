@@ -1,0 +1,3 @@
+getProductsCommonInfo : SELECT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_trackingnumber, oState.ship_state, oState.ship_price, 
+						oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount
+					    FROM PRODUCT prod INNER JOIN ORDERSTATE oState ON prod.orderid = oState.orderid and prod.memberid=? and prod.orderid=?

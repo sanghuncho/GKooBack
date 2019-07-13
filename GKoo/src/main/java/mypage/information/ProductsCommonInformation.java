@@ -6,6 +6,14 @@ public class ProductsCommonInformation {
 	private String trackingNr;
 	private String shipState;
 	private double totalPrice;
+	
+	private double actualWeight;
+	private double volumeWeight;
+	private double shipPrice;
+	private double shipPriceDiscount;
+	
+	private String paymentOwnerName;
+	private int paymentState;
 
 	public ProductsCommonInformation() {}
 	
@@ -74,5 +82,53 @@ public class ProductsCommonInformation {
 
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+	
+	public double getActualWeight() {
+		return actualWeight;
+	}
+
+	public void setActualWeight(double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+
+	public double getVolumeWeight() {
+		return volumeWeight;
+	}
+
+	public void setVolumeWeight(double volumeWeight) {
+		this.volumeWeight = volumeWeight;
+	}
+
+	public double getShipPriceDiscount() {
+		return shipPriceDiscount;
+	}
+
+	public void setShipPriceDiscount(double shipPriceDiscount) {
+		this.shipPriceDiscount = shipPriceDiscount;
+	}
+
+	public double getShipPrice() {
+		return shipPrice;
+	}
+
+	public void setShipPrice(double shipPrice) {
+		this.shipPrice = shipPrice;
+	}
+
+	public String getPaymentOwnerName() {
+		return paymentOwnerName;
+	}
+
+	public void setPaymentOwnerName(String paymentOwnerName) {
+		this.paymentOwnerName = paymentOwnerName;
+	}
+
+	public int getPaymentState() {
+		return paymentState;
+	}
+
+	public void setPaymentState(int paymentState) {
+		this.paymentState = paymentState;
 	}
 }

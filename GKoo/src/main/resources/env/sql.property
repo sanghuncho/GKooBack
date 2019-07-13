@@ -1,3 +1,26 @@
+--Normal Query
 select * from notice;
-
 select notice_content from notice where notice_nr = ;
+
+
+
+--Create Table
+create table payment (
+	paymentid serial primary key,
+	memberid VARCHAR(50) NOT NULL,
+	orderid VARCHAR(50) NOT NULL,
+	payment_date timestamp, 
+	payment_ownername VARCHAR(50),
+	payment_art integer,
+	payment_deposit numeric
+);
+
+-- Add Column
+ALTER TABLE payment
+ADD COLUMN payment_state integer;
+
+-- Insert data
+INSERT INTO payment (memberid, orderid, payment_deposit) VALUES ('m', '20190526220452', 42000);
+
+-- Update table
+UPDATE payment SET payment_ownername = null, payment_state = 1 WHERE orderid='20190526220452' and memberid='m' ;

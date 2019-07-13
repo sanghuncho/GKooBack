@@ -14,4 +14,6 @@ public interface MypageDetailsDAO {
 	public List<Product> getProductsInfo(String username, String number);
 	
 	public ProductsCommonInformation getProductsCommonInfo(String username, String number);
+	
+	public void willPayDeliveryFee(String username, String orderNumber, String ownerName);
 }

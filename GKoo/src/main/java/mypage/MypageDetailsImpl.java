@@ -14,6 +14,8 @@ import mypage.information.RecipientInformation;
 
 public class MypageDetailsImpl implements MypageDetailsDAO {
 	
+	private final int PAYMENT_REQEUST_STATE = 2;
+	
 	/*bulider pattern*/
 	@Override
 	public OrderingPersonInformation getOrderingpersonInfo(String fullname) {
@@ -41,6 +43,22 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			//Logger
 		}		
 		return recipient;
+	}
+	
+	@Override
+	public void willPayDeliveryFee(String username, String orderNumber, String ownerName) {
+		ConnectionDB.connectSQL();
+		String query = "UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid=? AND orderid=?";
+		try (Connection conn = ConnectionDB.getConnectInstance();
+				PreparedStatement psmt = conn.prepareStatement(query);){
+			psmt.setString(1, ownerName);
+			psmt.setInt(2, PAYMENT_REQEUST_STATE);
+			psmt.setString(3, username);
+			psmt.setString(4, orderNumber);
+			psmt.executeQuery();
+		} catch (SQLException e) {
+			//Logger
+		}	
 	}
 	
 	public RecipientInformation writeRecipientInformation(ResultSet rs, RecipientInformation recipient) throws SQLException {
@@ -97,16 +115,20 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	}
 	
 	@Override
-	public ProductsCommonInformation getProductsCommonInfo(String username, String number) {
+	public ProductsCommonInformation getProductsCommonInfo(String username, String orderNumber) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_trackingnumber, state.ship_state "
-				+ "FROM PRODUCT prod INNER JOIN ORDERSTATE state ON prod.orderid=state.orderid and prod.memberid=? and prod.orderid=?";
+		String query = "SELECT DISTINCT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_trackingnumber, "
+				+ "oState.ship_state, oState.ship_price, oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, paymt.payment_ownername, paymt.payment_state  "
+				+ "FROM ((PRODUCT prod INNER JOIN ORDERSTATE oState "
+				+ "ON prod.orderid = oState.orderid and prod.memberid=? and prod.orderid=?) "
+				+ "INNER JOIN PAYMENT paymt ON oState.fk_payment = paymt.paymentid and oState.orderid = ?)";
 		ProductsCommonInformation commonInfo = new ProductsCommonInformation();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
 			psmt.setString(1, username);
-			psmt.setString(2, number);
+			psmt.setString(2, orderNumber);
+			psmt.setString(3, orderNumber);
 			resultSet = psmt.executeQuery();
 			commonInfo = writeProductsCommonInformation(resultSet, commonInfo);
 		} catch (SQLException e) {
@@ -119,7 +141,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(totalPriceQuery);){
 			psmt.setString(1, username);
-			psmt.setString(2, number);
+			psmt.setString(2, orderNumber);
 			resultSetForPrice = psmt.executeQuery();
 			commonInfo = writeTotalPriceProductsCommonInformation(resultSetForPrice, commonInfo);
 		} catch (SQLException e) {
@@ -144,7 +166,15 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			commonInfo.setTrackingCompany(rs.getString("pd_trackingtitle"));
 			commonInfo.setTrackingNr(rs.getString("pd_trackingnumber"));
 			commonInfo.setShipState(rs.getInt("ship_state"));
+			commonInfo.setShipPrice(rs.getInt("ship_price"));
+			commonInfo.setActualWeight(rs.getDouble("box_actual_weight"));
+			commonInfo.setVolumeWeight(rs.getDouble("box_volume_weight"));
+			commonInfo.setPaymentOwnerName(rs.getString("payment_ownername"));
+			commonInfo.setPaymentState(rs.getInt("payment_state"));
 		}
 		return commonInfo;
 	}
+
+
+	
 }
