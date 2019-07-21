@@ -218,12 +218,12 @@ public class ShippingServiceModel {
 		return shipState;
 	}
 	public void setShipState(ShippingServiceState shipState) {
-		this.shipState = shipState.getStateCode();
+		this.shipState = shipState.getCode();
 	}
 	public int getPaymentState() {
 		return paymentState;
 	}
 	public void setPaymentState(ShippingServiceState paymentState) {
-		this.paymentState = paymentState.getStateCode();
+		this.paymentState = paymentState.getCode();
 	}
 }

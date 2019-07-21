@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mypage.information.ProductsCommonInformation;
 import mypage.information.RecipientInformation;
+import serviceBase.ServicePath;
 import mypage.information.ProductsInformation.Product;
 import util.AuthentificationService;
 
 @RestController
 public class MypageDetailsController {
 
-	@CrossOrigin(origins = "http://localhost:3000/detailsmypage")
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/orderingpersoninfo")
 	public OrderingPersonInformation requestOrderingpersonInfo(HttpServletRequest request) throws SQLException  {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
@@ -33,7 +34,7 @@ public class MypageDetailsController {
 		return detailsImp.getOrderingpersonInfo(fullname);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000/detailsmypage")
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/recipientinfo/{number}")
 	public RecipientInformation requestRecipientInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
@@ -42,7 +43,7 @@ public class MypageDetailsController {
 		return detailsImp.getRecipientInfo(memberId, number);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000/detailsmypage")
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/productscommoninfo/{number}")
 	public ProductsCommonInformation requestProductsCommonInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
@@ -51,7 +52,7 @@ public class MypageDetailsController {
 		return detailsImp.getProductsCommonInfo(memberId, number);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000/detailsmypage")
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/productslistinfo/{number}")
 	public List<Product> requestProductsListInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
@@ -60,9 +61,23 @@ public class MypageDetailsController {
 		return detailsImp.getProductsInfo(memberId, number);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000/detailsmypage")
-	@RequestMapping(value = "/willpaydeleveryfee", method = RequestMethod.POST)
-	public ResponseEntity<?> willPayDeliveryFee(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
+//	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+//	@RequestMapping(value = "/willpaydeleveryfee", method = RequestMethod.POST)
+//	public ResponseEntity<?> willPayDeliveryFee(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
+//		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
+//		String memberId = AuthentificationService.getAuthenficatedMemberID(request);
+//        System.out.println("oderNumber: " + data[0].get("orderNumber"));
+//        System.out.println("ownerNumber: " + data[1].get("ownerName"));
+//        String orderNumber = data[0].get("orderNumber").toString();
+//        String ownerName = data[1].get("ownerName").toString();
+//        detailsImp.willPayDeliveryFee(memberId, orderNumber, ownerName);
+//		HttpHeaders headers = new HttpHeaders();
+//		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+//	}
+	
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+	@RequestMapping(value = "/willpaydeleveryfeeupdate", method = RequestMethod.POST)
+	public ProductsCommonInformation willPayDeliveryFeeUpdate(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
 		String memberId = AuthentificationService.getAuthenficatedMemberID(request);
         System.out.println("oderNumber: " + data[0].get("orderNumber"));
@@ -70,7 +85,6 @@ public class MypageDetailsController {
         String orderNumber = data[0].get("orderNumber").toString();
         String ownerName = data[1].get("ownerName").toString();
         detailsImp.willPayDeliveryFee(memberId, orderNumber, ownerName);
-		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+		return detailsImp.getProductsCommonInfo(memberId, orderNumber);
 	}
 }

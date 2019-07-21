@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
-import dataBase.ConnectionDB;
+import databaseUtil.ConnectionDB;
 import util.TimeStamp;
 
 public class ShippingServiceDAO {

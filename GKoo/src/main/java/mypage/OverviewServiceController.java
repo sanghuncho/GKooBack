@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import serviceBase.ServicePath;
 import util.AuthentificationService;
 
 @RestController
 public class OverviewServiceController {
 	public OverviewServiceController() {}
 	
-	@CrossOrigin(origins = "http://localhost:3000/mypage")
+	@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping("/orderinformation")
 	public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
@@ -24,7 +25,7 @@ public class OverviewServiceController {
 	}
 	
 	// ToDo : Refactoring 
-	@CrossOrigin(origins = "http://localhost:3000/mypage")
+	@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping("/warehouseinformation")
 	public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImp = new OverviewInformationImpl();

@@ -6,15 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import dataBase.ConnectionDB;
+import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.ProductsInformation;
 import mypage.information.ProductsInformation.Product;
 import mypage.information.RecipientInformation;
+import payment.PaymentState;
+import shippingService.ShippingServiceState;
 
 public class MypageDetailsImpl implements MypageDetailsDAO {
 	
-	private final int PAYMENT_REQEUST_STATE = 2;
+	private final int PAYMENT_REQEUST_STATE = 2; //결제요청 - 무통장입금전
 	
 	/*bulider pattern*/
 	@Override
@@ -45,16 +47,41 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		return recipient;
 	}
 	
+//	payment
+//	1 결제대기 - 결제전
+//	2 결제요청 - 무통장입금전
+//	3 결제완료
+	
+//	shipState
+//	입고대기 (1),
+//	입고완료 (2),
+//	결제요청 (3),
+//	결제완료 (4),
+//	해외배송중 (5),
+//	통관진행 (6),
+//	국내배송 (7),
+//	배송완료 (8)
+
 	@Override
 	public void willPayDeliveryFee(String username, String orderNumber, String ownerName) {
 		ConnectionDB.connectSQL();
-		String query = "UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid=? AND orderid=?";
+		//String query = "UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid=? AND orderid=?";
+		String query = "WITH t AS ( UPDATE PAYMENT SET payment_ownername = ?, "
+				+ "payment_state = ?  "
+				+ "WHERE memberid = ? AND orderid = ?) "
+				+ "UPDATE orderstate SET ship_state = ?  "
+				+ "WHERE memberid = ? AND orderid = ?";
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
 			psmt.setString(1, ownerName);
-			psmt.setInt(2, PAYMENT_REQEUST_STATE);
+			psmt.setInt(2, PaymentState.REQUEST.getCode());
 			psmt.setString(3, username);
 			psmt.setString(4, orderNumber);
+			
+			psmt.setInt(5, ShippingServiceState.PAYMENT_READY.getCode());
+			psmt.setString(6, username);
+			psmt.setString(7, orderNumber);
+			
 			psmt.executeQuery();
 		} catch (SQLException e) {
 			//Logger

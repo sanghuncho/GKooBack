@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import dataBase.ConnectionDB;
+import databaseUtil.ConnectionDB;
 
 public class PurchaseOrderDAO {
 	private Statement statement = null;

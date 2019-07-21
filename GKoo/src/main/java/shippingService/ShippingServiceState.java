@@ -32,7 +32,7 @@ public enum ShippingServiceState {
 	        this.stateCode = stateCode;
 	    }
 	    
-	    public int getStateCode() {
+	    public int getCode() {
 	        return this.stateCode;
 	    }
 	    

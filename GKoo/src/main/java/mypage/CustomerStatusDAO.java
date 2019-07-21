@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.keycloak.representations.AccessToken;
 
-import dataBase.ConnectionDB;
+import databaseUtil.ConnectionDB;
 
 public class CustomerStatusDAO {
 	

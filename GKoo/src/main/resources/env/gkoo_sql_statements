@@ -1,3 +1,7 @@
 getProductsCommonInfo : SELECT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_trackingnumber, oState.ship_state, oState.ship_price, 
 						oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount
-					    FROM PRODUCT prod INNER JOIN ORDERSTATE oState ON prod.orderid = oState.orderid and prod.memberid=? and prod.orderid=?
+					    FROM ((PRODUCT prod INNER JOIN ORDERSTATE oState ON prod.orderid = oState.orderid and prod.memberid="m" and prod.orderid="20190526220452") 
+					    INNER JOIN PAYMENT paymt ON oState.fk_payment = paymt.paymentid and oState.orderid = "20190526220452"
+					    
+willPayDeliveryFee : WITH t AS ( UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid = ? AND orderid = ?) 
+					 UPDATE orderstate SET ship_state = ? WHERE memberid = ? AND orderid = ?
