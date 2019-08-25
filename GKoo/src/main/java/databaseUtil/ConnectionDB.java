@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class ConnectionDB {
 
 	private static final String POSTGRE_DB_DRIVER = "org.postgresql.Driver";
-	private static final String POSTGRE_DB_CONNECTION = "jdbc:postgresql://localhost:5432/motherj";
+	private static final String POSTGRE_DB_CONNECTION = "jdbc:postgresql://localhost:5432/gkoo";
 	private static final String POSTGRE_DB_USER = "postgres";
-	private static final String POSTGRE_DB_PASSWORD = "motherj";
+	private static final String POSTGRE_DB_PASSWORD = "gkooadmin";
 	private static Connection conn = null;
 	
 	public ConnectionDB() {}

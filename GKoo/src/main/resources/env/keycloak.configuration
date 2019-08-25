@@ -6,7 +6,5 @@ keycloak.resource=version_0_1_0
 keycloak.public-client=true
 keycloak.cors = true
 
-
-## Keycloak -> Roles -> Default Roles : Assign - Realm Default Roles[User]
 keycloak.security-constraints[0].authRoles[0]= user
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*

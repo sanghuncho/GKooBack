@@ -15,12 +15,11 @@ import util.AuthentificationService;
 public class OverviewServiceController {
 	public OverviewServiceController() {}
 	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
+	@CrossOrigin(origins = "http://localhost:3000/mypage")
 	@RequestMapping("/orderinformation")
 	public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-		String memberId = AuthentificationService.getAuthenficatedMemberID(request);
-		/*ToDo : low coupling - Spring injection, interface, injection */
+		String memberId = AuthentificationService.getAuthenficatedMemberID(request);		
 		return overviewImp.getOrderInformationFromDB(memberId);
 	}
 	
@@ -33,7 +32,4 @@ public class OverviewServiceController {
 		/*ToDo : low coupling - interface, injection */
 		return overviewImp.getWarehouseInformationFromDB(memberId);
 	}
-	
-	// other impl of informations 
-
 }
