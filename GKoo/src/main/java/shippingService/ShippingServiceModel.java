@@ -93,7 +93,7 @@ public class ShippingServiceModel {
 		this.setOwnerContent = setOwnerContent;
 	}
 
-	public String getReceiverNameByEnglishr() {
+	public String getReceiverNameByEnglish() {
 		return receiverNameByEnglish;
 	}
 	

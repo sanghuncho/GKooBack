@@ -42,7 +42,7 @@ public class ShippingServiceDAO {
 			psmt.setString(1, model.getMemberId());
 			psmt.setString(2, String.valueOf(model.getOrderId()));
 			psmt.setString(3, model.getReceiverNameByKorea());
-			psmt.setString(4, model.getReceiverNameByEnglishr());
+			psmt.setString(4, model.getReceiverNameByEnglish());
 			psmt.setString(5, model.getTransitNumber());
 			
 			/**
@@ -148,7 +148,7 @@ public class ShippingServiceDAO {
 	private static final String CREATE_SHIPPING_SERVICE = 
 			"insert into recipient(memberId, orderId, name_kor, name_eng,"
 			+ "transit_nr, phone_prefic, phone_interfix, phone_suffix, zip_code,"
-			+ "address, detail_adress,userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			+ "address, detail_address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String CREATE_SHIPPING_PRODUCTS = "insert into product(memberId, orderId, order_stamp, "
 			+ "pd_shopurl, pd_trackingtitle, pd_trackingnumber,"

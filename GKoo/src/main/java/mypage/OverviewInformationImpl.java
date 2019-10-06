@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import databaseUtil.ConnectionDB;
 
 public class OverviewInformationImpl implements OverviewServiceDAO {
@@ -92,7 +96,6 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 			
 	}
 	
-	
 	private String collectProductInfos(String orderId) {
 		List<String> products = new ArrayList<>();
 		ResultSet resultSet = null;
@@ -112,5 +115,25 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 		}
 
 		return products.toString().replace("[", "").replace("]", "");
+	}
+
+	@Override
+	public ResponseEntity<?> updateTrackingNumber(String memberId, String orderNumber, String trackingCompony, String trackingNumber) {
+	    ConnectionDB.connectSQL();
+		final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where memberid = ? and orderid = ?";
+		
+		try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_TRACKNG_NUMBER);){
+		    psmt.setString(1, trackingNumber);
+		    psmt.setString(2, trackingCompony);
+            psmt.setString(3, memberId);
+            psmt.setString(4, orderNumber);
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            //Logger
+        }
+		
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
 	}
 }

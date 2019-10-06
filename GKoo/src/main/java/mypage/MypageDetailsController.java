@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import mypage.information.ProductsCommonInformation;
-import mypage.information.RecipientInformation;
+import mypage.information.RecipientData;
 import serviceBase.ServicePath;
 import mypage.information.ProductsInformation.Product;
 import util.AuthentificationService;
@@ -36,7 +33,7 @@ public class MypageDetailsController {
 	
 	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/recipientinfo/{number}")
-	public RecipientInformation requestRecipientInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
+	public RecipientData requestRecipientInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
 		String memberId = AuthentificationService.getAuthenficatedMemberID(request);		
 		/*ToDo : low coupling - Spring injection, interface, injection */
@@ -87,4 +84,14 @@ public class MypageDetailsController {
         detailsImp.willPayDeliveryFee(memberId, orderNumber, ownerName);
 		return detailsImp.getProductsCommonInfo(memberId, orderNumber);
 	}
+	
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+    @RequestMapping(value = "/updaterecipientdata", method = RequestMethod.POST)
+    public ResponseEntity<?> updateRecipientData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
+        MypageDetailsImpl detailsImp = new MypageDetailsImpl();
+        String memberId = AuthentificationService.getAuthenficatedMemberID(request);
+        //RecipientData recipientData = detailsImp.createRecipientData(memberId, data);
+        /*ToDo : low coupling - Spring injection, interface, injection */
+        return detailsImp.updateRecipientData(memberId, data);
+    }
 }

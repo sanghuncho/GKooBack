@@ -4,13 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.ProductsInformation;
 import mypage.information.ProductsInformation.Product;
-import mypage.information.RecipientInformation;
+import mypage.information.RecipientData;
 import payment.PaymentState;
 import shippingService.ShippingServiceState;
 
@@ -30,11 +33,11 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	//factory pattern
 	//https://alvinalexander.com/java/java-factory-pattern-example
 	@Override
-	public RecipientInformation getRecipientInfo(String username, String number) {
+	public RecipientData getRecipientInfo(String username, String number) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
 		String query = "SELECT * FROM RECIPIENT WHERE memberid=? AND orderid=?";
-		RecipientInformation recipient = new RecipientInformation();
+		RecipientData recipient = new RecipientData();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
 			psmt.setString(1, username);
@@ -88,7 +91,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		}	
 	}
 	
-	public RecipientInformation writeRecipientInformation(ResultSet rs, RecipientInformation recipient) throws SQLException {
+	public RecipientData writeRecipientInformation(ResultSet rs, RecipientData recipient) throws SQLException {
 		while (rs.next()) {
 			recipient.setNameKor(rs.getString("name_kor"));
 			recipient.setNameEng(rs.getString("name_eng"));
@@ -98,9 +101,9 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			recipient.setPhoneSuffix(rs.getString("phone_suffix"));
 			recipient.buildPhoneNr();
 			recipient.setZipCode(rs.getString("zip_code"));
-			recipient.setAdress(rs.getString("address"));
-			recipient.setAdressDetails(rs.getString("detail_adress"));
-			recipient.buildFullAdress();
+			recipient.setAddress(rs.getString("address"));
+			recipient.setAddressDetails(rs.getString("detail_address"));
+			//recipient.buildFullAdress();
 			recipient.setUsercomment(rs.getString("usercomment"));
 		}
 		return recipient;
@@ -201,7 +204,46 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		}
 		return commonInfo;
 	}
-
-
 	
+	public ResponseEntity<?> updateRecipientData(String memberId, HashMap<String, Object>[] data) {
+	    String orderNumber = data[0].get("orderNumber").toString();
+        String nameKor = data[1].get("nameKor").toString();
+        String nameEng = data[2].get("nameEng").toString();
+        String transitNr = data[3].get("transitNr").toString();
+        String phonePrefic = data[4].get("phonePrefic").toString();
+        String phoneInterfix = data[5].get("phoneInterfix").toString();
+        String phoneSuffix = data[6].get("phoneSuffix").toString();
+        String zipCode = data[7].get("zipCode").toString();
+        String address = data[8].get("address").toString();
+        String addressDetails = data[9].get("addressDetails").toString();
+        String usercomment = data[10].get("usercomment").toString();
+        
+        ConnectionDB.connectSQL();
+        final String UPDATE_RECIPIENT_DATA = 
+                "UPDATE recipient SET name_kor = ?, name_eng = ?, transit_nr = ?, phone_prefic = ?, phone_interfix = ?, phone_suffix = ?, zip_code = ?, address= ?, detail_address = ?, usercomment = ? "
+                + "where memberid = ? and orderid = ?";
+        
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_RECIPIENT_DATA);){
+            psmt.setString(1, nameKor);
+            psmt.setString(2, nameEng);
+            psmt.setString(3, transitNr);
+            psmt.setString(4, phonePrefic);
+            psmt.setString(5, phoneInterfix);
+            psmt.setString(6, phoneSuffix);
+            psmt.setString(7, zipCode);
+            psmt.setString(8, address);
+            psmt.setString(9, addressDetails);
+            psmt.setString(10, usercomment);
+            psmt.setString(11, memberId);
+            psmt.setString(12, orderNumber);
+            
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            //Logger
+        }
+        
+	    HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+	}
 }

@@ -17,7 +17,7 @@ public class AuthentificationService {
 		AccessToken accessToken = ((KeycloakPrincipal<?>) request.getUserPrincipal())
         	    .getKeycloakSecurityContext().getToken();
 		/*ToDO: null check*/
-		String fullname = accessToken.getFamilyName() +" "+ accessToken.getGivenName();
+		String fullname = accessToken.getFamilyName() +""+ accessToken.getGivenName();
 		return fullname;
 	}
 }
