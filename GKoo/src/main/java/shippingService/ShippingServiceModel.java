@@ -11,6 +11,11 @@ public class ShippingServiceModel {
 	private String memberId;
 	private String timeStamp;
 	private String orderId;
+
+	private String shopUrl;
+    private String easyship;
+	private String trackingCompany;
+	private String trackingNumber;
 	
 	private String receiverNameByKorea;
 	private String setOwnerContent;
@@ -32,7 +37,7 @@ public class ShippingServiceModel {
 	private double shippingPrice;
 	private int shipState;
 	private int paymentState;
-	
+
 	private ArrayList<ShippingProduct> shippingProductList = new ArrayList<>();
 	
 	public ArrayList<ShippingProduct> getShippingProductList(){
@@ -53,13 +58,8 @@ public class ShippingServiceModel {
 
 	public void addProduct(HashMap<String, Object>[] data) {
 		ShippingProduct product = new ShippingProduct();
-		product.setShopUrl(data[0].get("shopUrl").toString());
-		product.setEasyship(data[1].get("easyship").toString());
-		
-		product.setTrackingTitle(data[2].get("trackingTitle").toString());
-		product.setTrackingNumber(data[3].get("trackingNumber").toString());
+	
 		product.setCategoryTitle(data[4].get("categoryTitle").toString());
-		
 		product.setItemTitle(data[5].get("itemTitle").toString());
 		product.setBrandName(data[6].get("brandName").toString());
 		product.setItemName(data[7].get("itemName").toString());
@@ -72,11 +72,42 @@ public class ShippingServiceModel {
 	public void addMoreProducts() {
 		for(int i=0; i < shopUrlList.size(); i++ ) {
 			ShippingProduct product = new ShippingProduct();
-			product.setShopUrl(shopUrlList.get(i));
 			// other list here added
 			shippingProductList.add(product);
 		}
 	}
+	
+	public String getShopUrl() {
+        return shopUrl;
+    }
+	
+    public void setShopUrl(String shopUrl) {
+        this.shopUrl = shopUrl;
+    }
+    
+    public String getEasyship() {
+        return easyship;
+    }
+    
+    public void setEasyship(String easyship) {
+        this.easyship = easyship;
+    }
+    
+    public String getTrackingCompany() {
+        return trackingCompany;
+    }
+    
+    public void setTrackingCompany(String trackingCompany) {
+        this.trackingCompany = trackingCompany;
+    }
+    
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+    
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
 	
 	public String getReceiverNameByKorea() {
 		return receiverNameByKorea;
@@ -208,21 +239,27 @@ public class ShippingServiceModel {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
+	
 	public double getShippingPrice() {
 		return shippingPrice;
 	}
+	
 	public void setShippingPrice(double shippingPrice) {
 		this.shippingPrice = shippingPrice;
 	}
+	
 	public int getShipState() {
 		return shipState;
 	}
+	
 	public void setShipState(ShippingServiceState shipState) {
 		this.shipState = shipState.getCode();
 	}
+	
 	public int getPaymentState() {
 		return paymentState;
 	}
+	
 	public void setPaymentState(ShippingServiceState paymentState) {
 		this.paymentState = paymentState.getCode();
 	}

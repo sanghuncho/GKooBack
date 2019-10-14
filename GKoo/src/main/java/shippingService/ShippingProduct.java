@@ -1,13 +1,8 @@
 package shippingService;
 
 public class ShippingProduct {
-	private String shopUrl;
-	private String easyship;
 	
-	private String trackingTitle;
-	private String trackingNumber;
 	private String categoryTitle;
-
 	private String itemTitle;
 	private String brandName;
 	private String itemName;
@@ -18,41 +13,8 @@ public class ShippingProduct {
 	
 	public ShippingProduct() {}
 	
-	public ShippingProduct(String shopUrl, String easyship, String trackingTitle,
-			String trackingNumber, String categoryTitle, String itemTitle,
+	public ShippingProduct(String categoryTitle, String itemTitle,
 			String brandName, String itemName, double totalPrice) {
-	}
-	
-	public String getShopUrl() {
-		return shopUrl;
-	}
-	
-	public void setShopUrl(String shopUrl) {
-		this.shopUrl = shopUrl;
-	}
-	
-	public String getEasyship() {
-		return easyship;
-	}
-	
-	public void setEasyship(String easyship) {
-		this.easyship = easyship;
-	}
-	
-	public String getTrackingTitle() {
-		return trackingTitle;
-	}
-	
-	public void setTrackingTitle(String trackingTitle) {
-		this.trackingTitle = trackingTitle;
-	}
-
-	public String getTrackingNumber() {
-		return trackingNumber;
-	}
-	
-	public void setTrackingNumber(String trackingNumber) {
-		this.trackingNumber = trackingNumber;
 	}
 	
 	public String getCategoryTitle() {

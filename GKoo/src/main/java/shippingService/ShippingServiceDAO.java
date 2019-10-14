@@ -114,9 +114,9 @@ public class ShippingServiceDAO {
 				psmt.setString(1, model.getMemberId());
 				psmt.setString(2, String.valueOf(model.getOrderId()));
 				psmt.setTimestamp(3, TimeStamp.getTimestampKorea());
-				psmt.setString(4, products.get(i).getShopUrl());
-				psmt.setString(5, products.get(i).getTrackingTitle());
-				psmt.setString(6, products.get(i).getTrackingNumber());
+//				psmt.setString(4, products.get(i).getShopUrl());
+//				psmt.setString(5, products.get(i).getTrackingTitle());
+//				psmt.setString(6, products.get(i).getTrackingNumber());
 				psmt.setString(7, products.get(i).getCategoryTitle());
 				psmt.setString(8, products.get(i).getItemTitle());
 				psmt.setString(9, products.get(i).getBrandName());

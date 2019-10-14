@@ -48,7 +48,12 @@ public class ShippingRequestController {
         shippingModel.setTimeStamp(timeStamp);
         shippingModel.setOrderId(orderId);
         System.out.println("배송대행 서비스주문번호: " + orderId);
-		/**
+		
+        shippingModel.setEasyship(data[0].get("easyship").toString());
+        //{deliveryObject={"shopUrl":"www.ebay.de","trackingTitle":"DHL","trackingNumber":"123456"}}
+        //{productObjectList=[{"categoryTitle":"전자제품","itemTitle":"오디오","brandName":"b1","itemName":"p","productPrice":"1","productAmount":1,"totalPrice":null}]
+        //easyship=true
+        /**
 	     *Todo: amount and price
 	     */
         shippingModel.addProduct(data);
