@@ -1,5 +1,6 @@
 package shippingService;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import payment.PaymentState;
 import util.MemberProfile;
 import util.OrderID;
 import util.TimeStamp;
@@ -35,7 +39,7 @@ public class ShippingRequestController {
 	
 	@CrossOrigin(origins = "http://localhost:3000/requestshipping")
 	@RequestMapping(value = "/createshippingservice", method = RequestMethod.POST)
-	public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
+	public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException, JsonParseException, JsonMappingException, IOException {
 	
 		System.out.println("배송대행 서비스 신청시작");
 		ShippingServiceModel shippingModel = new ShippingServiceModel();
@@ -44,51 +48,47 @@ public class ShippingRequestController {
 		String memberId = MemberProfile.getMemberID(request);
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
         String orderId = OrderID.generateOrderID();
+        System.out.println("배송대행 서비스주문번호: " + orderId);
+		
         shippingModel.setMemberId(memberId);
         shippingModel.setTimeStamp(timeStamp);
         shippingModel.setOrderId(orderId);
-        System.out.println("배송대행 서비스주문번호: " + orderId);
-		
         shippingModel.setEasyship(data[0].get("easyship").toString());
-        //{deliveryObject={"shopUrl":"www.ebay.de","trackingTitle":"DHL","trackingNumber":"123456"}}
-        //{productObjectList=[{"categoryTitle":"전자제품","itemTitle":"오디오","brandName":"b1","itemName":"p","productPrice":"1","productAmount":1,"totalPrice":null}]
-        //easyship=true
-        /**
-	     *Todo: amount and price
-	     */
-        shippingModel.addProduct(data);
+        
+        ObjectMapper mapper = new ObjectMapper();
+        DeliveryDataObject deliveryDataObj = mapper.readValue(data[1].get("deliveryDataObject").toString(), DeliveryDataObject.class);
+        ShippingProduct[] shippingProducts = mapper.readValue(data[2].get("shippingProductList").toString(), ShippingProduct[].class);
+        
+        shippingModel.setDeliveryData(deliveryDataObj);
+        shippingModel.setShippingProductsList(shippingProducts);
 
-        /**
-	     *From here additional product, other list should be implemented.
-	     *ToDO: set-method and add-method integrated
-	     */
-		shippingModel.setShopUrlList(transformArrayList("shopUrlList", data[22].get("shopUrlList").toString()));
-		shippingModel.addMoreProducts();
-		
 		/**
 	     *ToDO: move to shippingServiceModel
 	     *ToDO: Build pattern
+	     *ToDO: Jackson
 	     */
-		shippingModel.setReceiverNameByKorea(data[9].get("receiverNameByKorea").toString());
-		shippingModel.setOwnerContent(data[10].get("setOwnerContent").toString());
-		shippingModel.setReceiverNameByEnglish(data[11].get("receiverNameByEnglish").toString());
+		shippingModel.setReceiverNameByKorea(data[3].get("receiverNameByKorea").toString());
+		shippingModel.setOwnerContent(data[4].get("setOwnerContent").toString());
+		shippingModel.setReceiverNameByEnglish(data[5].get("receiverNameByEnglish").toString());
 		
-		shippingModel.setPrivateTransit(data[12].get("privateTransit").toString());
-		shippingModel.setTransitNumber(data[13].get("transitNumber").toString());
-		shippingModel.setAgreeWithCollection(data[14].get("agreeWithCollection").toString());
+		shippingModel.setPrivateTransit(data[6].get("privateTransit").toString());
+		shippingModel.setTransitNumber(data[7].get("transitNumber").toString());
+		shippingModel.setAgreeWithCollection(data[8].get("agreeWithCollection").toString());
 		
-		shippingModel.setCallNumberFront(data[15].get("callNumberFront").toString());
-		shippingModel.setCallNumberMiddle(data[16].get("callNumberMiddle").toString());
-		shippingModel.setCallNumberRear(data[17].get("callNumberRear").toString());
+		shippingModel.setCallNumberFront(data[9].get("callNumberFront").toString());
+		shippingModel.setCallNumberMiddle(data[10].get("callNumberMiddle").toString());
+		shippingModel.setCallNumberRear(data[11].get("callNumberRear").toString());
 		
-		shippingModel.setPostCode(data[18].get("postCode").toString());
-		shippingModel.setDeliveryAddress(data[19].get("deliveryAddress").toString());
-		shippingModel.setDetailAddress(data[20].get("detailAddress").toString());
-		shippingModel.setDeliveryMessage(data[21].get("deliveryMessage").toString());
+		shippingModel.setPostCode(data[12].get("postCode").toString());
+		shippingModel.setDeliveryAddress(data[13].get("deliveryAddress").toString());
+		shippingModel.setDetailAddress(data[14].get("detailAddress").toString());
+		shippingModel.setDeliveryMessage(data[15].get("deliveryMessage").toString());
 		
+		/** 국제배송비 */
 		shippingModel.setShippingPrice(INITIAL_PRICE);
+		/** 국제배송 상태 */
 		shippingModel.setShipState(ShippingServiceState.RECEIVE_BOX_READY);
-		shippingModel.setPaymentState(ShippingServiceState.PAYMENT_READY);
+		shippingModel.setPaymentState(PaymentState.BEFORE);
 		
 		shipServiceDao.createShippingServiceDB(shippingModel);
 		HttpHeaders headers = new HttpHeaders();

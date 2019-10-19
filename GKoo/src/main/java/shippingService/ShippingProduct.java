@@ -1,21 +1,16 @@
 package shippingService;
 
 public class ShippingProduct {
-	
 	private String categoryTitle;
 	private String itemTitle;
 	private String brandName;
 	private String itemName;
 	
-	private int amount;
-	private double price;
-	private double totalPrice;
+	private int productAmount;
+	private double productPrice;
+	private double productTotalPrice;
 	
 	public ShippingProduct() {}
-	
-	public ShippingProduct(String categoryTitle, String itemTitle,
-			String brandName, String itemName, double totalPrice) {
-	}
 	
 	public String getCategoryTitle() {
 		return categoryTitle;
@@ -46,27 +41,27 @@ public class ShippingProduct {
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
-	public double getTotalPrice() {
-		return totalPrice;
+	public double getProductTotalPrice() {
+		return productTotalPrice;
 	}
 	
-	public void setTotalPrice(String totalPrice) {
-		this.totalPrice = Double.parseDouble(totalPrice);
+	public void setProductTotalPrice(String totalPrice) {
+		this.productTotalPrice = Double.parseDouble(totalPrice);
 	}
 
-	public int getAmount() {
-		return amount;
+	public int getProductAmount() {
+		return productAmount;
 	}
 
-	public void setAmount(String amount) {
-		this.amount = Integer.parseInt(amount);
+	public void setProductAmount(String amount) {
+		this.productAmount = Integer.parseInt(amount);
 	}
 
-	public double getPrice() {
-		return price;
+	public double getProductPrice() {
+		return productPrice;
 	}
 
-	public void setPrice(String price) {
-		this.price = Double.parseDouble(price);
+	public void setProductPrice(String price) {
+		this.productPrice = Double.parseDouble(price);
 	}
 }

@@ -113,8 +113,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	public List<Product> getProductsInfo(String username, String number) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT memberid, orderid, pd_shopurl, pd_trackingtitle, pd_trackingnumber, pd_categorytitle"
-				+ ", pd_itemtitle, pd_itemname,pd_brandname, pd_amount, pd_price, pd_totalprice  FROM PRODUCT WHERE memberid=? AND orderid=?";
+		String query = "SELECT memberid, orderid, pd_categorytitle"
+				+ ", pd_itemtitle, pd_itemname, pd_brandname, pd_amount, pd_price, pd_totalprice  FROM PRODUCT WHERE memberid=? AND orderid=?";
 		ProductsInformation productsInfo = new ProductsInformation();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
@@ -148,21 +148,20 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	public ProductsCommonInformation getProductsCommonInfo(String username, String orderNumber) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT DISTINCT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_trackingnumber, "
-				+ "oState.ship_state, oState.ship_price, oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, paymt.payment_ownername, paymt.payment_state  "
-				+ "FROM ((PRODUCT prod INNER JOIN ORDERSTATE oState "
-				+ "ON prod.orderid = oState.orderid and prod.memberid=? and prod.orderid=?) "
-				+ "INNER JOIN PAYMENT paymt ON oState.fk_payment = paymt.paymentid and oState.orderid = ?)";
+		String query = "SELECT oState.shop_url, oState.tracking_company_world, oState.trackingnr_world, oState.ship_state, oState.ship_price, oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, paymt.payment_ownername, paymt.payment_state FROM ORDERSTATE oState JOIN PAYMENT paymt ON oState.memberid = ? and oState.orderid = ? and oState.fk_payment = paymt.paymentid";
+		//String query = "SELECT * from ORDERSTATE where memberid=? and orderid = ? INNER JOIN PAYMENT paymt ON oState.fk_payment = paymt.paymentid and oState.orderid = ?";
+		//ToDo : Jackson
+		//select oState.shop_url, oState.ship_state, paymt.payment_state FROM ORDERSTATE oState 
+		//JOIN PAYMENT paymt on oState.fk_payment = paymt.paymentid and oState.orderid='20191019145523';                      
 		ProductsCommonInformation commonInfo = new ProductsCommonInformation();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
 			psmt.setString(1, username);
 			psmt.setString(2, orderNumber);
-			psmt.setString(3, orderNumber);
 			resultSet = psmt.executeQuery();
 			commonInfo = writeProductsCommonInformation(resultSet, commonInfo);
 		} catch (SQLException e) {
-			//Logger
+		    System.out.println(e);  
 		}
 		
 		ResultSet resultSetForPrice = null;
@@ -192,15 +191,15 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	public ProductsCommonInformation writeProductsCommonInformation(ResultSet rs, ProductsCommonInformation commonInfo) throws SQLException {
 		while (rs.next()) {
 			/*refactoring divide table shopurl, tracking..and perform ones*/
-			commonInfo.setShopUrl(rs.getString("pd_shopurl"));
-			commonInfo.setTrackingCompany(rs.getString("pd_trackingtitle"));
-			commonInfo.setTrackingNr(rs.getString("pd_trackingnumber"));
-			commonInfo.setShipState(rs.getInt("ship_state"));
-			commonInfo.setShipPrice(rs.getInt("ship_price"));
+		    commonInfo.setShipPrice(rs.getInt("ship_price"));
+		    commonInfo.setPaymentState(rs.getInt("payment_state"));
+		    commonInfo.setShipState(rs.getInt("ship_state"));
+		    commonInfo.setShopUrl(rs.getString("shop_url"));
+		    commonInfo.setTrackingCompany(rs.getString("tracking_company_world"));
+			commonInfo.setTrackingNr(rs.getString("trackingnr_world"));
 			commonInfo.setActualWeight(rs.getDouble("box_actual_weight"));
 			commonInfo.setVolumeWeight(rs.getDouble("box_volume_weight"));
 			commonInfo.setPaymentOwnerName(rs.getString("payment_ownername"));
-			commonInfo.setPaymentState(rs.getInt("payment_state"));
 		}
 		return commonInfo;
 	}

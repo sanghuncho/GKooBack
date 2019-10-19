@@ -24,3 +24,9 @@ INSERT INTO payment (memberid, orderid, payment_deposit) VALUES ('m', '201905262
 
 -- Update table
 UPDATE payment SET payment_ownername = null, payment_state = 1 WHERE orderid='20190526220452' and memberid='m' ;
+
+-- Drop table column
+ALTER TABLE "table_name" DROP COLUMN "column_name";
+
+-- Delete table rows
+DELETE FROM table WHERE ;

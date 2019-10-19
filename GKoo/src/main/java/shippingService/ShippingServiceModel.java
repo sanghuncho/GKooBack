@@ -1,9 +1,11 @@
 package shippingService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-
+import java.util.stream.Collectors;
 import org.springframework.context.annotation.Configuration;
+import payment.PaymentState;
 
 @Configuration
 public class ShippingServiceModel {
@@ -12,8 +14,8 @@ public class ShippingServiceModel {
 	private String timeStamp;
 	private String orderId;
 
+	private String easyship;
 	private String shopUrl;
-    private String easyship;
 	private String trackingCompany;
 	private String trackingNumber;
 	
@@ -34,47 +36,31 @@ public class ShippingServiceModel {
 	private String detailAddress;
 	private String deliveryMessage;
 	
+	/** 국제배송비 */
 	private double shippingPrice;
+	/** 국제배송 상태 */
 	private int shipState;
 	private int paymentState;
 
 	private ArrayList<ShippingProduct> shippingProductList = new ArrayList<>();
+	private double shippingProductspriceSum;
 	
 	public ArrayList<ShippingProduct> getShippingProductList(){
-		
-		/**
-	     *Todo: immutable guava, return type heap?
-	     */
+		/** Todo: immutable guava, return type heap? */
 		return shippingProductList;
 	}
 	public ShippingServiceModel() {}
 	
-	/**
-     *Todo: implement other list.
-     */
-	
-	//additional product
-	private ArrayList<String> shopUrlList = new ArrayList<>(); 
-
-	public void addProduct(HashMap<String, Object>[] data) {
-		ShippingProduct product = new ShippingProduct();
-	
-		product.setCategoryTitle(data[4].get("categoryTitle").toString());
-		product.setItemTitle(data[5].get("itemTitle").toString());
-		product.setBrandName(data[6].get("brandName").toString());
-		product.setItemName(data[7].get("itemName").toString());
-		product.setAmount("1");
-		product.setPrice("6");
-		product.setTotalPrice(data[8].get("totalPrice").toString());
-		shippingProductList.add(product);
+	public void setDeliveryData(DeliveryDataObject data) {
+	    this.shopUrl = data.getShopUrl();
+	    this.trackingCompany = data.getTrackingTitle();
+	    this.trackingNumber = data.getTrackingNumber();
 	}
 	
-	public void addMoreProducts() {
-		for(int i=0; i < shopUrlList.size(); i++ ) {
-			ShippingProduct product = new ShippingProduct();
-			// other list here added
-			shippingProductList.add(product);
-		}
+	public void setShippingProductsList(ShippingProduct[] shippingProducts) {
+	    ArrayList<ShippingProduct> arrayList = new ArrayList<ShippingProduct>(Arrays.asList(shippingProducts));
+	    this.shippingProductspriceSum = arrayList.stream().mapToDouble(ShippingProduct::getProductTotalPrice).sum();
+	    this.shippingProductList = arrayList;
 	}
 	
 	public String getShopUrl() {
@@ -212,9 +198,6 @@ public class ShippingServiceModel {
 		this.deliveryMessage = deliveryMessage;
 	}
 	
-	public void setShopUrlList(ArrayList<String> shopList) {
-		this.shopUrlList.addAll(shopList);
-	}
 
 	public String getMemberId() {
 		return memberId;
@@ -260,7 +243,11 @@ public class ShippingServiceModel {
 		return paymentState;
 	}
 	
-	public void setPaymentState(ShippingServiceState paymentState) {
+	public void setPaymentState(PaymentState paymentState) {
 		this.paymentState = paymentState.getCode();
 	}
+	
+    public double getShippingProductspriceSum() {
+        return shippingProductspriceSum;
+    }
 }
