@@ -1,5 +1,6 @@
 package mypage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,12 +10,19 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.ProductsInformation;
 import mypage.information.ProductsInformation.Product;
 import mypage.information.RecipientData;
 import payment.PaymentState;
+import shippingService.DeliveryDataObject;
+import shippingService.ShippingProduct;
+import shippingService.ShippingServiceDAO;
+import shippingService.ShippingServiceModel;
 import shippingService.ShippingServiceState;
 
 public class MypageDetailsImpl implements MypageDetailsDAO {
@@ -132,10 +140,10 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		while (rs.next()) {
 			/*refactoring divide table shopurl, tracking..*/
 			Product product = products.createProduct();
-			product.setCategorytitle(rs.getString("pd_categorytitle"));
-			product.setItemtitle(rs.getString("pd_itemtitle"));
+			product.setCategoryTitle(rs.getString("pd_categorytitle"));
+			product.setItemTitle(rs.getString("pd_itemtitle"));
 			product.setItemName(rs.getString("pd_itemname"));
-			product.setBrandname(rs.getString("pd_brandname"));
+			product.setBrandName(rs.getString("pd_brandname"));
 			product.setAmount(rs.getInt("pd_amount"));
 			product.setPrice(rs.getDouble("pd_price"));
 			product.setTotalPrice(rs.getDouble("pd_totalprice"));
@@ -241,6 +249,27 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         } catch (SQLException e) {
             //Logger
         }
+        
+	    HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+	}
+	
+	public ResponseEntity<?> updateDataEditorProductsList(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
+	    String orderNumber = data[0].get("orderNumber").toString();
+	    
+	    ObjectMapper mapper = new ObjectMapper();
+        DeliveryDataObject deliveryDataObj = mapper.readValue(data[1].get("deliveryDataObject").toString(), DeliveryDataObject.class);
+        ShippingProduct[] shippingProducts = mapper.readValue(data[2].get("shippingProductList").toString(), ShippingProduct[].class);
+        
+        ShippingServiceModel shippingModel = new ShippingServiceModel();
+        ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
+        
+        shippingModel.setOrderId(orderNumber);
+        shippingModel.setMemberId(memberId);
+        shippingModel.setDeliveryData(deliveryDataObj);
+        shippingModel.setShippingProductsList(shippingProducts);
+        
+        shipServiceDao.updateDataShippingServiceDB(shippingModel);
         
 	    HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);

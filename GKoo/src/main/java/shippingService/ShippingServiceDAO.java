@@ -94,44 +94,60 @@ public class ShippingServiceDAO {
 			psmt.executeUpdate();
 		} catch (SQLException e) {
 		    System.out.println(e);
-		} 
+		}  
 
-		/** 
-         *memberid character varying(50) NOT NULL,
-          orderid character varying(50) NOT NULL,
-          order_stamp timestamp without time zone NOT NULL,
-          pd_categorytitle character varying(50),
-          pd_itemtitle character varying(50),
-          pd_brandname character varying(50),
-          pd_itemname character varying(50),
-          pd_amount integer NOT NULL,
-          pd_price numeric NOT NULL,
-          pd_totalprice numeric NOT NULL,
-           */   
-
-		ArrayList<ShippingProduct> products = model.getShippingProductList();
-		ConnectionDB.connectSQL();
-		for(int i=0; i< products.size(); i++) {
-			try (Connection conn = ConnectionDB.getConnectInstance();
-			        PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_PRODUCTS);) {
-					
-				psmt.setString(1, model.getMemberId());
-				psmt.setString(2, String.valueOf(model.getOrderId()));
-				psmt.setTimestamp(3, TimeStamp.getTimestampKorea());
-				psmt.setString(4, products.get(i).getCategoryTitle());
-				psmt.setString(5, products.get(i).getItemTitle());
-				psmt.setString(6, products.get(i).getBrandName());
-				psmt.setString(7, products.get(i).getItemName());
-				psmt.setInt(8, products.get(i).getProductAmount());
-				psmt.setDouble(9, products.get(i).getProductPrice());
-				psmt.setDouble(10, products.get(i).getProductTotalPrice());
-					
-				psmt.executeUpdate();
-			} catch (SQLException ex) {
-			    System.out.println(ex);	
-			} 
-		}
+		createShippingProductListDB(model);
 	}
+	
+	public void updateDataShippingServiceDB(ShippingServiceModel model) throws SQLException {
+	    ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_SHIPPING_ORDER_STATE);
+                PreparedStatement psmt_delete = conn.prepareStatement(DELETE_SHIPPING_SERVICE_PRODUCTS);){
+            psmt.setString(1, model.getShopUrl());
+            psmt.setString(2, model.getTrackingCompany());
+            psmt.setString(3, model.getTrackingNumber());
+            psmt.setString(2, model.getTrackingCompany());
+            psmt.setString(4, model.getMemberId());
+            psmt.setString(5, model.getOrderId());
+            
+            psmt_delete.setString(1, model.getMemberId());
+            psmt_delete.setString(2, model.getOrderId());
+            
+            psmt.executeUpdate();
+            psmt_delete.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex); 
+        } 
+        
+        createShippingProductListDB(model);
+	}
+	
+	private void createShippingProductListDB(ShippingServiceModel model) {
+        ArrayList<ShippingProduct> products = model.getShippingProductList();
+        ConnectionDB.connectSQL();
+            try (Connection conn = ConnectionDB.getConnectInstance();
+                    PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_PRODUCTS);) {
+                
+                for(int i=0; i< products.size(); i++) {
+                    psmt.setString(1, model.getMemberId());
+                    psmt.setString(2, String.valueOf(model.getOrderId()));
+                    psmt.setTimestamp(3, TimeStamp.getTimestampKorea());
+                    psmt.setString(4, products.get(i).getCategoryTitle());
+                    psmt.setString(5, products.get(i).getItemTitle());
+                    psmt.setString(6, products.get(i).getBrandName());
+                    psmt.setString(7, products.get(i).getItemName());
+                    psmt.setInt(8, products.get(i).getProductAmount());
+                    psmt.setDouble(9, products.get(i).getProductPrice());
+                    psmt.setDouble(10, products.get(i).getProductTotalPrice());
+                        
+                    psmt.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex); 
+            } 
+        
+    }
 	
 	private int getPaymentId(ResultSet rs) throws SQLException {
 	    int paymentid=0;
@@ -140,7 +156,6 @@ public class ShippingServiceDAO {
 	    }
 	    return paymentid;
 	}
-	
  
 	private static final String CREATE_SHIPPING_SERVICE = 
 			"insert into recipient(memberId, orderId, name_kor, name_eng,"
@@ -156,5 +171,10 @@ public class ShippingServiceDAO {
 	
 	private static final String CREATE_SHIPPING_PAYMENT = 
 	        "insert into payment(memberId, orderId, payment_state) values(?,?,?) RETURNING payment.paymentid";
+	
+	private static final String UPDATE_SHIPPING_ORDER_STATE = 
+            "UPDATE ORDERSTATE SET shop_url=?, tracking_company_world=?, trackingnr_world=? WHERE memberid=? and orderid=?";
+	
+	private static final String DELETE_SHIPPING_SERVICE_PRODUCTS = "DELETE FROM PRODUCT WHERE memberid=? and orderid=?";
     
 }

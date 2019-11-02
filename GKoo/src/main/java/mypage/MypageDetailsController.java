@@ -1,5 +1,6 @@
 package mypage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.RecipientData;
 import serviceBase.ServicePath;
@@ -93,5 +95,15 @@ public class MypageDetailsController {
         //RecipientData recipientData = detailsImp.createRecipientData(memberId, data);
         /*ToDo : low coupling - Spring injection, interface, injection */
         return detailsImp.updateRecipientData(memberId, data);
+    }
+	
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+    @RequestMapping(value = "/updateDataEditorProductsList", method = RequestMethod.POST)
+    public ResponseEntity<?> updateDataEditorProductsList(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException, JsonParseException, JsonMappingException, IOException  {
+        MypageDetailsImpl detailsImp = new MypageDetailsImpl();
+        String memberId = AuthentificationService.getAuthenficatedMemberID(request);
+        //RecipientData recipientData = detailsImp.createRecipientData(memberId, data);
+        /*ToDo : low coupling - Spring injection, interface, injection */
+        return detailsImp.updateDataEditorProductsList(memberId, data);
     }
 }

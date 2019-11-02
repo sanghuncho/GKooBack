@@ -23,10 +23,10 @@ public class ProductsInformation {
 	
 	public class Product {
 		
-		private String categorytitle;
-		private String itemtitle;
-		private String brandname;
-		private String itemname;
+		private String categoryTitle;
+		private String itemTitle;
+		private String brandName;
+		private String itemName;
 		private int amount;
 		private double price;
 		private double totalPrice;
@@ -35,45 +35,45 @@ public class ProductsInformation {
 		
 		public Product(String category, String itemTitle, String brandName, String itemName,
 				int amount, double price, double totalPrice) {
-			this.categorytitle = category;
-			this.itemtitle = itemTitle;
-			this.brandname = brandName;
-			this.itemname = itemName;
+			this.categoryTitle = category;
+			this.itemTitle = itemTitle;
+			this.brandName = brandName;
+			this.itemName = itemName;
 			this.amount = amount;
 			this.price = price;
 			this.totalPrice = totalPrice;
 		}
 		
-		public String getCategorytitle() {
-			return categorytitle;
+		public String getCategoryTitle() {
+			return categoryTitle;
 		}
 
-		public void setCategorytitle(String categorytitle) {
-			this.categorytitle = categorytitle;
+		public void setCategoryTitle(String categorytitle) {
+			this.categoryTitle = categorytitle;
 		}
 
-		public String getItemtitle() {
-			return itemtitle;
+		public String getItemTitle() {
+			return itemTitle;
 		}
 
-		public void setItemtitle(String itemtitle) {
-			this.itemtitle = itemtitle;
+		public void setItemTitle(String itemtitle) {
+			this.itemTitle = itemtitle;
 		}
 
-		public String getBrandname() {
-			return brandname;
+		public String getBrandName() {
+			return brandName;
 		}
 
-		public void setBrandname(String brandname) {
-			this.brandname = brandname;
+		public void setBrandName(String brandname) {
+			this.brandName = brandname;
 		}
 
 		public String getItemName() {
-			return itemname;
+			return itemName;
 		}
 
 		public void setItemName(String itemname) {
-			this.itemname = itemname;
+			this.itemName = itemname;
 		}
 
 		public int getAmount() {
