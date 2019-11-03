@@ -145,10 +145,11 @@ public class ShippingServiceDAO {
                 psmt.executeUpdate();
             }
         } catch (SQLException ex) {
+            //ShippingServiceDAOException 
             System.out.println(ex);
-            LOGGER.error("deleteShipingServiceDataError/" + "id: "+memberId + "odernumber: " + orderNumber);
+            LOGGER.error("ShipingServiceData har error." + "id: "+memberId + "odernumber: " + orderNumber, ex);
         }
-        LOGGER.info("deleteShipingServiceData/" + "id: "+memberId + "odernumber: " + orderNumber);
+        LOGGER.info("ShipingServiceData is deleted." + "id: "+memberId + "odernumber: " + orderNumber);
     }
 	
 	private void createShippingProductListDB(ShippingServiceModel model) {
