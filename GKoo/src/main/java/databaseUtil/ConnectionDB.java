@@ -14,10 +14,9 @@ public class ConnectionDB {
 	private static final String POSTGRE_DB_USER = "postgres";
 	private static final String POSTGRE_DB_PASSWORD = "gkooadmin";
 	private static Connection conn = null;
-	
+
 	public ConnectionDB() {}
-	
-	
+
 	public static void connectSQL() {
     	try {
 			Class.forName(POSTGRE_DB_DRIVER);
@@ -40,11 +39,9 @@ public class ConnectionDB {
 			return;
 		}
 
-		if (conn != null) {
-		    LOGGER.info("database now! connected!!");
-		} else {
-		    LOGGER.info("Failed to make connection!");
-		}    	
+		if (conn == null) {
+		    LOGGER.error("Failed to make connection with DB!", conn);
+		}   	
     }
 	
 	public static Connection getConnectInstance() {

@@ -19,7 +19,7 @@ public class Application extends SpringBootServletInitializer  {
     }
 	
 	public static void main(String[] args) throws Exception {
-	    LOGGER.info("create spring App");
+	    LOGGER.info("create GKoo App");
 		SpringApplication.run(Application.class, args);
     }
 }
