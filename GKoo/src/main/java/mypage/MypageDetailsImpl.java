@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -274,4 +275,14 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	    HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
 	}
+	
+	public ResponseEntity<?> deleteShipingServiceData(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
+        String orderNumber = data[0].get("orderNumber").toString();
+        
+        ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
+        shipServiceDao.deleteShipingServiceData(memberId, orderNumber);
+        
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+    }
 }

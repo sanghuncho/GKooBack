@@ -3,8 +3,11 @@ package databaseUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ConnectionDB {
+    private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String POSTGRE_DB_DRIVER = "org.postgresql.Driver";
 	private static final String POSTGRE_DB_CONNECTION = "jdbc:postgresql://localhost:5432/gkoo";
@@ -25,8 +28,6 @@ public class ConnectionDB {
 			return;
 		}
     	
-    	System.out.println("PostgreSQL JDBC Driver Registered!");
-		//Connection connection = null;
 		try {
 			conn = DriverManager.getConnection(
 					POSTGRE_DB_CONNECTION, 
@@ -40,9 +41,9 @@ public class ConnectionDB {
 		}
 
 		if (conn != null) {
-			System.out.println("You made it, take control your database now! connected!!");
+		    LOGGER.info("database now! connected!!");
 		} else {
-			System.out.println("Failed to make connection!");
+		    LOGGER.info("Failed to make connection!");
 		}    	
     }
 	

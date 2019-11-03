@@ -25,4 +25,6 @@ public interface MypageDetailsDAO {
 	public ResponseEntity<?> updateRecipientData(String memberId, HashMap<String, Object>[] data);
 	
 	public ResponseEntity<?> updateDataEditorProductsList(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException;
+	
+	public ResponseEntity<?> deleteShipingServiceData(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException;
 }

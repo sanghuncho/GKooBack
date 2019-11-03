@@ -106,4 +106,12 @@ public class MypageDetailsController {
         /*ToDo : low coupling - Spring injection, interface, injection */
         return detailsImp.updateDataEditorProductsList(memberId, data);
     }
+	
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+    @RequestMapping(value = "/deleteShipingServiceData", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteShipingServiceData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException, JsonParseException, JsonMappingException, IOException  {
+        MypageDetailsImpl detailsImp = new MypageDetailsImpl();
+        String memberId = AuthentificationService.getAuthenficatedMemberID(request);
+        return detailsImp.deleteShipingServiceData(memberId, data);
+    }
 }

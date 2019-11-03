@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import databaseUtil.ConnectionDB;
 import util.TimeStamp;
 
 public class ShippingServiceDAO {
-	
+    private static final Logger LOGGER = LogManager.getLogger();
+
 	public ShippingServiceDAO() {}
 	
 	public void createShippingServiceDB(ShippingServiceModel model) throws SQLException {
@@ -123,6 +126,31 @@ public class ShippingServiceDAO {
         createShippingProductListDB(model);
 	}
 	
+	public void deleteShipingServiceData(String memberId, String orderNumber) throws SQLException {
+	    ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt_orderstate = conn.prepareStatement(DELETE_SHIPPING_SERVICE_ORDERSTATE);
+                PreparedStatement psmt_payment = conn.prepareStatement(DELETE_SHIPPING_SERVICE_PAYMENT);
+                PreparedStatement psmt_recipient = conn.prepareStatement(DELETE_SHIPPING_SERVICE_RECIPIENT);
+                PreparedStatement psmt_products = conn.prepareStatement(DELETE_SHIPPING_SERVICE_PRODUCTS);                
+                ) {
+            ArrayList<PreparedStatement> psmt_list = new ArrayList<>();
+            psmt_list.add(psmt_orderstate);
+            psmt_list.add(psmt_payment);
+            psmt_list.add(psmt_recipient);
+            psmt_list.add(psmt_products);
+            for(PreparedStatement psmt : psmt_list) {
+                psmt.setString(1, memberId);
+                psmt.setString(2, orderNumber);
+                psmt.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            LOGGER.error("deleteShipingServiceDataError/" + "id: "+memberId + "odernumber: " + orderNumber);
+        }
+        LOGGER.info("deleteShipingServiceData/" + "id: "+memberId + "odernumber: " + orderNumber);
+    }
+	
 	private void createShippingProductListDB(ShippingServiceModel model) {
         ArrayList<ShippingProduct> products = model.getShippingProductList();
         ConnectionDB.connectSQL();
@@ -176,5 +204,8 @@ public class ShippingServiceDAO {
             "UPDATE ORDERSTATE SET shop_url=?, tracking_company_world=?, trackingnr_world=? WHERE memberid=? and orderid=?";
 	
 	private static final String DELETE_SHIPPING_SERVICE_PRODUCTS = "DELETE FROM PRODUCT WHERE memberid=? and orderid=?";
+	private static final String DELETE_SHIPPING_SERVICE_ORDERSTATE = "DELETE FROM ORDERSTATE WHERE memberid=? and orderid=?";
+	private static final String DELETE_SHIPPING_SERVICE_PAYMENT = "DELETE FROM PAYMENT WHERE memberid=? and orderid=?";
+	private static final String DELETE_SHIPPING_SERVICE_RECIPIENT = "DELETE FROM RECIPIENT WHERE memberid=? and orderid=?";
     
 }

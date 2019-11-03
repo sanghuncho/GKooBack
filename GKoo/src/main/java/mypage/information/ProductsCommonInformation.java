@@ -45,6 +45,7 @@ public class ProductsCommonInformation {
 		return this.shipState;
 	}
 
+	/*refactoring : return only value, render value to string in frontend*/
 	public void setShipState(int shipState) {
 		String stateName="";
 		switch(shipState) {
