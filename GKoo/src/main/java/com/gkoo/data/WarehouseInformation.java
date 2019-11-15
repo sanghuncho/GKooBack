@@ -1,6 +1,6 @@
-package mypage;
+package com.gkoo.data;
 
-public class OrderInformation {
+public class WarehouseInformation {
 	private String orderNumber;
 	private String productInfo;
 	private String recipient;
@@ -8,7 +8,8 @@ public class OrderInformation {
 	private int deliveryState;
 	private String deliveryTracking;
 	
-	public OrderInformation(){}
+	public WarehouseInformation(){}
+	
 	public String getOrderNumber() {
 		return orderNumber;
 	}
