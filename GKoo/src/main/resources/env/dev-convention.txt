@@ -1,5 +1,5 @@
-POSTGRE_DB_LOCAL_USER = postgres
-POSTGRE_DB_LOCAL_PASSWORD = mother*
+POSTGRE_DB_LOCAL_USER = gkoo***
+POSTGRE_DB_LOCAL_PASSWORD = gkoo***
 
 KEYCLOAK_LOCAL_ADMIN = m
 KEYCLOAK_LOCAL_PASSWORD = 306**
@@ -12,3 +12,8 @@ since 24.12.2018
 java     port : 8888
 keycloak port : 8080
 react    port : 3000
+
+Convention: same attributes from DB to Backend until frontend
+-userid = 아이디
+-username = 사용자 이름
+-ordernumber = 주문번호

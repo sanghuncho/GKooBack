@@ -1,16 +1,19 @@
-package mypage;
+package com.gkoo.data;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  08.11.2019
+ *
+ */
 public class CustomerStatus {
 	private String customerId;
 	private int insuranceAmount;
 	private int depositeAmount;
 	private int pointAmount;
 	
-	public CustomerStatus(String customerId,
-			int insuranceAmount,
-			int depositeAmount,
-			int pointAmount){
-		
+	public CustomerStatus(String customerId, int insuranceAmount, int depositeAmount, int pointAmount){
 		this.customerId = customerId;
 		this.insuranceAmount = insuranceAmount;
 		this.depositeAmount = depositeAmount;
@@ -50,6 +53,4 @@ public class CustomerStatus {
 	public void setPointAmount(int pointAmount) {
 		this.pointAmount = pointAmount;
 	}
-	
-	
 }

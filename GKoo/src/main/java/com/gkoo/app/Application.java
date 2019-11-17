@@ -1,4 +1,4 @@
-package application;
+package com.gkoo.app;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -9,6 +9,13 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  24.12.2018
+ *
+ */
 @SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule", "shippingService", "managementService", "warehouse" })
 public class Application extends SpringBootServletInitializer  {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -19,7 +26,7 @@ public class Application extends SpringBootServletInitializer  {
     }
 	
 	public static void main(String[] args) throws Exception {
-	    LOGGER.info("create GKoo App");
+	    LOGGER.info("create gkoo App");
 		SpringApplication.run(Application.class, args);
     }
 }

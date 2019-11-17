@@ -1,6 +1,6 @@
-package mypage;
+package com.gkoo.data;
 
-public class WarehouseInformation {
+public class OrderInformation {
 	private String orderNumber;
 	private String productInfo;
 	private String recipient;
@@ -8,8 +8,7 @@ public class WarehouseInformation {
 	private int deliveryState;
 	private String deliveryTracking;
 	
-	public WarehouseInformation(){}
-	
+	public OrderInformation(){}
 	public String getOrderNumber() {
 		return orderNumber;
 	}
@@ -57,5 +56,4 @@ public class WarehouseInformation {
 	public void setDeliveryTracking(String deliveryTracking) {
 		this.deliveryTracking = deliveryTracking;
 	}
-
 }
