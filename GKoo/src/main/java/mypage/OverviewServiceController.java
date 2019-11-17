@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.gkoo.data.OrderInformation;
+import com.gkoo.data.WarehouseInformation;
 import serviceBase.ServicePath;
 import util.AuthentificationService;
 

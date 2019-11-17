@@ -6,9 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.gkoo.data.WarehouseInformation;
 import databaseUtil.ConnectionDB;
-import mypage.WarehouseInformation;
 
 public class WarehouseImp implements WarehouseDAO {
 
