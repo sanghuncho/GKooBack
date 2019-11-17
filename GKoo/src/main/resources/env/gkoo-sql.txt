@@ -1,8 +1,13 @@
+--DB backup & restore
+
+---- Backup
+Format : Custom
+Encoding:  UTF8
+Role name: postgres
+
 --Normal Query
 select * from notice;
 select notice_content from notice where notice_nr = ;
-
-
 
 --Create Table
 create table payment (

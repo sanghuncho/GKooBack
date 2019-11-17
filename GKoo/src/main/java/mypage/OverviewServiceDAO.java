@@ -3,6 +3,8 @@ package mypage;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.OrderInformation;
+import com.gkoo.data.WarehouseInformation;
 
 public interface OverviewServiceDAO {
 	

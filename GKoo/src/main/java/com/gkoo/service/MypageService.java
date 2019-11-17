@@ -1,14 +1,17 @@
 package com.gkoo.service;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  18.11.2019
+ *
+ */
 public interface MypageService {
     public List<OrderInformation> getOrderData(String userid);
     

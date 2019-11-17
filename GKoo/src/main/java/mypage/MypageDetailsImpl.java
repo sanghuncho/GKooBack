@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gkoo.data.PersonalData;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.ProductsInformation;
@@ -30,13 +31,12 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	
 	private final int PAYMENT_REQEUST_STATE = 2; //결제요청 - 무통장입금전
 	
-	/*bulider pattern*/
 	@Override
-	public OrderingPersonInformation getOrderingpersonInfo(String fullname) {
-		OrderingPersonInformation orderingPersonInfo = new OrderingPersonInformation();
-		orderingPersonInfo.setFullname(fullname);
-		orderingPersonInfo.setShipServiceCenter("독일");
-		return orderingPersonInfo;
+	public PersonalData getOrderingpersonInfo(String fullname) {
+		PersonalData personalData = new PersonalData();
+		personalData.setFullname(fullname);
+		personalData.setShipServiceCenter("독일");
+		return personalData;
 	}
 
 	//factory pattern

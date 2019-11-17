@@ -7,12 +7,13 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.gkoo.data.PersonalData;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.RecipientData;
 import mypage.information.ProductsInformation.Product;
 
 public interface MypageDetailsDAO {
-	public OrderingPersonInformation getOrderingpersonInfo(String fullname);
+	public PersonalData getOrderingpersonInfo(String fullname);
 	
 	public RecipientData getRecipientInfo(String username, String number);
 	

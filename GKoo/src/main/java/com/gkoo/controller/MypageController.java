@@ -52,11 +52,10 @@ public class MypageController {
     @CrossOrigin(origins = ServicePath.MYPAGE)
     @RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
     public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-        String memberId = AuthentificationService.getAuthenficatedMemberID(request);
+        String userid =  SecurityConfig.getUserid(request);
         String orderNumber = data[0].get("orderNumber").toString();
         String trackingCompany = data[1].get("trackingCompany").toString();
         String trackingNumber = data[2].get("trackingNumber").toString();
-        return mypageService.updateTrackingNumber(memberId, orderNumber, trackingCompany, trackingNumber);
+        return mypageService.updateTrackingNumber(userid, orderNumber, trackingCompany, trackingNumber);
     }
-
 }

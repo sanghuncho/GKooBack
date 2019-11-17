@@ -1,5 +1,12 @@
 package com.gkoo.data;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  18.11.2019
+ *
+ */
 public class OrderInformation {
 	private String orderNumber;
 	private String productInfo;

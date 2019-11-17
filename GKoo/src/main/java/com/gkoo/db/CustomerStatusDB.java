@@ -10,6 +10,13 @@ import com.gkoo.data.CustomerStatus;
 import com.gkoo.exception.CustomerStatusException;
 import databaseUtil.ConnectionDB;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  18.11.2019
+ *
+ */
 public class CustomerStatusDB {
     private static final Logger LOGGER = LogManager.getLogger();
     

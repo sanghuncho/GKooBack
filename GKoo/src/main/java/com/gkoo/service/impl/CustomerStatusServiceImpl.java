@@ -6,6 +6,13 @@ import com.gkoo.data.CustomerStatus;
 import com.gkoo.repository.CustomerStatusRepository;
 import com.gkoo.service.CustomerStatusService;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  18.11.2019
+ *
+ */
 public class CustomerStatusServiceImpl implements CustomerStatusService {
     private final CustomerStatusRepository customerStatusRepository;
     

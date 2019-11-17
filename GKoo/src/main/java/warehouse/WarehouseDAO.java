@@ -1,8 +1,7 @@
 package warehouse;
 
 import java.util.List;
-
-import mypage.WarehouseInformation;
+import com.gkoo.data.WarehouseInformation;
 
 public interface WarehouseDAO {
 

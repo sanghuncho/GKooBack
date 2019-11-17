@@ -16,6 +16,13 @@ import com.gkoo.data.WarehouseInformation;
 import com.gkoo.exception.MypageException;
 import databaseUtil.ConnectionDB;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  18.11.2019
+ *
+ */
 public class MypageDB {
     private static final Logger LOGGER = LogManager.getLogger();
     

@@ -1,11 +1,18 @@
-package mypage;
+package com.gkoo.data;
 
-public class OrderingPersonInformation {
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  18.11.2019
+ *
+ */
+public class PersonalData {
 
 	private String fullname;
 	private String shipServiceCenter;
 	
-	public OrderingPersonInformation() {}
+	public PersonalData() {}
 	
 	public String getFullname() {
 		return fullname;

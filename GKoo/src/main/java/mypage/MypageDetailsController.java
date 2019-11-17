@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.gkoo.data.PersonalData;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.RecipientData;
 import serviceBase.ServicePath;
@@ -26,7 +27,7 @@ public class MypageDetailsController {
 
 	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/orderingpersoninfo")
-	public OrderingPersonInformation requestOrderingpersonInfo(HttpServletRequest request) throws SQLException  {
+	public PersonalData requestOrderingpersonInfo(HttpServletRequest request) throws SQLException  {
 		MypageDetailsImpl detailsImp = new MypageDetailsImpl();
 		String fullname = AuthentificationService.getAuthenficatedFullname(request);
 		/*ToDo : low coupling - Spring injection, interface, injection */

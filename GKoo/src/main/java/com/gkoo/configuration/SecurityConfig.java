@@ -24,4 +24,12 @@ public class SecurityConfig {
             throw new ConfigException("error retrieving userid :" + request, e);
         }
     }
+    
+    public static String getFullname(HttpServletRequest request) {
+        AccessToken accessToken = ((KeycloakPrincipal<?>) request.getUserPrincipal())
+                .getKeycloakSecurityContext().getToken();
+        /*ToDO: null check*/
+        String fullname = accessToken.getFamilyName() +""+ accessToken.getGivenName();
+        return fullname;
+    }
 }
