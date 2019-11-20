@@ -28,8 +28,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     }
 
     @Override
-    public CustomerStatus getCustomerStatus(AccessToken accessToken) {
-        String userid = accessToken.getPreferredUsername();
+    public CustomerStatus getCustomerStatus(String userid) {
         return CustomerStatusDB.getCustomerStatus(userid);
     }
 }

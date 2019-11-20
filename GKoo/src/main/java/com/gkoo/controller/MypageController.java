@@ -15,9 +15,7 @@ import com.gkoo.configuration.SecurityConfig;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 import com.gkoo.service.MypageService;
-import mypage.OverviewInformationImpl;
 import serviceBase.ServicePath;
-import util.AuthentificationService;
 
 /**
  *

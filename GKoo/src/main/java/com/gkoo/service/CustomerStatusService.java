@@ -12,6 +12,6 @@ import com.gkoo.data.CustomerStatus;
  *
  */
 public interface CustomerStatusService {
-    public CustomerStatus getCustomerStatus(AccessToken accessToken);
+    public CustomerStatus getCustomerStatus(String userid);
     public void checkUserid(AccessToken accessToken);
 }

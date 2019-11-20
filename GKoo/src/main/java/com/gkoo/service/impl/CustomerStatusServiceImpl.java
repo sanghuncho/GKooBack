@@ -26,7 +26,7 @@ public class CustomerStatusServiceImpl implements CustomerStatusService {
     }
 
     @Override
-    public CustomerStatus getCustomerStatus(AccessToken accessToken) {
-        return customerStatusRepository.getCustomerStatus(accessToken);
+    public CustomerStatus getCustomerStatus(String userid) {
+        return customerStatusRepository.getCustomerStatus(userid);
     }
 }

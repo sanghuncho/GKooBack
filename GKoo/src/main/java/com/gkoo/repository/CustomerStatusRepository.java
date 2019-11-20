@@ -15,5 +15,5 @@ public interface CustomerStatusRepository {
     
     public void checkUserid(AccessToken accessToken);
         
-    public CustomerStatus getCustomerStatus(AccessToken accessToken);
+    public CustomerStatus getCustomerStatus(String userid);
 }
