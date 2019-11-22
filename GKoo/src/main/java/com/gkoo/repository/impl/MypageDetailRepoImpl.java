@@ -3,6 +3,7 @@ package com.gkoo.repository.impl;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import com.gkoo.data.PersonalData;
 import com.gkoo.db.MypageDetailDB;
 import com.gkoo.repository.MypageDetailRepository;
@@ -17,6 +18,7 @@ import mypage.information.RecipientData;
  * @since  18.11.2019
  *
  */
+@Repository
 public class MypageDetailRepoImpl implements MypageDetailRepository {
 
     @Override

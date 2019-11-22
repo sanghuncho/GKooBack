@@ -1,5 +1,8 @@
 package com.gkoo.data;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 /**
  *
  * @author sanghuncho
@@ -12,6 +15,7 @@ public class CustomerStatus {
 	private int insuranceAmount;
 	private int depositeAmount;
 	private int pointAmount;
+	
 	
 	public CustomerStatus(String customerId, int insuranceAmount, int depositeAmount, int pointAmount){
 		this.customerId = customerId;

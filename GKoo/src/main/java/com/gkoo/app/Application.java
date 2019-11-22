@@ -16,7 +16,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * @since  24.12.2018
  *
  */
-@SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule", "shippingService", "managementService", "warehouse" })
+//@SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule", "shippingService", "managementService", "warehouse", "com.gkoo.controller" })
+@SpringBootApplication(scanBasePackages = { "com.gkoo.controller", "com.gkoo.data",  "com.gkoo.service", "com.gkoo.service.impl", "com.gkoo.repository", "com.gkoo.repository.impl"})
 public class Application extends SpringBootServletInitializer  {
     private static final Logger LOGGER = LogManager.getLogger();
 
