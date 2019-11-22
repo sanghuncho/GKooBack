@@ -81,6 +81,7 @@
 	    <version>2.9.10</version>
 	</dependency>
 	
+<<<<<<< HEAD
 	<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
@@ -119,6 +120,8 @@
         <version>5.5.2</version>
         <scope>test</scope>
       </dependency>
+=======
+>>>>>>> 0b9105920543d837c68df14bf874a3cad3c175f4
 	
     
   </dependencies>
