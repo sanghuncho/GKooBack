@@ -2,6 +2,7 @@ package com.gkoo.repository.impl;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 import com.gkoo.db.MypageDB;
@@ -14,6 +15,7 @@ import com.gkoo.repository.MypageRepository;
  * @since  18.11.2019
  *
  */
+@Repository
 public class MypageRepoImpl implements MypageRepository {
 
     @Override

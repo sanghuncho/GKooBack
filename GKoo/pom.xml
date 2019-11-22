@@ -16,12 +16,6 @@
   </parent>
   
   <dependencies>
-    <dependency>
-      	<groupId>junit</groupId>
-      	<artifactId>junit</artifactId>
-      	<version>3.8.1</version>
-    	<scope>test</scope>
-    </dependency>
     
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -87,6 +81,8 @@
 	    <version>2.9.10</version>
 	</dependency>
 	
+	
+    
   </dependencies>
   
   <build>
@@ -96,6 +92,7 @@
             <artifactId>spring-boot-maven-plugin</artifactId>
         </plugin>
     </plugins>
+   
     <finalName>gkoo</finalName>
   </build>
   

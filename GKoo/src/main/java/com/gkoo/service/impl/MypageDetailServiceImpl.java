@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import com.gkoo.data.PersonalData;
 import com.gkoo.repository.MypageDetailRepository;
 import com.gkoo.service.MypageDetailService;
@@ -18,6 +19,7 @@ import mypage.information.RecipientData;
  * @since  18.11.2019
  *
  */
+@Service
 public class MypageDetailServiceImpl implements MypageDetailService {
 
     private final MypageDetailRepository mypageDetailRepository;
