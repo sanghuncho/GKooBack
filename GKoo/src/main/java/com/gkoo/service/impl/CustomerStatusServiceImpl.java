@@ -2,10 +2,12 @@ package com.gkoo.service.impl;
 
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.repository.CustomerStatusRepository;
 import com.gkoo.service.CustomerStatusService;
 
+@Service
 public class CustomerStatusServiceImpl implements CustomerStatusService {
     private final CustomerStatusRepository customerStatusRepository;
     

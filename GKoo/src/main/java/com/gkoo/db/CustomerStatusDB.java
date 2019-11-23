@@ -24,16 +24,20 @@ public class CustomerStatusDB {
     public static Boolean existUserid(String userid) throws SQLException {
         ResultSet resultSet = null;
         ConnectionDB.connectSQL();
+        int number = 0;
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(NUMBER_USERID);){
             psmt.setString(1, userid);
             resultSet = psmt.executeQuery();
+            while(resultSet.next()) {
+                number = resultSet.getInt(1);
+            }
         } catch (SQLException e) {
             String error = "Error retriving the numer of userid";
             LOGGER.error(error, e);
             throw new CustomerStatusException(error, e);
         }
-        return resultSet.getInt(1) == 0 ? false : true;
+        return number == 0 ? false : true;
     }
     
     public static void registerInitialCustomer(String userid, String lastname, String firstname) {
@@ -64,16 +68,9 @@ public class CustomerStatusDB {
                 PreparedStatement psmt = conn.prepareStatement(FETCH_CUSTOMERSTATUS);){
             psmt.setString(1, userid);
             resultSet = psmt.executeQuery();
-        } catch (SQLException e) {
-            String error = "Error fetching customerstatus";
-            LOGGER.error(error, e);
-            throw new CustomerStatusException(error, e);
-        }
-        
-        try {
             customerStatus = writeCustomerStatus(resultSet);
         } catch (SQLException e) {
-            String error = "Error writing customerstatus";
+            String error = "Error fetching customerstatus";
             LOGGER.error(error, e);
             throw new CustomerStatusException(error, e);
         }
