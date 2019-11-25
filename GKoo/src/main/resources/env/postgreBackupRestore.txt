@@ -1,0 +1,4 @@
+1.backup
+    
+2.restore
+  databases -> create databases [gkoo]  

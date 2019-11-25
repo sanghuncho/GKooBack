@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.gkoo.data.CustomerStatus;
+import com.gkoo.data.UserBaseInfo;
 import com.gkoo.exception.CustomerStatusException;
+import com.google.common.util.concurrent.CycleDetectingLockFactory.WithExplicitOrdering;
 import databaseUtil.ConnectionDB;
 
 public class CustomerStatusDB {
@@ -20,6 +22,7 @@ public class CustomerStatusDB {
     private static final String CREATE_CUSTOMER = "INSERT INTO customer(gkoo_id, lastname, firstname)"
             + "VALUES (?, ?, ?)";
     private static final String FETCH_CUSTOMERSTATUS = "select * from customerstatus where gkoo_id = ?";
+    private static final String FETCH_USERBASEINFO = "select * from customer where gkoo_id = ?";
     
     public static Boolean existUserid(String userid) throws SQLException {
         ResultSet resultSet = null;
@@ -86,5 +89,41 @@ public class CustomerStatusDB {
             customerStatus.setPointAmount(resultSet.getInt("pointAmount"));
         }
         return customerStatus;
+    }
+    
+    public static UserBaseInfo getUserBaseInfo(String userid) {
+        ConnectionDB.connectSQL();
+        ResultSet resultSet = null;
+        UserBaseInfo userBaseInfo = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(FETCH_USERBASEINFO);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            userBaseInfo = writeUserBaseInfo(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching userBaseInfo";
+            LOGGER.error(error, e);
+            throw new CustomerStatusException(error, e);
+        }
+        return userBaseInfo;
+    }
+    
+    private static UserBaseInfo writeUserBaseInfo(ResultSet resultSet) throws SQLException {
+        UserBaseInfo userBaseInfo =  new UserBaseInfo();
+        while (resultSet.next()) {
+            userBaseInfo.setUserid(resultSet.getString("gkoo_id"))
+                         .withFirstName(resultSet.getString("firstname"))
+                         .withLastName(resultSet.getString("lastname"))
+                         .withAddress(resultSet.getString("address"))
+                         .withEmail(resultSet.getString("email"))
+                         .withNameEng(resultSet.getString("name_eng"))
+                         .withDetailAddress(resultSet.getString("detail_address"))
+                         .withTransitNr(resultSet.getString("transit_nr"))
+                         .withZipCode(resultSet.getString("zip_code"))
+                         .withPhonePrefic(resultSet.getString("phone_prefic"))
+                         .withPhoneInterfix(resultSet.getString("phone_interfix"))
+                         .withPhoneSuffix(resultSet.getString("phone_suffix"));
+        }
+        return userBaseInfo;
     }
 }

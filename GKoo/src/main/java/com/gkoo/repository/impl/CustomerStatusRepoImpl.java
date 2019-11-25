@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.keycloak.representations.AccessToken;
 import org.springframework.stereotype.Repository;
 import com.gkoo.data.CustomerStatus;
+import com.gkoo.data.UserBaseInfo;
 import com.gkoo.db.CustomerStatusDB;
 import com.gkoo.repository.CustomerStatusRepository;
 
@@ -33,5 +34,10 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     public CustomerStatus getCustomerStatus(AccessToken accessToken) {
         String userid = accessToken.getPreferredUsername();
         return CustomerStatusDB.getCustomerStatus(userid);
+    }
+
+    @Override
+    public UserBaseInfo getUserBaseInfo(String userid) {
+        return CustomerStatusDB.getUserBaseInfo(userid);
     }
 }

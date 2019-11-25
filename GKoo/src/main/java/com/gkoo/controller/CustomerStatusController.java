@@ -48,7 +48,7 @@ public class CustomerStatusController {
     @RequestMapping("/fetchuserbaseinfo")
     public UserBaseInfo requestUserBaseInfo(HttpServletRequest request) throws SQLException {
 	    String userid = SecurityConfig.getUserid(request);
-        return new UserBaseInfo(userid);
+        return customerstatusService.getUserBaseInfo(userid);
     }
 	
 	@CrossOrigin(origins = ServicePath.MYPAGE)

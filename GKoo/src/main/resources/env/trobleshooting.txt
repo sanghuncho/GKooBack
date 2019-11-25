@@ -3,3 +3,8 @@
 3. Haupklasse nicht gefunden => maven aktualisieren
 4. if the notice of cross-origin shows, let refresh the react application  
 5. fetch-method should be located in keycloak-method
+
+Keycloak "No Access Control Allow Origin
+1. create a Role and a User
+    go to Roles -> add user role
+    go to users ->Role Mappings -> Assigned Roles
