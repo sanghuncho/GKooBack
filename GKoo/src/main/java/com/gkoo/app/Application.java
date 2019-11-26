@@ -19,7 +19,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication(scanBasePackages = { "mypage", "motherj.noticeModule", "shippingService", "managementService", "warehouse",
             "com.gkoo.controller", "com.gkoo.repository", "com.gkoo.service", "com.gkoo.repository.impl", "com.gkoo.service.impl", "com.gkoo.db" })
 public class Application extends SpringBootServletInitializer  {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
