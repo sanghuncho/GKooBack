@@ -1,7 +1,9 @@
 package com.gkoo.service.impl;
 
+import java.util.HashMap;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.data.UserBaseInfo;
@@ -22,12 +24,17 @@ public class CustomerStatusServiceImpl implements CustomerStatusService {
     }
 
     @Override
-    public CustomerStatus getCustomerStatus(AccessToken accessToken) {
-        return customerStatusRepository.getCustomerStatus(accessToken);
+    public CustomerStatus getCustomerStatus(String userid) {
+        return customerStatusRepository.getCustomerStatus(userid);
     }
 
     @Override
     public UserBaseInfo getUserBaseInfo(String userid) {
         return customerStatusRepository.getUserBaseInfo(userid);
+    }
+
+    @Override
+    public ResponseEntity<?> updateBaseInfo(HashMap<String, Object>[] data, String userid) {
+        return customerStatusRepository.updateBaseInfo(data, userid);
     }
 }

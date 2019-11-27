@@ -1,13 +1,18 @@
 package com.gkoo.repository.impl;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.keycloak.representations.AccessToken;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.data.UserBaseInfo;
 import com.gkoo.db.CustomerStatusDB;
+import com.gkoo.exception.CustomerStatusException;
 import com.gkoo.repository.CustomerStatusRepository;
 
 @Repository
@@ -31,13 +36,26 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     }
     
     @Override
-    public CustomerStatus getCustomerStatus(AccessToken accessToken) {
-        String userid = accessToken.getPreferredUsername();
+    public CustomerStatus getCustomerStatus(String userid) {
         return CustomerStatusDB.getCustomerStatus(userid);
     }
 
     @Override
     public UserBaseInfo getUserBaseInfo(String userid) {
         return CustomerStatusDB.getUserBaseInfo(userid);
+    }
+
+    @Override
+    public ResponseEntity<?> updateBaseInfo(HashMap<String, Object>[] data, String userid) {
+        ObjectMapper mapper = new ObjectMapper();
+        UserBaseInfo userBaseInfoData=null;
+        try {
+            userBaseInfoData = mapper.readValue(data[0].get("userbaseinfo").toString(), UserBaseInfo.class);
+        } catch (IOException ex) {
+            String error = "Error mapping userBaseInfo";
+            LOGGER.error(error, ex);
+            throw new CustomerStatusException(error, ex);
+        }
+        return CustomerStatusDB.updateBaseInfo(userBaseInfoData, userid);
     }
 }
