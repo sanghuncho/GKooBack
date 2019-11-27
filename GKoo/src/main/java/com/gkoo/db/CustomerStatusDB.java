@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.data.UserBaseInfo;
 import com.gkoo.exception.CustomerStatusException;
@@ -23,6 +26,8 @@ public class CustomerStatusDB {
             + "VALUES (?, ?, ?)";
     private static final String FETCH_CUSTOMERSTATUS = "select * from customerstatus where gkoo_id = ?";
     private static final String FETCH_USERBASEINFO = "select * from customer where gkoo_id = ?";
+    private static final String UPDATE_USERBASEINFO = "UPDATE CUSTOMER SET firstname=?, lastname=?, address=?, email=?, name_eng=?, detail_address=?, "
+            + "transit_nr=?, zip_code=?, phone_prefic=?, phone_interfix=?, phone_suffix=? where gkoo_id=?";
     
     public static Boolean existUserid(String userid) throws SQLException {
         ResultSet resultSet = null;
@@ -125,5 +130,30 @@ public class CustomerStatusDB {
                          .withPhoneSuffix(resultSet.getString("phone_suffix"));
         }
         return userBaseInfo;
+    }
+    
+    public static ResponseEntity<?> updateBaseInfo(UserBaseInfo data, String userid){
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_USERBASEINFO);){
+            psmt.setString(1, data.getFirstName());
+            psmt.setString(2, data.getLastName());
+            psmt.setString(3, data.getAddress());
+            psmt.setString(2, data.getEmail());
+            psmt.setString(4, data.getNameEng());
+            psmt.setString(5, data.getDetailAddress());
+            psmt.setString(6, data.getTransitNr());
+            psmt.setString(7, data.getZipCode());
+            psmt.setString(8, data.getPhonePrefic());
+            psmt.setString(9, data.getPhoneInterfix());
+            psmt.setString(10, data.getPhoneSuffix());
+            psmt.executeUpdate();
+        } catch (SQLException ex) {
+            String error = "Error updating userBaseInfo";
+            LOGGER.error(error, ex);
+            throw new CustomerStatusException(error, ex);
+        } 
+        String responseMessage = "userBaseInfoData is updateded for userid:" + userid;
+        return new ResponseEntity<String>(responseMessage, HttpStatus.ACCEPTED);
     }
 }

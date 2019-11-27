@@ -1,6 +1,7 @@
 package com.gkoo.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.gkoo.configuration.AppConfig;
 import com.gkoo.configuration.SecurityConfig;
@@ -41,7 +45,8 @@ public class CustomerStatusController {
 	public CustomerStatus requestCustomerStatus(HttpServletRequest request) throws SQLException {
         AccessToken accessToken = SecurityConfig.getAccessToken(request);
         customerstatusService.checkUserid(accessToken);
-        return customerstatusService.getCustomerStatus(accessToken);
+        String userid = accessToken.getPreferredUsername();
+        return customerstatusService.getCustomerStatus(userid);
 	}
 	
 	@CrossOrigin(origins = ServicePath.MYPAGE)
@@ -52,11 +57,19 @@ public class CustomerStatusController {
     }
 	
 	@CrossOrigin(origins = ServicePath.MYPAGE)
-    @RequestMapping("/updateuserbaseinfo")
-    public ResponseEntity<?> updateBaseInfo(HttpServletRequest request) throws SQLException {
+    @RequestMapping(value = "/updateuserbaseinfo", method = RequestMethod.POST)
+    public ResponseEntity<?> updateBaseInfo(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
         String userid = SecurityConfig.getUserid(request);
-        HttpHeaders headers = new HttpHeaders();
         LOGGER.info("updateuserbaseinfo");
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        //HttpHeaders headers = new HttpHeaders();
+        //return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        return customerstatusService.updateBaseInfo(data, userid);
     }
+	
+//	@CrossOrigin(origins = ServicePath.MYPAGE)
+//    @RequestMapping("/customerstatus/{userid}")
+//    public CustomerStatus requestCustomerStatusTest(HttpServletRequest request, @PathVariable String userid) throws SQLException {
+//        AccessToken accessToken = SecurityConfig.getAccessToken(request);
+//        return customerstatusService.getCustomerStatus(userid);
+//    }
 }
