@@ -21,4 +21,8 @@ public interface CustomerStatusService {
     public void checkUserid(AccessToken accessToken);
     public UserBaseInfo getUserBaseInfo(String userid);
     public ResponseEntity<?> updateBaseInfo(HashMap<String, Object>[] data, String userid);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 354bd9247ffe59b0bc99878a3f2dad7401adfeab
