@@ -50,11 +50,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
         ObjectMapper mapper = new ObjectMapper();
         UserBaseInfo userBaseInfoData=null;
         try {
-<<<<<<< HEAD
             userBaseInfoData = mapper.readValue(data[0].get("userBaseInfo").toString(), UserBaseInfo.class);
-=======
-            userBaseInfoData = mapper.readValue(data[0].get("userbaseinfo").toString(), UserBaseInfo.class);
->>>>>>> 354bd9247ffe59b0bc99878a3f2dad7401adfeab
         } catch (IOException ex) {
             String error = "Error mapping userBaseInfo";
             LOGGER.error(error, ex);
