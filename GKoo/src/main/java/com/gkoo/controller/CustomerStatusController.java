@@ -61,15 +61,6 @@ public class CustomerStatusController {
     public ResponseEntity<?> updateBaseInfo(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
         String userid = SecurityConfig.getUserid(request);
         LOGGER.info("updateuserbaseinfo");
-        //HttpHeaders headers = new HttpHeaders();
-        //return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
         return customerstatusService.updateBaseInfo(data, userid);
     }
-	
-//	@CrossOrigin(origins = ServicePath.MYPAGE)
-//    @RequestMapping("/customerstatus/{userid}")
-//    public CustomerStatus requestCustomerStatusTest(HttpServletRequest request, @PathVariable String userid) throws SQLException {
-//        AccessToken accessToken = SecurityConfig.getAccessToken(request);
-//        return customerstatusService.getCustomerStatus(userid);
-//    }
 }

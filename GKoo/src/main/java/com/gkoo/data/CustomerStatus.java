@@ -8,13 +8,13 @@ package com.gkoo.data;
  *
  */
 public class CustomerStatus {
-	private String customerId;
+	private String userid;
 	private int insuranceAmount;
 	private int depositeAmount;
 	private int pointAmount;
 	
-	public CustomerStatus(String customerId, int insuranceAmount, int depositeAmount, int pointAmount){
-		this.customerId = customerId;
+	public CustomerStatus(String userid, int insuranceAmount, int depositeAmount, int pointAmount){
+		this.userid = userid;
 		this.insuranceAmount = insuranceAmount;
 		this.depositeAmount = depositeAmount;
 		this.pointAmount = pointAmount;
@@ -22,12 +22,12 @@ public class CustomerStatus {
 	
 	public CustomerStatus() {}
 	
-	public String getCustomerId() {
-		return customerId;
+	public String getUserid() {
+		return userid;
 	}
 	
-	public void setCustomerId(String id) {
-		customerId = id;
+	public void setUserid(String userid) {
+	    this.userid = userid;
 	}
 
 	public int getInsuranceAmount() {

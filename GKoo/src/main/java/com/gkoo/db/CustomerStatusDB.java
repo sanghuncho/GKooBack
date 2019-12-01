@@ -88,7 +88,7 @@ public class CustomerStatusDB {
     private static CustomerStatus writeCustomerStatus(ResultSet resultSet) throws SQLException {
         CustomerStatus customerStatus =  new CustomerStatus();
         while (resultSet.next()) {
-            customerStatus.setCustomerId(resultSet.getString("gkoo_id"));
+            customerStatus.setUserid(resultSet.getString("gkoo_id"));
             customerStatus.setInsuranceAmount(resultSet.getInt("insuranceamount"));
             customerStatus.setDepositeAmount(resultSet.getInt("depositeamount"));
             customerStatus.setPointAmount(resultSet.getInt("pointAmount"));
@@ -116,6 +116,7 @@ public class CustomerStatusDB {
     private static UserBaseInfo writeUserBaseInfo(ResultSet resultSet) throws SQLException {
         UserBaseInfo userBaseInfo =  new UserBaseInfo();
         while (resultSet.next()) {
+            userBaseInfo.setPhoneSuffix(resultSet.getString("phone_suffix"));
             userBaseInfo.setUserid(resultSet.getString("gkoo_id"))
                          .withFirstName(resultSet.getString("firstname"))
                          .withLastName(resultSet.getString("lastname"))
