@@ -38,3 +38,34 @@ getProductsCommonInfo : SELECT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_t
                         
 willPayDeliveryFee : WITH t AS ( UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid = ? AND orderid = ?) 
                      UPDATE orderstate SET ship_state = ? WHERE memberid = ? AND orderid = ?
+                     
+create table favorite_address (
+    id serial primary key,
+    userid VARCHAR(50) NOT NULL,
+    name_kor VARCHAR(50) NOT NULL,
+    name_eng VARCHAR(50),
+    transit_nr VARCHAR(50),
+    phone_first VARCHAR(50),
+    phone_second VARCHAR(50),
+    zip_code VARCHAR(10),
+    address text,
+    detail_address text
+);
+
+drop table favorite_address;
+
+create table favorite_address (
+    id serial primary key,
+    userid VARCHAR(50) NOT NULL,
+    orderid VARCHAR(50) NOT NULL,
+    name_kor VARCHAR(50) NOT NULL,
+    name_eng VARCHAR(50),
+    transit_nr VARCHAR(50),
+    phone_prefic VARCHAR(10),
+    phone_interfix VARCHAR(10),
+    phone_suffix VARCHAR(10),
+    phone_second VARCHAR(50),
+    zip_code VARCHAR(10),
+    address text,
+    detail_address text
+);

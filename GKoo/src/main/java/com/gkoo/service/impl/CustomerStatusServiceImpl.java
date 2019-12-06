@@ -1,8 +1,10 @@
 package com.gkoo.service.impl;
 
 import java.util.HashMap;
+
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.gkoo.data.CustomerStatus;

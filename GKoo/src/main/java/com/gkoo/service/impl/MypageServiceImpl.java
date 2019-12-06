@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 import com.gkoo.repository.MypageRepository;
@@ -30,5 +31,20 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public ResponseEntity<?> updateTrackingNumber(String memberId,String orderNumber,String trackingCompany,String trackingNumber) {
         return mypageRepository.updateTrackingNumber(memberId, orderNumber, trackingCompany, trackingNumber);
+    }
+
+    @Override
+    public List<FavoriteAddress> getFavoriteAddressList(String userid) {
+        return mypageRepository.getFavoriteAddressList(userid);
+    }
+
+    @Override
+    public ResponseEntity<?> updateFavoriteAddress(String userid, HashMap<String, Object>[] data) {
+        return mypageRepository.updateFavoriteAddress(userid, data);
+    }
+
+    @Override
+    public ResponseEntity<?> createFavoriteAddress(String userid, HashMap<String, Object>[] data) {
+        return mypageRepository.createFavoriteAddress(userid, data);
     }
 }

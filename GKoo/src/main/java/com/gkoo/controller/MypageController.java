@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import com.gkoo.configuration.SecurityConfig;
+import com.gkoo.data.FavoriteAddress;
+import com.gkoo.data.OrderInformation;
+import com.gkoo.data.WarehouseInformation;
 //import com.gkoo.configuration.SecurityConfig;
 //import com.gkoo.data.OrderInformation;
 //import com.gkoo.data.WarehouseInformation;
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 //import mypage.OverviewInformationImpl;
 //import serviceBase.ServicePath;
 //import util.AuthentificationService;
+import com.gkoo.service.MypageService;
+import serviceBase.ServicePath;
 
 /**
  *
@@ -26,8 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @since  12.11.2019
  *
  */
-//@RestController
-//public class MypageController {
+@RestController
+public class MypageController {
 //    private final MypageService mypageService; 
 //    
 //    @Autowired
@@ -52,10 +58,31 @@ import org.springframework.web.bind.annotation.RestController;
 //    @CrossOrigin(origins = ServicePath.MYPAGE)
 //    @RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
 //    public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-//        String memberId = AuthentificationService.getAuthenficatedMemberID(request);
+//        String userid = SecurityConfig.getUserid(request);
 //        String orderNumber = data[0].get("orderNumber").toString();
 //        String trackingCompany = data[1].get("trackingCompany").toString();
 //        String trackingNumber = data[2].get("trackingNumber").toString();
-//        return mypageService.updateTrackingNumber(memberId, orderNumber, trackingCompany, trackingNumber);
+//        return mypageService.updateTrackingNumber(userid, orderNumber, trackingCompany, trackingNumber);
 //    }
-//}
+//    
+//    @CrossOrigin(origins = ServicePath.MYPAGE)
+//    @RequestMapping("/fetchFavoriteAddressList")
+//    public List<FavoriteAddress> requestFavoriteAddressList(HttpServletRequest request) throws SQLException  {
+//        String userid = SecurityConfig.getUserid(request);
+//        return mypageService.getFavoriteAddressList(userid);
+//    }
+//    
+//    @CrossOrigin(origins = ServicePath.MYPAGE)
+//    @RequestMapping(value = "/updateFavoriteAddress", method = RequestMethod.POST)
+//    public ResponseEntity<?> updateFavoriteAddress(HttpServletRequest request, @RequestBody HashMap<String, Object>[] data) throws SQLException  {
+//        String userid = SecurityConfig.getUserid(request);
+//        return mypageService.updateFavoriteAddress(userid, data);
+//    }
+//    
+//    @CrossOrigin(origins = ServicePath.MYPAGE)
+//    @RequestMapping(value = "/createFavoriteAddress", method = RequestMethod.POST)
+//    public ResponseEntity<?> createFavoriteAddress(HttpServletRequest request, @RequestBody HashMap<String, Object>[] data) throws SQLException  {
+//        String userid = SecurityConfig.getUserid(request);
+//        return mypageService.createFavoriteAddress(userid, data);
+//    }
+}

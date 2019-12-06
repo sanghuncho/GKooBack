@@ -1,0 +1,16 @@
+Token Name : GKOO
+Grant Type : Password Credentials
+Access Token URL : http://localhost:8080/auth/realms/gkoo/protocol/openid-connect/token
+Username : m
+Password : 30643
+Client ID : version_0_1_0
+Scope : opendid
+
+example: 
+pm.test("Your test name", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.customerId).to.eql("m");
+    pm.expect(jsonData.insuranceAmount).to.eql(0);
+    pm.expect(jsonData.depositeAmount).to.eql(0);
+    pm.expect(jsonData.pointAmount).to.eql(1000);
+});
