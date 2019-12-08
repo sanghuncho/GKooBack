@@ -3,6 +3,7 @@ package com.gkoo.repository.impl;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.keycloak.representations.AccessToken;
@@ -49,8 +50,9 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     public ResponseEntity<?> updateBaseInfo(HashMap<String, Object>[] data, String userid) {
         ObjectMapper mapper = new ObjectMapper();
         UserBaseInfo userBaseInfoData=null;
+        //Objects.requireNonNull(data[0].get("userBaseInfo"));
         try {
-            userBaseInfoData = mapper.readValue(data[0].get("userBaseInfo").toString(), UserBaseInfo.class);
+            userBaseInfoData = mapper.readValue(data[0].get("userBaseInfoData").toString(), UserBaseInfo.class);
         } catch (IOException ex) {
             String error = "Error mapping userBaseInfo";
             LOGGER.error(error, ex);
