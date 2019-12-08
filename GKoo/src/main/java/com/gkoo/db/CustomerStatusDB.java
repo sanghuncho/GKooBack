@@ -140,14 +140,15 @@ public class CustomerStatusDB {
             psmt.setString(1, data.getFirstName());
             psmt.setString(2, data.getLastName());
             psmt.setString(3, data.getAddress());
-            psmt.setString(2, data.getEmail());
-            psmt.setString(4, data.getNameEng());
-            psmt.setString(5, data.getDetailAddress());
-            psmt.setString(6, data.getTransitNr());
-            psmt.setString(7, data.getZipCode());
-            psmt.setString(8, data.getPhonePrefic());
-            psmt.setString(9, data.getPhoneInterfix());
-            psmt.setString(10, data.getPhoneSuffix());
+            psmt.setString(4, data.getEmail());
+            psmt.setString(5, data.getNameEng());
+            psmt.setString(6, data.getDetailAddress());
+            psmt.setString(7, data.getTransitNr());
+            psmt.setString(8, data.getZipCode());
+            psmt.setString(9, data.getPhonePrefic());
+            psmt.setString(10, data.getPhoneInterfix());
+            psmt.setString(11, data.getPhoneSuffix());
+            psmt.setString(12, userid);
             psmt.executeUpdate();
         } catch (SQLException ex) {
             String error = "Error updating userBaseInfo";

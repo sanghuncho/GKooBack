@@ -6,5 +6,6 @@ public class ServicePath {
 	
 	public static final String MYPAGE 		  = BASE_HOST + "mypage";
 	public static final String DETAILS_MYPAGE = BASE_HOST + "detailsmypage";
+	public static final String FAVORITE_ADDRESS_MANAGER    = BASE_HOST + "favoriteAddressManager";
 	public static final String MANAGEMENT	  = BASE_HOST + "management";
 }
