@@ -3,7 +3,6 @@ package com.gkoo.service.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,8 @@ public class AddressManagerServiceImpl implements AddressManagerService {
         ObjectMapper mapper = new ObjectMapper();
         FavoriteAddress favoriteAddress = null;
         try {
-            favoriteAddress = mapper.readValue(data[0].get("favoriteAddress").toString(), FavoriteAddress.class);
+            favoriteAddress = mapper.readValue(data[0].get("favoriteAddressData").toString(), FavoriteAddress.class);
+            favoriteAddress.setUserid(userid);
         } catch (IOException ex) {
             String error = "Error mapping creating favoriteAddress";
             LOGGER.error(error, ex);
@@ -60,7 +60,8 @@ public class AddressManagerServiceImpl implements AddressManagerService {
 
     @Override
     public ResponseEntity<?> deleteFavoriteAddress(HashMap<String, Object>[] data, String userid) {
-        int id=0;
-        return addressManagerRepository.deleteFavoriteAddress(id, userid);;
+        String deletedAddressIdData= data[0].get("favoriteAddressId").toString();
+        int deletedAddressId = Integer.parseInt(deletedAddressIdData);
+        return addressManagerRepository.deleteFavoriteAddress(deletedAddressId, userid);
     }
 }

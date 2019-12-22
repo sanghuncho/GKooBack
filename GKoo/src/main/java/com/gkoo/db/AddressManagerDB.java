@@ -18,10 +18,10 @@ import databaseUtil.ConnectionDB;
 public class AddressManagerDB {
     private static final Logger LOGGER = LogManager.getLogger();
     
-    private static final String UPDATE_FAVORITE_ADDRESS = "UPDATE favorite_address SET name_kor=?, name_eng=?, transit_nr=?, phone_prefic=?, phone_interfix=?, phone_suffix=?, phone_second=?, zip_code=?, address=?, detail_address=? where id=?";
+    private static final String UPDATE_FAVORITE_ADDRESS = "UPDATE favorite_address SET name_kor=?, name_eng=?, transit_nr=?, phonenumber_first=?, phonenumber_second=?, zip_code=?, address=?  where id=?";
     private static final String FETCH_FAVORITE_ADDRESS_LIST = "SELECT * FROM FAVORITE_ADDRESS WHERE userid=?";
-    private static final String CREATE_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phone_prefic, phone_interfix, phone_suffix, phone_second, zip_code, address, detail_address ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String DELETE_FAVORITE_ADDRESS = "DELETE FROM favorite_address where id=?, userid=?";
+    private static final String CREATE_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phonenumber_first, phonenumber_second, zip_code, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) returning id";
+    private static final String DELETE_FAVORITE_ADDRESS = "DELETE FROM favorite_address where id=? and userid=?";
     
    public static List<FavoriteAddress> getFavoriteAddressList(String userid){
         ConnectionDB.connectSQL();
@@ -45,16 +45,15 @@ public class AddressManagerDB {
         List<FavoriteAddress> favoriteAddressList = new ArrayList<>();
         while (rs.next()) {
             FavoriteAddress favoriteAddress = new FavoriteAddress();
+            favoriteAddress.setId(rs.getInt("id"));
+            favoriteAddress.setUserid(rs.getString("userid"));
             favoriteAddress.setNameKor(rs.getString("name_kor"));
             favoriteAddress.setNameEng(rs.getString("name_eng"));
             favoriteAddress.setTransitNr(rs.getString("transit_nr"));
-            favoriteAddress.setPhonePrefic(rs.getString("phone_prefic"));
-            favoriteAddress.setPhoneInterfix(rs.getString("phone_interfix"));
-            favoriteAddress.setPhoneSuffix(rs.getString("phone_suffix"));
-            favoriteAddress.setPhoneSuffix(rs.getString("phone_second"));
+            favoriteAddress.setPhonenumberFirst(rs.getString("phonenumber_first"));
+            favoriteAddress.setPhonenumberSecond(rs.getString("phonenumber_second"));
             favoriteAddress.setZipCode(rs.getString("zip_code"));
             favoriteAddress.setAddress(rs.getString("address"));
-            favoriteAddress.setAddressDetails(rs.getString("detail_address"));
             favoriteAddressList.add(favoriteAddress);
         }
         return favoriteAddressList;
@@ -68,13 +67,11 @@ public class AddressManagerDB {
             psmt.setString(2, favoriteAddress.getNameKor());
             psmt.setString(3, favoriteAddress.getNameEng());
             psmt.setString(4, favoriteAddress.getTransitNr());
-            psmt.setString(5, favoriteAddress.getPhonePrefic());
-            psmt.setString(6, favoriteAddress.getPhoneInterfix());
-            psmt.setString(7, favoriteAddress.getPhoneSuffix());
-            psmt.setString(8, favoriteAddress.getPhoneSecond());
-            psmt.setString(9, favoriteAddress.getZipCode());
-            psmt.setString(10, favoriteAddress.getAddress());
-            psmt.setString(11, favoriteAddress.getAddressDetails());
+            psmt.setString(5, favoriteAddress.getPhonenumberFirst());
+            psmt.setString(6, favoriteAddress.getPhonenumberSecond());
+            psmt.setString(7, favoriteAddress.getZipCode());
+            psmt.setString(8, favoriteAddress.getAddress());
+            psmt.executeUpdate();
         } catch (SQLException e) {
             String error = "Error creating favorite address";
             LOGGER.error(error, e);
@@ -91,15 +88,16 @@ public class AddressManagerDB {
             psmt.setString(1, favoriteAddress.getNameKor());
             psmt.setString(2, favoriteAddress.getNameEng());
             psmt.setString(3, favoriteAddress.getTransitNr());
-            psmt.setString(4, favoriteAddress.getPhonePrefic());
-            psmt.setString(5, favoriteAddress.getPhoneInterfix());
-            psmt.setString(6, favoriteAddress.getPhoneSuffix());
-            psmt.setString(7, favoriteAddress.getPhoneSecond());
-            psmt.setString(8, favoriteAddress.getZipCode());
-            psmt.setString(9, favoriteAddress.getAddress());
-            psmt.setString(10, favoriteAddress.getAddressDetails());
-            psmt.setString(11, userid);
-            psmt.executeUpdate();
+            psmt.setString(4, favoriteAddress.getPhonenumberFirst());
+            psmt.setString(5, favoriteAddress.getPhonenumberSecond());
+            psmt.setString(6, favoriteAddress.getZipCode());
+            psmt.setString(7, favoriteAddress.getAddress());
+            psmt.setString(8, userid);
+            int result = psmt.executeUpdate();
+            if (result == 0) {
+                String error = "Error updating favorite address";
+                LOGGER.error(error);
+            }
         } catch (SQLException e) {
             String error = "Error updating favorite address";
             LOGGER.error(error, e);

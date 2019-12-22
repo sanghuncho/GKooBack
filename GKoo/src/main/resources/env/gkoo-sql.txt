@@ -2,8 +2,6 @@
 select * from notice;
 select notice_content from notice where notice_nr = ;
 
-
-
 --Create Table
 create table payment (
 	paymentid serial primary key,
@@ -45,27 +43,11 @@ create table favorite_address (
     name_kor VARCHAR(50) NOT NULL,
     name_eng VARCHAR(50),
     transit_nr VARCHAR(50),
-    phone_first VARCHAR(50),
-    phone_second VARCHAR(50),
+    phonenumber_first VARCHAR(50),
+    phonenumber_second VARCHAR(50),
     zip_code VARCHAR(10),
     address text,
-    detail_address text
 );
 
+-- Delete total Table
 drop table favorite_address;
-
-create table favorite_address (
-    id serial primary key,
-    userid VARCHAR(50) NOT NULL,
-    orderid VARCHAR(50) NOT NULL,
-    name_kor VARCHAR(50) NOT NULL,
-    name_eng VARCHAR(50),
-    transit_nr VARCHAR(50),
-    phone_prefic VARCHAR(10),
-    phone_interfix VARCHAR(10),
-    phone_suffix VARCHAR(10),
-    phone_second VARCHAR(50),
-    zip_code VARCHAR(10),
-    address text,
-    detail_address text
-);

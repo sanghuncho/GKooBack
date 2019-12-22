@@ -2,6 +2,7 @@ package com.gkoo.repository.impl;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.db.AddressManagerDB;
 import com.gkoo.repository.AddressManagerRepository;
@@ -13,6 +14,7 @@ import com.gkoo.repository.AddressManagerRepository;
  * @since  19.12.2019
  *
  */
+@Repository
 public class AddressManagerRepoImpl implements AddressManagerRepository {
 
     @Override

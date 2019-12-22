@@ -14,14 +14,11 @@ public class FavoriteAddress {
     private String nameEng;
     private String transitNr;
     
-    private String phonePrefic;
-    private String phoneInterfix;
-    private String phoneSuffix;
-    private String phoneSecond;
+    private String phonenumberFirst;
+    private String phonenumberSecond;
     
     private String zipCode;
     private String address;
-    private String addressDetails;
     
     public FavoriteAddress() {}
 
@@ -57,36 +54,20 @@ public class FavoriteAddress {
         this.transitNr = transitNr;
     }
 
-    public String getPhonePrefic() {
-        return phonePrefic;
+    public String getPhonenumberFirst() {
+        return phonenumberFirst;
     }
 
-    public void setPhonePrefic(String phonePrefic) {
-        this.phonePrefic = phonePrefic;
+    public void setPhonenumberFirst(String phonenumberFirst) {
+        this.phonenumberFirst = phonenumberFirst;
     }
 
-    public String getPhoneInterfix() {
-        return phoneInterfix;
+    public String getPhonenumberSecond() {
+        return phonenumberSecond;
     }
 
-    public void setPhoneInterfix(String phoneInterfix) {
-        this.phoneInterfix = phoneInterfix;
-    }
-
-    public String getPhoneSuffix() {
-        return phoneSuffix;
-    }
-
-    public void setPhoneSuffix(String phoneSuffix) {
-        this.phoneSuffix = phoneSuffix;
-    }
-
-    public String getPhoneSecond() {
-        return phoneSecond;
-    }
-
-    public void setPhoneSecond(String phoneSecond) {
-        this.phoneSecond = phoneSecond;
+    public void setPhonenumberSecond(String phonenumberSecond) {
+        this.phonenumberSecond = phonenumberSecond;
     }
 
     public String getZipCode() {
@@ -103,14 +84,6 @@ public class FavoriteAddress {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getAddressDetails() {
-        return addressDetails;
-    }
-
-    public void setAddressDetails(String addressDetails) {
-        this.addressDetails = addressDetails;
     }
 
     public int getId() {
