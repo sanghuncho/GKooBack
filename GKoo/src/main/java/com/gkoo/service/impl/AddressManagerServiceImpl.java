@@ -49,7 +49,7 @@ public class AddressManagerServiceImpl implements AddressManagerService {
         ObjectMapper mapper = new ObjectMapper();
         FavoriteAddress favoriteAddress = null;
         try {
-            favoriteAddress = mapper.readValue(data[0].get("favoriteAddress").toString(), FavoriteAddress.class);
+            favoriteAddress = mapper.readValue(data[0].get("favoriteAddressData").toString(), FavoriteAddress.class);
         } catch (IOException ex) {
             String error = "Error mapping for updating favoriteAddress";
             LOGGER.error(error, ex);

@@ -59,7 +59,7 @@ public class AddressManagerContorller {
     }
     
     @CrossOrigin(origins = ServicePath.FAVORITE_ADDRESS_MANAGER)
-    @RequestMapping("/updateFavoriteAddress}")
+    @RequestMapping("/updateFavoriteAddress")
     public ResponseEntity<?> updateFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request){
         String userid = SecurityConfig.getUserid(request);
         return  addressManagerService.updateFavoriteAddress(data, userid);

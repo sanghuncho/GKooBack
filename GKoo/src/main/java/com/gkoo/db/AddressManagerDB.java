@@ -18,9 +18,9 @@ import databaseUtil.ConnectionDB;
 public class AddressManagerDB {
     private static final Logger LOGGER = LogManager.getLogger();
     
-    private static final String UPDATE_FAVORITE_ADDRESS = "UPDATE favorite_address SET name_kor=?, name_eng=?, transit_nr=?, phonenumber_first=?, phonenumber_second=?, zip_code=?, address=?  where id=?";
+    private static final String UPDATE_FAVORITE_ADDRESS = "UPDATE favorite_address SET name_kor=?, name_eng=?, transit_nr=?, phonenumber_first=?, phonenumber_second=?, zip_code=?, address=? where id=?";
     private static final String FETCH_FAVORITE_ADDRESS_LIST = "SELECT * FROM FAVORITE_ADDRESS WHERE userid=?";
-    private static final String CREATE_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phonenumber_first, phonenumber_second, zip_code, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) returning id";
+    private static final String CREATE_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phonenumber_first, phonenumber_second, zip_code, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
     private static final String DELETE_FAVORITE_ADDRESS = "DELETE FROM favorite_address where id=? and userid=?";
     
    public static List<FavoriteAddress> getFavoriteAddressList(String userid){
@@ -92,12 +92,8 @@ public class AddressManagerDB {
             psmt.setString(5, favoriteAddress.getPhonenumberSecond());
             psmt.setString(6, favoriteAddress.getZipCode());
             psmt.setString(7, favoriteAddress.getAddress());
-            psmt.setString(8, userid);
-            int result = psmt.executeUpdate();
-            if (result == 0) {
-                String error = "Error updating favorite address";
-                LOGGER.error(error);
-            }
+            psmt.setInt(8, favoriteAddress.getId());
+            psmt.executeUpdate();
         } catch (SQLException e) {
             String error = "Error updating favorite address";
             LOGGER.error(error, e);
