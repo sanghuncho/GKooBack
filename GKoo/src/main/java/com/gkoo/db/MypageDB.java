@@ -44,8 +44,8 @@ public class MypageDB {
     private static List<OrderInformation> writeOrderInformation(ResultSet rs, List<OrderInformation> orderInformationList) throws SQLException {
         while (rs.next()) {
             OrderInformation orderInfo = new OrderInformation();
-            orderInfo.setOrderNumber(rs.getString("orderid"));
-            orderInfo.setProductInfo(collectProductInfos(orderInfo.getOrderNumber()));
+            orderInfo.setOrderid(rs.getString("orderid"));
+            orderInfo.setProductInfo(collectProductInfos(orderInfo.getOrderid()));
             orderInfo.setRecipient(rs.getString("name_kor"));
             orderInfo.setDeliveryPayment(rs.getDouble("ship_price"));
             orderInfo.setDeliveryState(rs.getInt("ship_state"));

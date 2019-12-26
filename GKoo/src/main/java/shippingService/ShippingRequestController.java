@@ -1,17 +1,17 @@
 package shippingService;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import javax.servlet.http.HttpServletRequest;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.keycloak.KeycloakPrincipal;
-import org.keycloak.representations.AccessToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,34 +23,41 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gkoo.configuration.SecurityConfig;
+import com.gkoo.data.UserBaseInfo;
+import com.gkoo.exception.CustomerStatusException;
+import databaseUtil.ConnectionDB;
 import payment.PaymentState;
+import serviceBase.ServicePath;
 import util.MemberProfile;
 import util.OrderID;
 import util.TimeStamp;
 
 @RestController
 public class ShippingRequestController {
-	
+    private static final Logger LOGGER = LogManager.getLogger();
 	private final double INITIAL_PRICE = 0;
+    private static final String FETCH_USERBASEINFO = "select * from customer where userid = ?";
+
 	/**
      *Todo: using spring annotation 
      */		
 	public ShippingRequestController() {}
 	
-	@CrossOrigin(origins = "http://localhost:3000/requestshipping")
+	@CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
 	@RequestMapping(value = "/createshippingservice", method = RequestMethod.POST)
 	public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException, JsonParseException, JsonMappingException, IOException {
 	
-		System.out.println("배송대행 서비스 신청시작");
+	    LOGGER.info("배송대행 서비스 신청시작");
 		ShippingServiceModel shippingModel = new ShippingServiceModel();
 		ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
 		
-		String memberId = MemberProfile.getMemberID(request);
+        String userid = SecurityConfig.getUserid(request);      
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
         String orderId = OrderID.generateOrderID();
-        System.out.println("배송대행 서비스주문번호: " + orderId);
+        LOGGER.info("배송대행 서비스주문번호: " + orderId);
 		
-        shippingModel.setMemberId(memberId);
+        shippingModel.setUserid(userid);
         shippingModel.setTimeStamp(timeStamp);
         shippingModel.setOrderId(orderId);
         shippingModel.setEasyship(data[0].get("easyship").toString());
@@ -75,14 +82,12 @@ public class ShippingRequestController {
 		shippingModel.setTransitNumber(data[7].get("transitNumber").toString());
 		shippingModel.setAgreeWithCollection(data[8].get("agreeWithCollection").toString());
 		
-		shippingModel.setCallNumberFront(data[9].get("callNumberFront").toString());
-		shippingModel.setCallNumberMiddle(data[10].get("callNumberMiddle").toString());
-		shippingModel.setCallNumberRear(data[11].get("callNumberRear").toString());
+		shippingModel.setPhonenumberFirst(data[9].get("phonenumberFirst").toString());
+		shippingModel.setPhonenumberSecond(data[10].get("phonenumberSecond").toString());
 		
-		shippingModel.setPostCode(data[12].get("postCode").toString());
-		shippingModel.setDeliveryAddress(data[13].get("deliveryAddress").toString());
-		shippingModel.setDetailAddress(data[14].get("detailAddress").toString());
-		shippingModel.setDeliveryMessage(data[15].get("deliveryMessage").toString());
+		shippingModel.setPostCode(data[11].get("postCode").toString());
+		shippingModel.setDeliveryAddress(data[12].get("deliveryAddress").toString());
+		shippingModel.setDeliveryMessage(data[13].get("deliveryMessage").toString());
 		
 		/** 국제배송비 */
 		shippingModel.setShippingPrice(INITIAL_PRICE);
@@ -94,6 +99,46 @@ public class ShippingRequestController {
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
+	
+    @CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
+    @RequestMapping("/fetchcustomerbaseinfo")
+    public UserBaseInfo requestCustomerBaseInfo(HttpServletRequest request) throws SQLException {
+        String userid = SecurityConfig.getUserid(request);
+        return getUserBaseInfo(userid);
+    }
+    
+    public static UserBaseInfo getUserBaseInfo(String userid) {
+        ConnectionDB.connectSQL();
+        ResultSet resultSet = null;
+        UserBaseInfo userBaseInfo = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(FETCH_USERBASEINFO);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            userBaseInfo = writeUserBaseInfo(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching userBaseInfo";
+            LOGGER.error(error, e);
+            throw new CustomerStatusException(error, e);
+        }
+        return userBaseInfo;
+    }
+    
+    private static UserBaseInfo writeUserBaseInfo(ResultSet resultSet) throws SQLException {
+        UserBaseInfo userBaseInfo =  new UserBaseInfo();
+        while (resultSet.next()) {
+            userBaseInfo.setUserid(resultSet.getString("userid"))
+                         .withNameKor(resultSet.getString("name_kor"))
+                         .withNameEng(resultSet.getString("name_eng"))
+                         .withEmail(resultSet.getString("email"))
+                         .withTransitNr(resultSet.getString("transit_nr"))
+                         .withPhonenumberFirst(resultSet.getString("phonenumber_first"))
+                         .withPhonenumberSecond(resultSet.getString("phonenumber_second"))
+                         .withZipCode(resultSet.getString("zip_code"))
+                         .withAddress(resultSet.getString("address"));
+        }
+        return userBaseInfo;
+    }
 	
 	
 	/**

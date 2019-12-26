@@ -19,7 +19,7 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 	public OverviewInformationImpl(){}
 	
 	@Override
-	public List<OrderInformation> getOrderInformationFromDB(String username) {
+	public List<OrderInformation> getOrderInformationFromDB(String userid) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
 		String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
@@ -28,7 +28,7 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 		List<OrderInformation> orderInformationList = new ArrayList<>();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
-			psmt.setString(1, username);
+			psmt.setString(1, userid);
 			resultSet = psmt.executeQuery();
 			orderInformationList = writeOrderInformation(resultSet, orderInformationList);
 		} catch (SQLException e) {
@@ -61,8 +61,8 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 	private List<OrderInformation> writeOrderInformation(ResultSet rs, List<OrderInformation> orderInformationList) throws SQLException {
 		while (rs.next()) {
 			OrderInformation orderInfo = new OrderInformation();
-			orderInfo.setOrderNumber(rs.getString("orderid"));
-			orderInfo.setProductInfo(collectProductInfos(orderInfo.getOrderNumber()));
+			orderInfo.setOrderid(rs.getString("orderid"));
+			orderInfo.setProductInfo(collectProductInfos(orderInfo.getOrderid()));
 			orderInfo.setRecipient(rs.getString("name_kor"));
 			orderInfo.setDeliveryPayment(rs.getDouble("ship_price"));
 			orderInfo.setDeliveryState(rs.getInt("ship_state"));

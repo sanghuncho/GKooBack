@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,15 +41,15 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	//factory pattern
 	//https://alvinalexander.com/java/java-factory-pattern-example
 	@Override
-	public RecipientData getRecipientInfo(String username, String number) {
+	public RecipientData getRecipientInfo(String userid, String orderid) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT * FROM RECIPIENT WHERE memberid=? AND orderid=?";
+		String query = "SELECT * FROM RECIPIENT WHERE userid=? AND orderid=?";
 		RecipientData recipient = new RecipientData();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
-			psmt.setString(1, username);
-			psmt.setString(2, number);
+			psmt.setString(1, userid);
+			psmt.setString(2, orderid);
 			resultSet = psmt.executeQuery();
 			recipient = writeRecipientInformation(resultSet, recipient);
 		} catch (SQLException e) {
@@ -105,14 +104,10 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			recipient.setNameKor(rs.getString("name_kor"));
 			recipient.setNameEng(rs.getString("name_eng"));
 			recipient.setTransitNr(rs.getString("transit_nr"));
-			recipient.setPhonePrefic(rs.getString("phone_prefic"));
-			recipient.setPhoneInterfix(rs.getString("phone_interfix"));
-			recipient.setPhoneSuffix(rs.getString("phone_suffix"));
-			recipient.buildPhoneNr();
+			recipient.setPhonenumberFirst(rs.getString("phonenumber_first"));
+			recipient.setPhonenumberSecond(rs.getString("phonenumber_second"));
 			recipient.setZipCode(rs.getString("zip_code"));
 			recipient.setAddress(rs.getString("address"));
-			recipient.setAddressDetails(rs.getString("detail_address"));
-			//recipient.buildFullAdress();
 			recipient.setUsercomment(rs.getString("usercomment"));
 		}
 		return recipient;
@@ -213,38 +208,34 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		return commonInfo;
 	}
 	
-	public ResponseEntity<?> updateRecipientData(String memberId, HashMap<String, Object>[] data) {
-	    String orderNumber = data[0].get("orderNumber").toString();
+	public ResponseEntity<?> updateRecipientData(String userid, HashMap<String, Object>[] data) {
+	    String orderid = data[0].get("orderid").toString();
         String nameKor = data[1].get("nameKor").toString();
         String nameEng = data[2].get("nameEng").toString();
         String transitNr = data[3].get("transitNr").toString();
-        String phonePrefic = data[4].get("phonePrefic").toString();
-        String phoneInterfix = data[5].get("phoneInterfix").toString();
-        String phoneSuffix = data[6].get("phoneSuffix").toString();
-        String zipCode = data[7].get("zipCode").toString();
-        String address = data[8].get("address").toString();
-        String addressDetails = data[9].get("addressDetails").toString();
-        String usercomment = data[10].get("usercomment").toString();
+        String phonenumberFirst = data[4].get("phonenumberFirst").toString();
+        String phonenumberSecond = data[5].get("phonenumberSecond").toString();
+        String zipCode = data[6].get("zipCode").toString();
+        String address = data[7].get("address").toString();
+        String usercomment = data[8].get("usercomment").toString();
         
         ConnectionDB.connectSQL();
         final String UPDATE_RECIPIENT_DATA = 
-                "UPDATE recipient SET name_kor = ?, name_eng = ?, transit_nr = ?, phone_prefic = ?, phone_interfix = ?, phone_suffix = ?, zip_code = ?, address= ?, detail_address = ?, usercomment = ? "
-                + "where memberid = ? and orderid = ?";
+                "UPDATE recipient SET name_kor = ?, name_eng = ?, transit_nr = ?, phonenumber_first = ?, phonenumber_second = ?, zip_code = ?, address= ?, usercomment = ? "
+                + "where userid = ? and orderid = ?";
         
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(UPDATE_RECIPIENT_DATA);){
             psmt.setString(1, nameKor);
             psmt.setString(2, nameEng);
             psmt.setString(3, transitNr);
-            psmt.setString(4, phonePrefic);
-            psmt.setString(5, phoneInterfix);
-            psmt.setString(6, phoneSuffix);
-            psmt.setString(7, zipCode);
-            psmt.setString(8, address);
-            psmt.setString(9, addressDetails);
-            psmt.setString(10, usercomment);
-            psmt.setString(11, memberId);
-            psmt.setString(12, orderNumber);
+            psmt.setString(4, phonenumberFirst);
+            psmt.setString(5, phonenumberSecond);
+            psmt.setString(6, zipCode);
+            psmt.setString(7, address);
+            psmt.setString(8, usercomment);
+            psmt.setString(9, userid);
+            psmt.setString(10, orderid);
             
             psmt.executeUpdate();
         } catch (SQLException e) {
@@ -255,8 +246,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
 	}
 	
-	public ResponseEntity<?> updateDataEditorProductsList(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
-	    String orderNumber = data[0].get("orderNumber").toString();
+	public ResponseEntity<?> updateDataEditorProductsList(String userid, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
+	    String orderid = data[0].get("orderid").toString();
 	    
 	    ObjectMapper mapper = new ObjectMapper();
         DeliveryDataObject deliveryDataObj = mapper.readValue(data[1].get("deliveryDataObject").toString(), DeliveryDataObject.class);
@@ -265,8 +256,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         ShippingServiceModel shippingModel = new ShippingServiceModel();
         ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
         
-        shippingModel.setOrderId(orderNumber);
-        shippingModel.setMemberId(memberId);
+        shippingModel.setOrderId(orderid);
+        shippingModel.setUserid(userid);
         shippingModel.setDeliveryData(deliveryDataObj);
         shippingModel.setShippingProductsList(shippingProducts);
         

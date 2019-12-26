@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import com.gkoo.configuration.SecurityConfig;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 import serviceBase.ServicePath;
@@ -25,12 +26,12 @@ public class OverviewServiceController {
 	
 	//autowired OverviewInformationImpl?
 	
-	@CrossOrigin(origins = "http://localhost:3000/mypage")
+	@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping("/orderinformation")
 	public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-		String memberId = AuthentificationService.getAuthenficatedMemberID(request);		
-		return overviewImp.getOrderInformationFromDB(memberId);
+        String userid = SecurityConfig.getUserid(request);      
+		return overviewImp.getOrderInformationFromDB(userid);
 	}
 	
 	// ToDo : Refactoring 

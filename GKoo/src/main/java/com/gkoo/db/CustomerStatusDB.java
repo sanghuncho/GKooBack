@@ -6,28 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.data.UserBaseInfo;
 import com.gkoo.exception.CustomerStatusException;
-import com.google.common.util.concurrent.CycleDetectingLockFactory.WithExplicitOrdering;
 import databaseUtil.ConnectionDB;
 
 public class CustomerStatusDB {
     private static final Logger LOGGER = LogManager.getLogger();
     
     private static final int INITIAL_POINT = 1000;
-    private static final String NUMBER_USERID = "select count(gkoo_id) from customer where gkoo_id = ?";
+    private static final String NUMBER_USERID = "select count(userid) from customer where userid = ?";
     private static final String CREATE_CUSTOMER_STATUS = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
             + "VALUES (?, 0, 0, ?)";
-    private static final String CREATE_CUSTOMER = "INSERT INTO customer(gkoo_id, lastname, firstname)"
-            + "VALUES (?, ?, ?)";
+    private static final String CREATE_CUSTOMER = "INSERT INTO customer(userid, name_kor)"
+            + "VALUES (?, ?)";
     private static final String FETCH_CUSTOMERSTATUS = "select * from customerstatus where gkoo_id = ?";
-    private static final String FETCH_USERBASEINFO = "select * from customer where gkoo_id = ?";
-    private static final String UPDATE_USERBASEINFO = "UPDATE CUSTOMER SET firstname=?, lastname=?, address=?, email=?, name_eng=?, detail_address=?, "
-            + "transit_nr=?, zip_code=?, phone_prefic=?, phone_interfix=?, phone_suffix=? where gkoo_id=?";
+    private static final String FETCH_USERBASEINFO = "select * from customer where userid = ?";
+    private static final String UPDATE_USERBASEINFO = "UPDATE CUSTOMER SET name_kor=?, name_eng=?, email=?, transit_nr=?, phonenumber_first=?, phonenumber_second=?, "
+            + "zip_code=?, address=? where userid=?";
     
     public static Boolean existUserid(String userid) throws SQLException {
         ResultSet resultSet = null;
@@ -48,7 +46,7 @@ public class CustomerStatusDB {
         return number == 0 ? false : true;
     }
     
-    public static void registerInitialCustomer(String userid, String lastname, String firstname) {
+    public static void registerInitialCustomer(String userid, String fullnameKor) {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt_customerstatus = conn.prepareStatement(CREATE_CUSTOMER_STATUS);
@@ -58,8 +56,7 @@ public class CustomerStatusDB {
             psmt_customerstatus.execute();
             
             psmt_customer.setString(1, userid);
-            psmt_customer.setString(2, lastname);
-            psmt_customer.setString(3, firstname);
+            psmt_customer.setString(2, fullnameKor);
             psmt_customer.execute();
         } catch (SQLException e) {
             String error = "Error creating initial customerstatus and customer";
@@ -116,19 +113,15 @@ public class CustomerStatusDB {
     private static UserBaseInfo writeUserBaseInfo(ResultSet resultSet) throws SQLException {
         UserBaseInfo userBaseInfo =  new UserBaseInfo();
         while (resultSet.next()) {
-            userBaseInfo.setPhoneSuffix(resultSet.getString("phone_suffix"));
-            userBaseInfo.setUserid(resultSet.getString("gkoo_id"))
-                         .withFirstName(resultSet.getString("firstname"))
-                         .withLastName(resultSet.getString("lastname"))
-                         .withAddress(resultSet.getString("address"))
-                         .withEmail(resultSet.getString("email"))
+            userBaseInfo.setUserid(resultSet.getString("userid"))
+                         .withNameKor(resultSet.getString("name_kor"))
                          .withNameEng(resultSet.getString("name_eng"))
-                         .withDetailAddress(resultSet.getString("detail_address"))
+                         .withEmail(resultSet.getString("email"))
                          .withTransitNr(resultSet.getString("transit_nr"))
+                         .withPhonenumberFirst(resultSet.getString("phonenumber_first"))
+                         .withPhonenumberSecond(resultSet.getString("phonenumber_second"))
                          .withZipCode(resultSet.getString("zip_code"))
-                         .withPhonePrefic(resultSet.getString("phone_prefic"))
-                         .withPhoneInterfix(resultSet.getString("phone_interfix"))
-                         .withPhoneSuffix(resultSet.getString("phone_suffix"));
+                         .withAddress(resultSet.getString("address"));
         }
         return userBaseInfo;
     }
@@ -137,18 +130,15 @@ public class CustomerStatusDB {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(UPDATE_USERBASEINFO);){
-            psmt.setString(1, data.getFirstName());
-            psmt.setString(2, data.getLastName());
-            psmt.setString(3, data.getAddress());
-            psmt.setString(4, data.getEmail());
-            psmt.setString(5, data.getNameEng());
-            psmt.setString(6, data.getDetailAddress());
-            psmt.setString(7, data.getTransitNr());
-            psmt.setString(8, data.getZipCode());
-            psmt.setString(9, data.getPhonePrefic());
-            psmt.setString(10, data.getPhoneInterfix());
-            psmt.setString(11, data.getPhoneSuffix());
-            psmt.setString(12, userid);
+            psmt.setString(1, data.getNameKor());
+            psmt.setString(2, data.getNameEng());
+            psmt.setString(3, data.getEmail());
+            psmt.setString(4, data.getTransitNr());
+            psmt.setString(5, data.getPhonenumberFirst());
+            psmt.setString(6, data.getPhonenumberSecond());
+            psmt.setString(7, data.getZipCode());
+            psmt.setString(8, data.getAddress());
+            psmt.setString(9, userid);
             psmt.executeUpdate();
         } catch (SQLException ex) {
             String error = "Error updating userBaseInfo";

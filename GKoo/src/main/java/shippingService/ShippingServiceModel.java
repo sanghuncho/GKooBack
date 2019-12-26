@@ -2,15 +2,13 @@ package shippingService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 import org.springframework.context.annotation.Configuration;
 import payment.PaymentState;
 
 @Configuration
 public class ShippingServiceModel {
 	
-	private String memberId;
+	private String userid;
 	private String timeStamp;
 	private String orderId;
 
@@ -27,13 +25,11 @@ public class ShippingServiceModel {
 	private String transitNumber;
 	private String agreeWithCollection;
 	
-	private String callNumberFront;
-	private String callNumberMiddle;
-	private String callNumberRear;
+	private String phonenumberFirst;
+    private String phonenumberSecond;
 
 	private String postCode;
 	private String deliveryAddress;
-	private String detailAddress;
 	private String deliveryMessage;
 	
 	/** 국제배송비 */
@@ -142,29 +138,6 @@ public class ShippingServiceModel {
 		this.agreeWithCollection = agreeWithCollection;
 	}
 	
-	public String getCallNumberFront() {
-		return callNumberFront;
-	}
-	
-	public void setCallNumberFront(String callNumberFront) {
-		this.callNumberFront = callNumberFront;
-	}
-
-	public String getCallNumberMiddle() {
-		return callNumberMiddle;
-	}
-	
-	public void setCallNumberMiddle(String callNumberMiddle) {
-		this.callNumberMiddle = callNumberMiddle;
-	}
-
-	public String getCallNumberRear() {
-		return callNumberRear;
-	}
-	
-	public void setCallNumberRear(String callNumberRear) {
-		this.callNumberRear = callNumberRear;
-	}
 	
 	public String getPostCode() {
 		return postCode;
@@ -182,14 +155,6 @@ public class ShippingServiceModel {
 		this.deliveryAddress = deliveryAddress;
 	}
 
-	public String getDetailAddress() {
-		return detailAddress;
-	}
-	
-	public void setDetailAddress(String detailAddress) {
-		this.detailAddress = detailAddress;
-	}
-
 	public String getDeliveryMessage() {
 		return deliveryMessage;
 	}
@@ -199,12 +164,12 @@ public class ShippingServiceModel {
 	}
 	
 
-	public String getMemberId() {
-		return memberId;
+	public String getUserid() {
+		return userid;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setUserid(String memberId) {
+		this.userid = memberId;
 	}
 
 	public String getTimeStamp() {
@@ -249,5 +214,21 @@ public class ShippingServiceModel {
 	
     public double getShippingProductspriceSum() {
         return shippingProductspriceSum;
+    }
+    
+    public String getPhonenumberSecond() {
+        return phonenumberSecond;
+    }
+    
+    public void setPhonenumberSecond(String phonenumberSecond) {
+        this.phonenumberSecond = phonenumberSecond;
+    }
+    
+    public String getPhonenumberFirst() {
+        return phonenumberFirst;
+    }
+    
+    public void setPhonenumberFirst(String phonenumberFirst) {
+        this.phonenumberFirst = phonenumberFirst;
     }
 }

@@ -25,6 +25,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
         String userid = accessToken.getPreferredUsername();
         String lastname = accessToken.getFamilyName();
         String firstname = accessToken.getGivenName();
+        String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {
             existUserid = CustomerStatusDB.existUserid(userid);
@@ -32,7 +33,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
             LOGGER.error("CustomerStatusRepoImpl-checkUserid:" + userid, e);
         }
         if (!existUserid) {
-            CustomerStatusDB.registerInitialCustomer(userid, lastname, firstname);
+            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor);
         }
     }
     

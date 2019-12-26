@@ -1,7 +1,7 @@
 package com.gkoo.data;
 
 public class OrderInformation {
-	private String orderNumber;
+	private String orderid;
 	private String productInfo;
 	private String recipient;
 	private double deliveryPayment;
@@ -9,12 +9,12 @@ public class OrderInformation {
 	private String deliveryTracking;
 	
 	public OrderInformation(){}
-	public String getOrderNumber() {
-		return orderNumber;
+	public String getOrderid() {
+		return orderid;
 	}
 
-	public void setOrderNumber(String orderNumber) {
-		this.orderNumber = orderNumber;
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public String getProductInfo() {

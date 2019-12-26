@@ -51,3 +51,34 @@ create table favorite_address (
 
 -- Delete total Table
 drop table favorite_address;
+
+drop table customer;
+
+create table customer (
+    id serial primary key,
+    userid VARCHAR(50) NOT NULL,
+    name_kor VARCHAR(50) NOT NULL,
+    name_eng VARCHAR(50),
+    email text,
+    transit_nr VARCHAR(50),
+    phonenumber_first VARCHAR(50),
+    phonenumber_second VARCHAR(50),
+    zip_code VARCHAR(10),
+    address text,
+);
+
+drop table recipient;
+    
+create table recipient (
+    id serial primary key,
+    userid VARCHAR(50) NOT NULL,
+    orderid VARCHAR(50) NOT NULL,
+    name_kor VARCHAR(50) NOT NULL,
+    name_eng VARCHAR(50),
+    transit_nr VARCHAR(50),
+    phonenumber_first VARCHAR(50),
+    phonenumber_second VARCHAR(50),
+    zip_code VARCHAR(10),
+    address text,
+    usercomment text
+);

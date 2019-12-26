@@ -33,18 +33,16 @@ public class ShippingServiceDAO {
            */	
 		try (Connection conn = ConnectionDB.getConnectInstance();
 		        PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_SERVICE);) {
-			psmt.setString(1, model.getMemberId());
+			psmt.setString(1, model.getUserid());
 			psmt.setString(2, String.valueOf(model.getOrderId()));
 			psmt.setString(3, model.getReceiverNameByKorea());
 			psmt.setString(4, model.getReceiverNameByEnglish());
 			psmt.setString(5, model.getTransitNumber());
-			psmt.setString(6, model.getCallNumberFront());
-			psmt.setString(7, model.getCallNumberMiddle());
-			psmt.setString(8, model.getCallNumberRear());
-			psmt.setString(9, model.getPostCode());
-			psmt.setString(10, model.getDeliveryAddress());
-			psmt.setString(11, model.getDetailAddress());
-			psmt.setString(12, model.getDeliveryMessage());
+			psmt.setString(6, model.getPhonenumberFirst());
+			psmt.setString(7, model.getPhonenumberSecond());
+			psmt.setString(8, model.getPostCode());
+			psmt.setString(9, model.getDeliveryAddress());
+			psmt.setString(10, model.getDeliveryMessage());
 	
 			psmt.executeUpdate();
 		} catch (SQLException e) {
@@ -56,7 +54,7 @@ public class ShippingServiceDAO {
 		int paymentid = 0;
 		try (Connection conn = ConnectionDB.getConnectInstance();
 		        PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_PAYMENT);) {
-            psmt.setString(1, model.getMemberId());
+            psmt.setString(1, model.getUserid());
             psmt.setString(2, String.valueOf(model.getOrderId()));
             psmt.setInt(3, model.getPaymentState());
             resultSet  = psmt.executeQuery();
@@ -86,7 +84,7 @@ public class ShippingServiceDAO {
                 shop_url character varying(50)
 	           */
 			
-			psmt.setString(1, model.getMemberId());
+			psmt.setString(1, model.getUserid());
 			psmt.setString(2, String.valueOf(model.getOrderId()));
 			psmt.setDouble(3, model.getShippingPrice());
 			psmt.setInt(4, model.getShipState());
@@ -111,10 +109,10 @@ public class ShippingServiceDAO {
             psmt.setString(2, model.getTrackingCompany());
             psmt.setString(3, model.getTrackingNumber());
             psmt.setString(2, model.getTrackingCompany());
-            psmt.setString(4, model.getMemberId());
+            psmt.setString(4, model.getUserid());
             psmt.setString(5, model.getOrderId());
             
-            psmt_delete.setString(1, model.getMemberId());
+            psmt_delete.setString(1, model.getUserid());
             psmt_delete.setString(2, model.getOrderId());
             
             psmt.executeUpdate();
@@ -159,7 +157,7 @@ public class ShippingServiceDAO {
                     PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_PRODUCTS);) {
                 
                 for(int i=0; i< products.size(); i++) {
-                    psmt.setString(1, model.getMemberId());
+                    psmt.setString(1, model.getUserid());
                     psmt.setString(2, String.valueOf(model.getOrderId()));
                     psmt.setTimestamp(3, TimeStamp.getTimestampKorea());
                     psmt.setString(4, products.get(i).getCategoryTitle());
@@ -186,9 +184,9 @@ public class ShippingServiceDAO {
 	}
  
 	private static final String CREATE_SHIPPING_SERVICE = 
-			"insert into recipient(memberId, orderId, name_kor, name_eng,"
-			+ "transit_nr, phone_prefic, phone_interfix, phone_suffix, zip_code,"
-			+ "address, detail_address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			"insert into recipient(userid, orderid, name_kor, name_eng,"
+			+ "transit_nr, phonenumber_first, phonenumber_second, zip_code,"
+			+ "address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String CREATE_SHIPPING_PRODUCTS = "insert into product(memberId, orderId, order_stamp, "
 			+ "pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
