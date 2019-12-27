@@ -24,8 +24,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gkoo.configuration.SecurityConfig;
+import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.UserBaseInfo;
 import com.gkoo.exception.CustomerStatusException;
+import com.gkoo.exception.MypageException;
 import databaseUtil.ConnectionDB;
 import payment.PaymentState;
 import serviceBase.ServicePath;
@@ -33,11 +35,17 @@ import util.MemberProfile;
 import util.OrderID;
 import util.TimeStamp;
 
+/**
+ * @author sanghuncho
+ * 
+ * @since  24.12.2018
+ */
 @RestController
 public class ShippingRequestController {
     private static final Logger LOGGER = LogManager.getLogger();
 	private final double INITIAL_PRICE = 0;
     private static final String FETCH_USERBASEINFO = "select * from customer where userid = ?";
+    private static final String REGISTER_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phonenumber_first, phonenumber_second, zip_code, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
 
 	/**
      *Todo: using spring annotation 
@@ -106,6 +114,46 @@ public class ShippingRequestController {
         String userid = SecurityConfig.getUserid(request);
         return getUserBaseInfo(userid);
     }
+    
+    @CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
+    @RequestMapping(value = "/registerFavoriteAddress",method = RequestMethod.POST)
+    public ResponseEntity<?> registerFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
+        String userid = SecurityConfig.getUserid(request);
+        ObjectMapper mapper = new ObjectMapper();
+        FavoriteAddress favoriteAddress = null;
+        try {
+            favoriteAddress = mapper.readValue(data[0].get("favoriteAddressData").toString(), FavoriteAddress.class);
+            favoriteAddress.setUserid(userid);
+        } catch (IOException ex) {
+            String error = "Error mapping for registering favoriteAddress";
+            LOGGER.error(error, ex);
+            throw new CustomerStatusException(error, ex);
+        }
+        return registerFavoriteAddress(favoriteAddress, userid);
+    }
+    
+    public static ResponseEntity<?> registerFavoriteAddress(FavoriteAddress favoriteAddress, String userid){
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(REGISTER_FAVORITE_ADDRESS);){
+            psmt.setString(1, userid);
+            psmt.setString(2, favoriteAddress.getNameKor());
+            psmt.setString(3, favoriteAddress.getNameEng());
+            psmt.setString(4, favoriteAddress.getTransitNr());
+            psmt.setString(5, favoriteAddress.getPhonenumberFirst());
+            psmt.setString(6, favoriteAddress.getPhonenumberSecond());
+            psmt.setString(7, favoriteAddress.getZipCode());
+            psmt.setString(8, favoriteAddress.getAddress());
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            String error = "Error creating favorite address";
+            LOGGER.error(error, e);
+            throw new MypageException(error, e);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+    }
+
     
     public static UserBaseInfo getUserBaseInfo(String userid) {
         ConnectionDB.connectSQL();
