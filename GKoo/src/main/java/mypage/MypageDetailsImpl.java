@@ -7,12 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gkoo.repository.ShippingServiceRepository;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.ProductsInformation;
@@ -21,13 +24,19 @@ import mypage.information.RecipientData;
 import payment.PaymentState;
 import shippingService.DeliveryDataObject;
 import shippingService.ShippingProduct;
-import shippingService.ShippingServiceDAO;
 import shippingService.ShippingServiceModel;
 import shippingService.ShippingServiceState;
 
+@Service
 public class MypageDetailsImpl implements MypageDetailsDAO {
 	
 	private final int PAYMENT_REQEUST_STATE = 2; //결제요청 - 무통장입금전
+	private ShippingServiceRepository shippingServiceRepository;
+	
+	@Autowired
+	public MypageDetailsImpl(ShippingServiceRepository shippingServiceRepository) {
+	    this.shippingServiceRepository = shippingServiceRepository;
+	}
 	
 	/*bulider pattern*/
 	@Override
@@ -254,26 +263,16 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         ShippingProduct[] shippingProducts = mapper.readValue(data[2].get("shippingProductList").toString(), ShippingProduct[].class);
         
         ShippingServiceModel shippingModel = new ShippingServiceModel();
-        ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
-        
         shippingModel.setOrderId(orderid);
         shippingModel.setUserid(userid);
         shippingModel.setDeliveryData(deliveryDataObj);
         shippingModel.setShippingProductsList(shippingProducts);
         
-        shipServiceDao.updateDataShippingServiceDB(shippingModel);
-        
-	    HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        return shippingServiceRepository.updateDataShippingService(shippingModel);
 	}
 	
-	public ResponseEntity<?> deleteShipingServiceData(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
+	public ResponseEntity<?> deleteShipingServiceData(String userid, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
         String orderNumber = data[0].get("orderNumber").toString();
-        
-        ShippingServiceDAO shipServiceDao = new ShippingServiceDAO();
-        shipServiceDao.deleteShipingServiceData(memberId, orderNumber);
-        
-        HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+        return shippingServiceRepository.deleteShipingServiceData(userid, orderNumber);
     }
 }
