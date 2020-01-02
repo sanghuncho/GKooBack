@@ -1,5 +1,6 @@
 package util;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,12 @@ public class TimeStamp {
 		ZonedDateTime zoDaTi = ZonedDateTime.of(currentDate, currentTime, zone);
 		String timeStamp = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(zoDaTi);
 		return timeStamp;
+	}
+	
+	public static final LocalDate getOrderDate() {
+	    ZoneId zone = ZoneId.of("Asia/Seoul");
+        LocalDate currentOrderDate = LocalDate.now(zone);
+        return currentOrderDate;
 	}
 	
 	public static final Timestamp getTimestampKorea() {

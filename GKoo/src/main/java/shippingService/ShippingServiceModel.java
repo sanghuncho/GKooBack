@@ -1,7 +1,9 @@
 package shippingService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import org.springframework.context.annotation.Configuration;
 import payment.PaymentState;
 
@@ -11,6 +13,7 @@ public class ShippingServiceModel {
 	private String userid;
 	private String timeStamp;
 	private String orderId;
+	private LocalDate orderDate;
 
 	private String easyship;
 	private String shopUrl;
@@ -230,5 +233,13 @@ public class ShippingServiceModel {
     
     public void setPhonenumberFirst(String phonenumberFirst) {
         this.phonenumberFirst = phonenumberFirst;
+    }
+    
+    public java.sql.Date getOrderDate() {
+        return java.sql.Date.valueOf(orderDate);
+    }
+    
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
     }
 }

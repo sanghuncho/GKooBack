@@ -22,8 +22,8 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 	public List<OrderInformation> getOrderInformationFromDB(String userid) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
-				+ "	FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.memberid=?";
+		String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, os.order_date ,rp.name_kor "
+				+ "	FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
 				
 		List<OrderInformation> orderInformationList = new ArrayList<>();
 		try (Connection conn = ConnectionDB.getConnectInstance();
@@ -43,7 +43,7 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
 		String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_world, os.tracking_company_world, rp.name_kor "
-				+ "	FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.memberid=? AND (os.ship_state=1 or os.ship_state=2)";
+				+ "	FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=? AND (os.ship_state=1 or os.ship_state=2)";
 				
 		List<WarehouseInformation> warehouseInformationList = new ArrayList<>();
 		try (Connection conn = ConnectionDB.getConnectInstance();
@@ -66,8 +66,8 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 			orderInfo.setRecipient(rs.getString("name_kor"));
 			orderInfo.setDeliveryPayment(rs.getDouble("ship_price"));
 			orderInfo.setDeliveryState(rs.getInt("ship_state"));
-			//ToDo: depends on the local, new impl
 			orderInfo.setDeliveryTracking(rs.getString("trackingnr_world"));
+			orderInfo.setOrderDate(rs.getDate("order_date"));
 			orderInformationList.add(orderInfo);
 		}
 		return orderInformationList;
@@ -81,7 +81,6 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 			warehouseInfo.setRecipient(rs.getString("name_kor"));
 			warehouseInfo.setDeliveryPayment(rs.getDouble("ship_price"));
 			warehouseInfo.setDeliveryState(rs.getInt("ship_state"));
-			//ToDo: depends on the local, new impl
 			warehouseInfo.setDeliveryTracking(convertTrackingStatus(rs.getString("tracking_company_world"), rs.getString("trackingnr_world")));
 			warehouseInformationList.add(warehouseInfo);
 		}

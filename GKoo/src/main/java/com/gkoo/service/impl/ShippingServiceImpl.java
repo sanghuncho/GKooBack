@@ -1,6 +1,8 @@
 package com.gkoo.service.impl;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +39,7 @@ public class ShippingServiceImpl implements ShippingService {
     public ResponseEntity<?> requestShippingservice(HashMap<String, Object>[] data, String userid) {
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
         String orderId = OrderID.generateOrderID();
+        LocalDate orderDate = TimeStamp.getOrderDate();
         LOGGER.info("배송대행 서비스 신청: "+ userid + "/배송대행 서비스주문번호: " + orderId);
         
         ShippingServiceModel shippingModel = new ShippingServiceModel();
@@ -44,6 +47,7 @@ public class ShippingServiceImpl implements ShippingService {
         shippingModel.setTimeStamp(timeStamp);
         shippingModel.setOrderId(orderId);
         shippingModel.setEasyship(data[0].get("easyship").toString());
+        shippingModel.setOrderDate(orderDate);
         
         ObjectMapper mapper = new ObjectMapper();
         DeliveryDataObject deliveryDataObj = null;
@@ -87,7 +91,7 @@ public class ShippingServiceImpl implements ShippingService {
         shippingModel.setShippingPrice(INITIAL_PRICE);
         /** 국제배송 상태 */
         shippingModel.setShipState(ShippingServiceState.RECEIVE_BOX_READY);
-        shippingModel.setPaymentState(PaymentState.BEFORE);
+        shippingModel.setPaymentState(PaymentState.NOT_DEFINED);
         
         return shippingServiceRepository.createShippingService(shippingModel);
     }

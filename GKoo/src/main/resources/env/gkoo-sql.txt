@@ -1,3 +1,7 @@
+==============================
+========= Queries ============ 
+==============================
+
 --Normal Query
 select * from notice;
 select notice_content from notice where notice_nr = ;
@@ -17,6 +21,14 @@ create table payment (
 ALTER TABLE payment
 ADD COLUMN payment_state integer;
 
+-- Add Column with reference
+ALTER TABLE payment
+ADD COLUMN "fk_column_name" integer REFERENCES "table_name";
+
+-- change Column name
+ALTER TABLE table_name
+  RENAME COLUMN old_name TO new_name;
+
 -- Insert data
 INSERT INTO payment (memberid, orderid, payment_deposit) VALUES ('m', '20190526220452', 42000);
 
@@ -26,8 +38,21 @@ UPDATE payment SET payment_ownername = null, payment_state = 1 WHERE orderid='20
 -- Drop table column
 ALTER TABLE "table_name" DROP COLUMN "column_name";
 
--- Delete table rows
-DELETE FROM table WHERE ;
+-- Drop table column and all of its associated objects(fk)
+ALTER TABLE "table_name" DROP COLUMN "column_name" CASCADE;
+
+-- Delete table all rows
+DELETE FROM "table_name";
+
+-- Delete table rows with condition
+DELETE FROM "table_name" WHERE ;
+
+-- Delete(drop) total Table
+drop table "table_name";
+
+==============================
+========== History ===========
+==============================
 
 getProductsCommonInfo : SELECT prod.pd_shopurl, prod.pd_trackingtitle, prod.pd_trackingnumber, oState.ship_state, oState.ship_price, 
                         oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount
@@ -49,8 +74,7 @@ create table favorite_address (
     address text,
 );
 
--- Delete total Table
-drop table favorite_address;
+
 
 drop table customer;
 
@@ -82,3 +106,22 @@ create table recipient (
     address text,
     usercomment text
 );
+
+
+ALTER TABLE orderstate
+ADD COLUMN order_date Date;
+
+ALTER TABLE orderstate DROP COLUMN fk_payment;
+
+DELETE FROM payment;
+
+ALTER TABLE payment
+ADD COLUMN fk_orderstate integer REFERENCES orderstate;
+
+ALTER TABLE payment
+  RENAME COLUMN memberid TO userid;
+  
+UPDATE orderstate SET order_date = '2019-12-25' WHERE orderid = '20190526192259';
+
+ALTER TABLE orderstate DROP COLUMN pay_state;
+  

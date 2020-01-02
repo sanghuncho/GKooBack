@@ -1,7 +1,10 @@
 package mypage.information;
 
+import java.util.Date;
+
 public class ProductsCommonInformation {
-	private String shopUrl;
+	
+    private String shopUrl;
 	private String trackingCompany;
 	private String trackingNr;
 	private String shipState;
@@ -12,6 +15,9 @@ public class ProductsCommonInformation {
 	private double shipPrice;
 	private double shipPriceDiscount;
 	
+	private int paymentid;
+	private Date paymentDate;
+	private double paymentDeposit;
 	private String paymentOwnerName;
 	private int paymentState;
 
@@ -132,4 +138,32 @@ public class ProductsCommonInformation {
 	public void setPaymentState(int paymentState) {
 		this.paymentState = paymentState;
 	}
+
+    public int getPaymentid() {
+        return paymentid;
+    }
+
+    public void setPaymentid(int paymentid) {
+        this.paymentid = paymentid;
+    }
+
+    public Date getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public double getPaymentDeposit() {
+        return paymentDeposit;
+    }
+
+    public void setPaymentDeposit(double paymentDeposit) {
+        this.paymentDeposit = paymentDeposit;
+    }
+
+    public void setShipState(String shipState) {
+        this.shipState = shipState;
+    }
 }

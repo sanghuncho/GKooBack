@@ -39,9 +39,8 @@ public class OverviewServiceController {
 	@RequestMapping("/warehouseinformation")
 	public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-		String memberId = AuthentificationService.getAuthenficatedMemberID(request);
-		/*ToDo : low coupling - interface, injection */
-		return overviewImp.getWarehouseInformationFromDB(memberId);
+		String userid = SecurityConfig.getUserid(request);   		/*ToDo : low coupling - interface, injection */
+		return overviewImp.getWarehouseInformationFromDB(userid);
 	}
 	
 	@CrossOrigin(origins = ServicePath.MYPAGE)

@@ -62,6 +62,13 @@ public class MypageDetailsController {
 		return detailsImp.getProductsInfo(memberId, number);
 	}
 	
+	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+    @RequestMapping("/mypageDetailData/{orderid}")
+    public MypageDetailData requestMypageDetailData(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
+        String userid = AuthentificationService.getAuthenficatedMemberID(request);        
+        return detailsImp.getMypageDetailData(userid, orderid);
+    }
+	
 //	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 //	@RequestMapping(value = "/willpaydeleveryfee", method = RequestMethod.POST)
 //	public ResponseEntity<?> willPayDeliveryFee(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
@@ -80,13 +87,13 @@ public class MypageDetailsController {
 	@RequestMapping(value = "/willpaydeleveryfeeupdate", method = RequestMethod.POST)
 	public ProductsCommonInformation willPayDeliveryFeeUpdate(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
 		//MypageDetailsImpl detailsImp = new MypageDetailsImpl();
-		String memberId = AuthentificationService.getAuthenficatedMemberID(request);
-        System.out.println("oderNumber: " + data[0].get("orderNumber"));
+	    String userid = SecurityConfig.getUserid(request);
+        System.out.println("orderid: " + data[0].get("orderid"));
         System.out.println("ownerNumber: " + data[1].get("ownerName"));
-        String orderNumber = data[0].get("orderNumber").toString();
+        String orderid = data[0].get("orderid").toString();
         String ownerName = data[1].get("ownerName").toString();
-        detailsImp.willPayDeliveryFee(memberId, orderNumber, ownerName);
-		return detailsImp.getProductsCommonInfo(memberId, orderNumber);
+        detailsImp.willPayDeliveryFee(userid, orderid, ownerName);
+		return detailsImp.getProductsCommonInfo(userid, orderid);
 	}
 	
 	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)

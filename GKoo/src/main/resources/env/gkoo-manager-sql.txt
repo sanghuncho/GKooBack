@@ -1,0 +1,33 @@
+payment_state
+상품도착전(0) - 결제창 숨김
+결제대기(1) - 상품도착, 배송비 입력, 결제전
+결제요청(2) - 무통장입금신청
+결제완료(3) - 결제확인됨
+
+orderstate - ship_state
+입고대기 (1),
+입고완료 (2),
+결제요청 (3),
+결제완료 (4),
+해외배송중 (5),
+통관진행 (6),
+국내배송 (7),
+배송완료 (8)
+
+
+결제창 숨김
+UPDATE payment SET payment_state = 0 WHERE paymentid = 13;
+
+상품 도착, 배송비 미정상태
+- 입고완료 (2)
+UPDATE orderstate SET ship_state = 2 WHERE orderid = ' ';
+
+상품 도착, 배송비 책정후
+UPDATE orderstate SET ship_state = 2, box_actual_weight = 2, box_volume_weight = 5, 
+	ship_price = 30000 WHERE orderid = '20200102182718';
+UPDATE payment SET payment_state = 1 WHERE orderid = '20200102182718';
+
+
+배송비 입금확인후
+UPDATE orderstate SET ship_state = 4  WHERE orderid = '20200102182718';
+UPDATE payment SET payment_state = 3, payment_date = '2020.01.02', payment_deposit=29000 WHERE orderid = '20200102182718';

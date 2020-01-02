@@ -83,24 +83,24 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 //	배송완료 (8)
 
 	@Override
-	public void willPayDeliveryFee(String username, String orderNumber, String ownerName) {
+	public void willPayDeliveryFee(String userid, String orderid, String ownerName) {
 		ConnectionDB.connectSQL();
 		//String query = "UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid=? AND orderid=?";
 		String query = "WITH t AS ( UPDATE PAYMENT SET payment_ownername = ?, "
 				+ "payment_state = ?  "
-				+ "WHERE memberid = ? AND orderid = ?) "
+				+ "WHERE userid = ? AND orderid = ?) "
 				+ "UPDATE orderstate SET ship_state = ?  "
-				+ "WHERE memberid = ? AND orderid = ?";
+				+ "WHERE userid = ? AND orderid = ?";
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
 			psmt.setString(1, ownerName);
 			psmt.setInt(2, PaymentState.REQUEST.getCode());
-			psmt.setString(3, username);
-			psmt.setString(4, orderNumber);
+			psmt.setString(3, userid);
+			psmt.setString(4, orderid);
 			
 			psmt.setInt(5, ShippingServiceState.PAYMENT_READY.getCode());
-			psmt.setString(6, username);
-			psmt.setString(7, orderNumber);
+			psmt.setString(6, userid);
+			psmt.setString(7, orderid);
 			
 			psmt.executeQuery();
 		} catch (SQLException e) {
@@ -161,7 +161,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	public ProductsCommonInformation getProductsCommonInfo(String username, String orderNumber) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT oState.shop_url, oState.tracking_company_world, oState.trackingnr_world, oState.ship_state, oState.ship_price, oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, paymt.payment_ownername, paymt.payment_state FROM ORDERSTATE oState JOIN PAYMENT paymt ON oState.memberid = ? and oState.orderid = ? and oState.fk_payment = paymt.paymentid";
+		String query = "SELECT oState.shop_url, oState.tracking_company_world, oState.trackingnr_world, oState.ship_state, oState.ship_price, oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, paymt.paymentid, paymt.payment_date, paymt.payment_deposit ,paymt.payment_ownername, paymt.payment_state FROM ORDERSTATE oState JOIN PAYMENT paymt ON oState.userid = ? and oState.orderid = ? and oState.id = paymt.fk_orderstate";
 		//String query = "SELECT * from ORDERSTATE where memberid=? and orderid = ? INNER JOIN PAYMENT paymt ON oState.fk_payment = paymt.paymentid and oState.orderid = ?";
 		//ToDo : Jackson
 		//select oState.shop_url, oState.ship_state, paymt.payment_state FROM ORDERSTATE oState 
@@ -213,6 +213,9 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			commonInfo.setActualWeight(rs.getDouble("box_actual_weight"));
 			commonInfo.setVolumeWeight(rs.getDouble("box_volume_weight"));
 			commonInfo.setPaymentOwnerName(rs.getString("payment_ownername"));
+			commonInfo.setPaymentid(rs.getInt("paymentid"));
+			commonInfo.setPaymentDate(rs.getDate("payment_date"));
+			commonInfo.setPaymentDeposit(rs.getDouble("payment_deposit"));
 		}
 		return commonInfo;
 	}
@@ -274,5 +277,12 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	public ResponseEntity<?> deleteShipingServiceData(String userid, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
         String orderNumber = data[0].get("orderNumber").toString();
         return shippingServiceRepository.deleteShipingServiceData(userid, orderNumber);
+    }
+
+    @Override
+    public MypageDetailData getMypageDetailData(String userid, String orderid) {
+        RecipientData recipientData = getRecipientInfo(userid, orderid);
+        ProductsCommonInformation productsCommonInformation = getProductsCommonInfo(userid, orderid);  
+        return new MypageDetailData(recipientData, productsCommonInformation);
     }
 }

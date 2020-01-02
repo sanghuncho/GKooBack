@@ -1,5 +1,11 @@
 package com.gkoo.data;
 
+import java.util.Date;
+
+/**
+ * @author sanghun cho
+ *
+ */
 public class OrderInformation {
 	private String orderid;
 	private String productInfo;
@@ -7,8 +13,10 @@ public class OrderInformation {
 	private double deliveryPayment;
 	private int deliveryState;
 	private String deliveryTracking;
+	private Date orderDate;
 	
 	public OrderInformation(){}
+	
 	public String getOrderid() {
 		return orderid;
 	}
@@ -56,4 +64,12 @@ public class OrderInformation {
 	public void setDeliveryTracking(String deliveryTracking) {
 		this.deliveryTracking = deliveryTracking;
 	}
+	
+    public Date getOrderDate() {
+        return orderDate;
+    }
+    
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
 }

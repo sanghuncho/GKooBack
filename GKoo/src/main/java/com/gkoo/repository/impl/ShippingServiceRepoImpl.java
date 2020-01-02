@@ -31,29 +31,29 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             + "address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     private static final String CREATE_SHIPPING_PAYMENT = 
-            "insert into payment(memberId, orderId, payment_state) values(?,?,?) RETURNING payment.paymentid";
+            "insert into payment(userid, orderId, payment_state, fk_orderstate) values(?,?,?,?)";
     
     private static final String CREATE_SHIPPING_PRODUCTS = "insert into product(memberId, orderId, order_stamp, "
             + "pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
             + "pd_amount, pd_price, pd_totalprice) values(?,?,?,?,?,?,?,?,?,?)";
     
     private static final String UPDATE_SHIPPING_ORDER_STATE = 
-            "UPDATE ORDERSTATE SET shop_url=?, tracking_company_world=?, trackingnr_world=? WHERE memberid=? and orderid=?";
+            "UPDATE ORDERSTATE SET shop_url=?, tracking_company_world=?, trackingnr_world=? WHERE userid=? and orderid=?";
     
-    private static final String CREATE_SHIPPING_ORDER_STATE = "insert into orderstate(memberId, orderId, ship_price, ship_state, "
-            + "tracking_company_world, trackingnr_world, fk_payment, shop_url) values(?,?,?,?,?,?,?,?)";
+    private static final String CREATE_SHIPPING_ORDER_STATE = "insert into orderstate(userid, orderId, ship_price, ship_state, "
+            + "tracking_company_world, trackingnr_world, shop_url, order_date) values(?,?,?,?,?,?,?,?) RETURNING orderstate.id";
     
     private static final String FETCH_USERBASEINFO = "select * from customer where userid = ?";
 
     private static final String REGISTER_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phonenumber_first, phonenumber_second, zip_code, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
 
-    private static final String DELETE_SHIPPING_SERVICE_PRODUCTS = "DELETE FROM PRODUCT WHERE memberid=? and orderid=?";
+    private static final String DELETE_SHIPPING_SERVICE_PRODUCTS = "DELETE FROM PRODUCT WHERE userid=? and orderid=?";
 
-    private static final String DELETE_SHIPPING_SERVICE_ORDERSTATE = "DELETE FROM ORDERSTATE WHERE memberid=? and orderid=?";
+    private static final String DELETE_SHIPPING_SERVICE_ORDERSTATE = "DELETE FROM ORDERSTATE WHERE userid=? and orderid=?";
     
-    private static final String DELETE_SHIPPING_SERVICE_PAYMENT = "DELETE FROM PAYMENT WHERE memberid=? and orderid=?";
+    private static final String DELETE_SHIPPING_SERVICE_PAYMENT = "DELETE FROM PAYMENT WHERE userid=? and orderid=?";
     
-    private static final String DELETE_SHIPPING_SERVICE_RECIPIENT = "DELETE FROM RECIPIENT WHERE memberid=? and orderid=?";
+    private static final String DELETE_SHIPPING_SERVICE_RECIPIENT = "DELETE FROM RECIPIENT WHERE userid=? and orderid=?";
     
     public ResponseEntity<?> createShippingService(ShippingServiceModel model) {
         ConnectionDB.connectSQL();      
@@ -73,56 +73,40 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             psmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
-        } 
+        }
         
+        ConnectionDB.connectSQL();
         ResultSet resultSet = null;
-        ConnectionDB.connectSQL();
-        int paymentid = 0;
-        try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_PAYMENT);) {
-            psmt.setString(1, model.getUserid());
-            psmt.setString(2, String.valueOf(model.getOrderId()));
-            psmt.setInt(3, model.getPaymentState());
-            resultSet  = psmt.executeQuery();
-            paymentid = getPaymentId(resultSet); 
-        } catch (SQLException e) {
-            System.out.println(e);
-        } 
-        
-        ConnectionDB.connectSQL();
+        int orderstateId = 0;
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_ORDER_STATE);){
-            /** 
-             *  memberid character varying(50) 
-                orderid character varying(50) 
-                ship_price numeric,
-                ship_state integer,
-                
-                trackingnr_kor character varying(50) 
-                trackingnr_world character varying(50) 
-                box_actual_weight numeric,
-                box_volume_weight numeric,
-                ship_price_discount numeric,
-                fk_payment integer,
-                
-                tracking_company_kor character varying(50) 
-                tracking_company_world character varying(50)
-                shop_url character varying(50)
-               */
-            
             psmt.setString(1, model.getUserid());
             psmt.setString(2, String.valueOf(model.getOrderId()));
             psmt.setDouble(3, model.getShippingPrice());
             psmt.setInt(4, model.getShipState());
             psmt.setString(5, model.getTrackingCompany());
             psmt.setString(6, model.getTrackingNumber());
-            psmt.setInt(7, paymentid);
-            psmt.setString(8, model.getShopUrl());
+            psmt.setString(7, model.getShopUrl());
+            psmt.setDate(8, model.getOrderDate());
+            resultSet  = psmt.executeQuery();
+            orderstateId = getOrderStateId(resultSet); 
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(CREATE_SHIPPING_PAYMENT);) {
+            psmt.setString(1, model.getUserid());
+            psmt.setString(2, String.valueOf(model.getOrderId()));
+            psmt.setInt(3, model.getPaymentState());
+            psmt.setInt(4, orderstateId);
             psmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
-        }  
-
+        } 
+        
+        
         createShippingProductList(model);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -159,6 +143,14 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             paymentid = rs.getInt("paymentid");
         }
         return paymentid;
+    }
+    
+    private int getOrderStateId(ResultSet rs) throws SQLException {
+        int orderstateID=0;
+        while (rs.next()) {
+            orderstateID = rs.getInt("id");
+        }
+        return orderstateID;
     }
 
     @Override

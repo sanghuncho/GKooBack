@@ -20,6 +20,8 @@ public interface MypageDetailsDAO {
 	
 	public ProductsCommonInformation getProductsCommonInfo(String username, String number);
 	
+	public MypageDetailData getMypageDetailData(String userid, String orderid);
+	
 	public void willPayDeliveryFee(String username, String orderNumber, String ownerName);
 		
 	public ResponseEntity<?> updateRecipientData(String memberId, HashMap<String, Object>[] data);
