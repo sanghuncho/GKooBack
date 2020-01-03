@@ -84,9 +84,12 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             psmt.setString(2, String.valueOf(model.getOrderId()));
             psmt.setDouble(3, model.getShippingPrice());
             psmt.setInt(4, model.getShipState());
-            psmt.setString(5, model.getTrackingCompany());
-            psmt.setString(6, model.getTrackingNumber());
-            psmt.setString(7, model.getShopUrl());
+            String company = model.getTrackingCompany();
+            psmt.setString(5, company == "" ? null : company);
+            String trackingNr = model.getTrackingNumber();
+            psmt.setString(6, trackingNr == "" ? null : trackingNr);
+            String shopUrl = model.getShopUrl();
+            psmt.setString(7, shopUrl == "" ? null : shopUrl);
             psmt.setDate(8, model.getOrderDate());
             resultSet  = psmt.executeQuery();
             orderstateId = getOrderStateId(resultSet); 

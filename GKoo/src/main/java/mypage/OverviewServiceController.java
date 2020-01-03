@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.gkoo.configuration.SecurityConfig;
+import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
+import payment.PaymentData;
 import serviceBase.ServicePath;
 import util.AuthentificationService;
 
@@ -34,23 +36,38 @@ public class OverviewServiceController {
 		return overviewImp.getOrderInformationFromDB(userid);
 	}
 	
-	// ToDo : Refactoring 
 	@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping("/warehouseinformation")
 	public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-		String userid = SecurityConfig.getUserid(request);   		/*ToDo : low coupling - interface, injection */
+		String userid = SecurityConfig.getUserid(request);
 		return overviewImp.getWarehouseInformationFromDB(userid);
 	}
+	
+	@CrossOrigin(origins = ServicePath.MYPAGE)
+    @RequestMapping("/paymentData")
+    public List<PaymentData> requestPaymentData(HttpServletRequest request) throws SQLException  {
+        OverviewInformationImpl overviewImp = new OverviewInformationImpl();
+        String userid = SecurityConfig.getUserid(request);
+        return overviewImp.getPaymentData(userid);
+    }
+	
+	@CrossOrigin(origins = ServicePath.MYPAGE)
+    @RequestMapping("/deliveryKoreaData")
+    public List<DeliveryKoreaData> requestDeliveryKoreaData(HttpServletRequest request) throws SQLException  {
+        OverviewInformationImpl overviewImp = new OverviewInformationImpl();
+        String userid = SecurityConfig.getUserid(request);
+        return overviewImp.getDeliveryKoreaData(userid);
+    }
 	
 	@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
 	public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
 		OverviewInformationImpl overviewImpl = new OverviewInformationImpl();
-		String memberId = AuthentificationService.getAuthenficatedMemberID(request);
-		String orderNumber = data[0].get("orderNumber").toString();
+		String userid = SecurityConfig.getUserid(request);
+		String orderid = data[0].get("orderid").toString();
 		String trackingCompany = data[1].get("trackingCompany").toString();
 	    String trackingNumber = data[2].get("trackingNumber").toString();
-		return overviewImpl.updateTrackingNumber(memberId, orderNumber, trackingCompany, trackingNumber);
+		return overviewImpl.updateTrackingNumber(userid, orderid, trackingCompany, trackingNumber);
 	}
 }

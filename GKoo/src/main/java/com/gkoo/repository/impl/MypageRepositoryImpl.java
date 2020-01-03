@@ -21,7 +21,7 @@ public class MypageRepositoryImpl implements MypageRepository {
         return MypageDB.getWarehouseData(userid);
     }
     
-    public ResponseEntity<?> updateTrackingNumber(String memberId,String orderNumber,String trackingCompany,String trackingNumber){
-        return MypageDB.updateTrackingNumber(memberId, orderNumber, trackingCompany, trackingNumber);
+    public ResponseEntity<?> updateTrackingNumber(String userid,String orderid, String trackingCompany, String trackingNumber){
+        return MypageDB.updateTrackingNumber(userid, orderid, trackingCompany, trackingNumber);
     }
 }

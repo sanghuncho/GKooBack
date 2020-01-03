@@ -6,18 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 import databaseUtil.ConnectionDB;
+import payment.PaymentData;
 
 public class OverviewInformationImpl implements OverviewServiceDAO {
+    private static final Logger LOGGER = LogManager.getLogger();
     
 	public OverviewInformationImpl(){}
-	
+
 	@Override
 	public List<OrderInformation> getOrderInformationFromDB(String userid) {
 		ResultSet resultSet = null;
@@ -76,8 +80,8 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 	private List<WarehouseInformation> writeWarehouseInformation(ResultSet rs, List<WarehouseInformation> warehouseInformationList) throws SQLException {
 		while (rs.next()) {
 			WarehouseInformation warehouseInfo = new WarehouseInformation();
-			warehouseInfo.setOrderNumber(rs.getString("orderid"));
-			warehouseInfo.setProductInfo(collectProductInfos(warehouseInfo.getOrderNumber()));
+			warehouseInfo.setOrderid(rs.getString("orderid"));
+			warehouseInfo.setProductInfo(collectProductInfos(warehouseInfo.getOrderid()));
 			warehouseInfo.setRecipient(rs.getString("name_kor"));
 			warehouseInfo.setDeliveryPayment(rs.getDouble("ship_price"));
 			warehouseInfo.setDeliveryState(rs.getInt("ship_state"));
@@ -96,7 +100,7 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 			
 	}
 	
-	private String collectProductInfos(String orderId) {
+	private String collectProductInfos(String orderid) {
 		List<String> products = new ArrayList<>();
 		ResultSet resultSet = null;
 		
@@ -105,7 +109,7 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 		ConnectionDB.connectSQL();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(GET_PRODUCTS_NAME);){
-			psmt.setString(1, orderId);
+			psmt.setString(1, orderid);
 			resultSet = psmt.executeQuery();
 			while (resultSet.next()) {
 				products.add(resultSet.getString("pd_itemtitle"));
@@ -118,22 +122,103 @@ public class OverviewInformationImpl implements OverviewServiceDAO {
 	}
 
 	@Override
-	public ResponseEntity<?> updateTrackingNumber(String memberId, String orderNumber, String trackingCompony, String trackingNumber) {
+	public ResponseEntity<?> updateTrackingNumber(String userid, String orderid, String trackingCompony, String trackingNumber) {
 	    ConnectionDB.connectSQL();
-		final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where memberid = ? and orderid = ?";
+		final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 		
 		try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(UPDATE_TRACKNG_NUMBER);){
 		    psmt.setString(1, trackingNumber);
 		    psmt.setString(2, trackingCompony);
-            psmt.setString(3, memberId);
-            psmt.setString(4, orderNumber);
+            psmt.setString(3, userid);
+            psmt.setString(4, orderid);
             psmt.executeUpdate();
         } catch (SQLException e) {
-            //Logger
+            String error = "Error updating trackingnumber";
+            LOGGER.error(error, e);
         }
 		
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
 	}
+
+    @Override
+    public List<PaymentData> getPaymentData(String userid) {
+        ConnectionDB.connectSQL();
+        final String GET_PAYMENTDATA = "SELECT * FROM PAYMENT WHERE (payment_state = 1 or payment_state = 2 or payment_state = 3) AND userid=?";
+        ResultSet resultSet = null;
+        List<PaymentData> paymentDataList = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            paymentDataList = writePaymentData(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+    
+    private List<PaymentData> writePaymentData(ResultSet rs){
+        List<PaymentData> paymentDataList = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                PaymentData payment = new PaymentData();
+                try {
+                    payment.setPaymentid(rs.getInt("paymentid"));
+                    payment.setOrderid(rs.getString("orderid"));
+                    payment.setPaymentState(rs.getInt("payment_state"));
+                } catch (SQLException e) {
+                    String error = "Error fetching paymentData";
+                    LOGGER.error(error, e);
+                }
+                paymentDataList.add(payment);
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+
+    @Override
+    public List<DeliveryKoreaData> getDeliveryKoreaData(String userid) {
+        ConnectionDB.connectSQL();
+        final String GET_DELIVERYKOREADATA = "SELECT * FROM ORDERSTATE WHERE ship_state > 4 AND userid=?";
+        ResultSet resultSet = null;
+        List<DeliveryKoreaData> deliveryKoreaDataList = new ArrayList<>();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_DELIVERYKOREADATA);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            deliveryKoreaDataList = writeDeliveryKoreaData(resultSet, deliveryKoreaDataList);
+        } catch (SQLException e) {
+            String error = "Error fetching delivery korea data";
+            LOGGER.error(error, e);
+        }
+        return deliveryKoreaDataList;
+    }
+    
+    private List<DeliveryKoreaData> writeDeliveryKoreaData(ResultSet rs, List<DeliveryKoreaData> deliveryKoreaDataList){
+        try {
+            while (rs.next()) {
+                DeliveryKoreaData deliveryKoreaData = new DeliveryKoreaData();
+                try {
+                    deliveryKoreaData.setId(rs.getInt("id"));
+                    deliveryKoreaData.setOrderid(rs.getString("orderid"));
+                    deliveryKoreaData.setDeliveryState(rs.getInt("ship_state"));
+                    deliveryKoreaData.setDeliveryTracking(rs.getString("trackingnr_kor"));
+                } catch (SQLException e) {
+                    String error = "Error fetching delivery korea data";
+                    LOGGER.error(error, e);
+                }
+                deliveryKoreaDataList.add(deliveryKoreaData);
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching delivery korea data";
+            LOGGER.error(error, e);
+        }
+        return deliveryKoreaDataList;
+    }
 }

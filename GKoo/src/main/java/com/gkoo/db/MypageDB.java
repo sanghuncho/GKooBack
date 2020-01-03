@@ -21,7 +21,7 @@ public class MypageDB {
     
     private static final String FETTCH_ORDER_DATA = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, rp.name_kor "
             + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.memberid=?";
-    private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where memberid = ? and orderid = ?";
+    private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
     public static List<OrderInformation> getOrderData(String userid) {
         ConnectionDB.connectSQL();
@@ -100,8 +100,8 @@ public class MypageDB {
     private static List<WarehouseInformation> writeWarehouseInformation(ResultSet rs, List<WarehouseInformation> warehouseInformationList) throws SQLException {
         while (rs.next()) {
             WarehouseInformation warehouseInfo = new WarehouseInformation();
-            warehouseInfo.setOrderNumber(rs.getString("orderid"));
-            warehouseInfo.setProductInfo(collectProductInfos(warehouseInfo.getOrderNumber()));
+            warehouseInfo.setOrderid(rs.getString("orderid"));
+            warehouseInfo.setProductInfo(collectProductInfos(warehouseInfo.getOrderid()));
             warehouseInfo.setRecipient(rs.getString("name_kor"));
             warehouseInfo.setDeliveryPayment(rs.getDouble("ship_price"));
             warehouseInfo.setDeliveryState(rs.getInt("ship_state"));
@@ -119,15 +119,15 @@ public class MypageDB {
         }
     }
     
-    public static ResponseEntity<?> updateTrackingNumber(String memberId, String orderNumber, String trackingCompony, String trackingNumber) {
+    public static ResponseEntity<?> updateTrackingNumber(String userid, String orderid, String trackingCompony, String trackingNumber) {
         ConnectionDB.connectSQL();
         
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(UPDATE_TRACKNG_NUMBER);){
             psmt.setString(1, trackingNumber);
             psmt.setString(2, trackingCompony);
-            psmt.setString(3, memberId);
-            psmt.setString(4, orderNumber);
+            psmt.setString(3, userid);
+            psmt.setString(4, orderid);
             psmt.executeUpdate();
         } catch (SQLException e) {
             String error = "Error updating trackingnumber";

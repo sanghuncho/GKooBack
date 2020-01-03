@@ -81,11 +81,19 @@ public class ShippingServiceImpl implements ShippingService {
         shippingModel.setAgreeWithCollection(data[8].get("agreeWithCollection").toString());
         
         shippingModel.setPhonenumberFirst(data[9].get("phonenumberFirst").toString());
-        shippingModel.setPhonenumberSecond(data[10].get("phonenumberSecond").toString());
+        if(data[10].get("phonenumberSecond") == null) {
+            shippingModel.setPhonenumberSecond("");
+        } else {
+            shippingModel.setPhonenumberSecond(data[10].get("phonenumberSecond").toString());
+        }
         
         shippingModel.setPostCode(data[11].get("postCode").toString());
         shippingModel.setDeliveryAddress(data[12].get("deliveryAddress").toString());
-        shippingModel.setDeliveryMessage(data[13].get("deliveryMessage").toString());
+        if(data[13].get("deliveryMessage") == null) {
+            shippingModel.setDeliveryMessage("");
+        } else {
+            shippingModel.setDeliveryMessage(data[13].get("deliveryMessage").toString());
+        }
         
         /** 국제배송비 */
         shippingModel.setShippingPrice(INITIAL_PRICE);

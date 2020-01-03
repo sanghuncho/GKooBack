@@ -29,7 +29,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public ResponseEntity<?> updateTrackingNumber(String memberId,String orderNumber,String trackingCompany,String trackingNumber) {
-        return mypageRepository.updateTrackingNumber(memberId, orderNumber, trackingCompany, trackingNumber);
+    public ResponseEntity<?> updateTrackingNumber(String userid,String orderid, String trackingCompany,String trackingNumber) {
+        return mypageRepository.updateTrackingNumber(userid, orderid, trackingCompany, trackingNumber);
     }
 }
