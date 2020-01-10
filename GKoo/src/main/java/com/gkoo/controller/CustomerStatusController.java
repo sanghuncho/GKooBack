@@ -41,7 +41,7 @@ public class CustomerStatusController {
 	public CustomerStatus requestCustomerStatus(HttpServletRequest request) throws SQLException {
         AccessToken accessToken = SecurityConfig.getAccessToken(request);
         customerstatusService.checkUserid(accessToken);
-        String userid = accessToken.getPreferredUsername();
+        String userid = SecurityConfig.getUserid(request);
         return customerstatusService.getCustomerStatus(userid);
 	}
 	

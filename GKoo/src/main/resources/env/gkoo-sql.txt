@@ -124,4 +124,25 @@ ALTER TABLE payment
 UPDATE orderstate SET order_date = '2019-12-25' WHERE orderid = '20190526192259';
 
 ALTER TABLE orderstate DROP COLUMN pay_state;
-  
+
+create table notices (
+    noticeid serial primary key,
+    notice_title VARCHAR(50) NOT NULL,
+    notice_content text NOT NULL,
+    notice_date date, 
+);
+
+DELETE FROM notice;
+drop table notice;
+
+create table question_answer (
+    qnaid serial primary key,
+    question_title VARCHAR(50) NOT NULL,
+    question_content text NOT NULL,
+    question_date date NOT NULL,
+    answer_content text,
+    answer_state answer_state,
+    answer_date date
+);
+
+CREATE TYPE answer_state AS ENUM('READY_TO_ANSWER', 'COMPLETE_ANSWER');

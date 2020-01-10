@@ -2,7 +2,6 @@ package com.gkoo.service;
 
 import java.util.HashMap;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.gkoo.data.UserBaseInfo;
 
