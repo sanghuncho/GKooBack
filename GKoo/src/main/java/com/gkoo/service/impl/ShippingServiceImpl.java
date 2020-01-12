@@ -39,7 +39,7 @@ public class ShippingServiceImpl implements ShippingService {
     public ResponseEntity<?> requestShippingservice(HashMap<String, Object>[] data, String userid) {
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
         String orderId = OrderID.generateOrderID();
-        LocalDate orderDate = TimeStamp.getOrderDate();
+        LocalDate orderDate = TimeStamp.getRequestDate();
         LOGGER.info("배송대행 서비스 신청: "+ userid + "/배송대행 서비스주문번호: " + orderId);
         
         ShippingServiceModel shippingModel = new ShippingServiceModel();

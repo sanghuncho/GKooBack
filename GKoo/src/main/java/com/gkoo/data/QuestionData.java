@@ -1,16 +1,16 @@
 package com.gkoo.data;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class QuestionData {
     private String questionTitle;
     private String questionContent;
-    private Date questionDate;
+    private LocalDate questionDate;
     
     public QuestionData() {}
     
-    public QuestionData(String questionTitle, String questionContent, Date questionDate) {
+    public QuestionData(String questionTitle, String questionContent, LocalDate questionDate) {
         this.questionTitle = questionTitle;
         this.questionContent = questionContent;
         this.questionDate = questionDate;
@@ -32,11 +32,11 @@ public class QuestionData {
         this.questionContent = questionContent;
     }
 
-    public java.sql.Date getQuestionDate() {
-        return new java.sql.Date(questionDate.getTime());
+    public Date getQuestionDate() {
+      return Date.valueOf(questionDate);
     }
-
-    public void setQuestionDate(Date questionDate) {
+    
+    public void setQuestionDate(LocalDate questionDate) {
         this.questionDate = questionDate;
     }
 }

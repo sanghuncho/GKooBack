@@ -21,7 +21,7 @@ public class TimeStamp {
 		return timeStamp;
 	}
 	
-	public static final LocalDate getOrderDate() {
+	public static final LocalDate getRequestDate() {
 	    ZoneId zone = ZoneId.of("Asia/Seoul");
         LocalDate currentOrderDate = LocalDate.now(zone);
         return currentOrderDate;

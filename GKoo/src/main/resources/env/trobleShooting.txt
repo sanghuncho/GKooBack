@@ -8,3 +8,5 @@ Keycloak "No Access Control Allow Origin
 1. create a Role and a User
     go to Roles -> add user role
     go to users ->Role Mappings -> Assigned Roles
+    
+2. check accessToken is well passed to children 

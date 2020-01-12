@@ -19,7 +19,7 @@ public class BuyingServiceImplTest {
 //        assertEquals(1.06, buyingServiceImplMock.getEstimationBuyingService(1, 1));
 //    }
     
-    private BuyingServiceImpl getMockBuyingServiceImpl() {
-        return new BuyingServiceImpl();
-    }
+//    private BuyingServiceImpl getMockBuyingServiceImpl() {
+//        return new BuyingServiceImpl();
+//    }
 }

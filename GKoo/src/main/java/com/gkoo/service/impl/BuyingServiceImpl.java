@@ -63,6 +63,6 @@ public class BuyingServiceImpl implements BuyingService {
     }
     
     public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, String userid){
-        return buyingServiceRepository.createBuyingService()data, userid;
+        return buyingServiceRepository.createBuyingService(data, userid);
     }
 }

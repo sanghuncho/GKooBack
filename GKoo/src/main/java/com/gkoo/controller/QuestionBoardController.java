@@ -11,9 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.gkoo.configuration.SecurityConfig;
-import com.gkoo.data.NoticeData;
 import com.gkoo.data.QuestionAnswerData;
 import com.gkoo.service.QuestionBoardService;
 import serviceBase.ServicePath;
@@ -36,10 +36,10 @@ public class QuestionBoardController {
     }
     
     @CrossOrigin(origins = ServicePath.QUESTION_BOARD)
-    @RequestMapping("/createQuestion")
+    @RequestMapping(value = "/registerQuestion", method = RequestMethod.POST)
     public ResponseEntity<?> createQuestion(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
         String userid = SecurityConfig.getUserid(request);
-        return questionBoardService.createQuestion(data,userid);
+        return questionBoardService.createQuestion(data, userid);
     }
     
     @CrossOrigin(origins = ServicePath.QUESTION_BOARD)

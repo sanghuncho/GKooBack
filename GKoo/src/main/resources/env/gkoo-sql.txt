@@ -130,7 +130,9 @@ create table notices (
     notice_title VARCHAR(50) NOT NULL,
     notice_content text NOT NULL,
     notice_date date, 
-);
+);	
+
+INSERT INTO notices (notice_title, notice_content, notice_date) VALUES ('GKoo 테스트 런칭', '배송대행 및 구매대행 신청이 테스트 진행중입니다', '2020-01-11');
 
 DELETE FROM notice;
 drop table notice;
@@ -145,4 +147,5 @@ create table question_answer (
     answer_date date
 );
 
+-- Enum Type
 CREATE TYPE answer_state AS ENUM('READY_TO_ANSWER', 'COMPLETE_ANSWER');
