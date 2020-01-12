@@ -75,7 +75,6 @@ create table favorite_address (
 );
 
 
-
 drop table customer;
 
 create table customer (
@@ -144,8 +143,13 @@ create table question_answer (
     question_date date NOT NULL,
     answer_content text,
     answer_state answer_state,
-    answer_date date
+    answer_date date,
+    userid VARCHAR(50)  NOT NULL
 );
 
 -- Enum Type
 CREATE TYPE answer_state AS ENUM('READY_TO_ANSWER', 'COMPLETE_ANSWER');
+
+
+ALTER TABLE question_answer
+ADD COLUMN userid String;

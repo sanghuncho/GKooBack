@@ -4,9 +4,11 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 public class QuestionData {
+    private int qnaid;
     private String questionTitle;
     private String questionContent;
     private LocalDate questionDate;
+    private String userid;
     
     public QuestionData() {}
     
@@ -38,5 +40,21 @@ public class QuestionData {
     
     public void setQuestionDate(LocalDate questionDate) {
         this.questionDate = questionDate;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public int getQnaid() {
+        return qnaid;
+    }
+
+    public void setQnaid(int qnaid) {
+        this.qnaid = qnaid;
     }
 }
