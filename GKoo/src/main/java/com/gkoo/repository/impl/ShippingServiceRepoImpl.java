@@ -109,7 +109,6 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             System.out.println(e);
         } 
         
-        
         createShippingProductList(model);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -136,7 +135,7 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
                     psmt.executeUpdate();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex); 
+                LOGGER.error("Creating ShippingServiceProduct is failed", ex);
             }
     }
     

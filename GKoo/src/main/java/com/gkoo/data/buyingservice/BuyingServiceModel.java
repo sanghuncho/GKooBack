@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import com.gkoo.data.OptionalServices;
+import com.gkoo.enums.BuyingServicePaymentState;
 import com.gkoo.enums.BuyingServiceState;
 import payment.PaymentState;
 import shippingService.DeliveryDataObject;
@@ -19,21 +20,20 @@ public class BuyingServiceModel {
     
     private String userid;
     private String timeStamp;
-    private String orderId;
+    private String orderid;
     private LocalDate orderDate;
 
-    private String easyship;
     private String shopUrl;
-    private String trackingCompany;
-    private String trackingNumber;
+    private String trackingCompanyWorld;
+    private String trackingNumberWorld;
+    private String trackingCompanyKor;
+    private String trackingNumberKor;
     
     private String receiverNameByKorea;
-    private String setOwnerContent;
     private String receiverNameByEnglish;
     
     private String privateTransit;
     private String transitNumber;
-    private String agreeWithCollection;
     
     private String phonenumberFirst;
     private String phonenumberSecond;
@@ -42,34 +42,32 @@ public class BuyingServiceModel {
     private String deliveryAddress;
     private String deliveryMessage;
     
+    /** 구매대행 견적, 배송비 제외 */
     private double buyingPrice;
-    private OptionalServices optionalServices;
     
     /** 국제배송비 */
     private double shippingPrice;
+    private double boxActualWeight;
+    private double boxVolumeWeight;
+    
+    private OptionalServices optionalServices;
     
     /** 구매대행 상태 */
-    private int buyingState;
+    private BuyingServiceState buyingState;
     
-    private int paymentState;
+    private BuyingServicePaymentState buyingServicePaymentState;
 
     private ArrayList<BuyingProduct> buyingProductList = new ArrayList<>();
-    private double buyingProductspriceSum;
+    private double buyingProductsPriceSum;
     
     public ArrayList<BuyingProduct> getBuyingProductList(){
         /** Todo: immutable guava, return type heap? */
         return buyingProductList;
     }
-        
-    public void setDeliveryData(DeliveryDataObject data) {
-        this.shopUrl = data.getShopUrl();
-        this.trackingCompany = data.getTrackingTitle();
-        this.trackingNumber = data.getTrackingNumber();
-    }
     
     public void setBuyingProductsList(BuyingProduct[] buyingProducts) {
         ArrayList<BuyingProduct> arrayList = new ArrayList<BuyingProduct>(Arrays.asList(buyingProducts));
-        this.buyingProductspriceSum = arrayList.stream().mapToDouble(BuyingProduct::getProductTotalPrice).sum();
+        this.buyingProductsPriceSum = arrayList.stream().mapToDouble(BuyingProduct::getProductTotalPrice).sum();
         this.buyingProductList = arrayList;
     }
     
@@ -81,43 +79,12 @@ public class BuyingServiceModel {
         this.shopUrl = shopUrl;
     }
     
-    public String getEasyship() {
-        return easyship;
-    }
-    
-    public void setEasyship(String easyship) {
-        this.easyship = easyship;
-    }
-    
-    public String getTrackingCompany() {
-        return trackingCompany;
-    }
-    
-    public void setTrackingCompany(String trackingCompany) {
-        this.trackingCompany = trackingCompany;
-    }
-    
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
-    
-    public void setTrackingNumber(String trackingNumber) {
-        this.trackingNumber = trackingNumber;
-    }
-    
     public String getReceiverNameByKorea() {
         return receiverNameByKorea;
     }
     
     public void setReceiverNameByKorea(String receiverNameByKorea) {
         this.receiverNameByKorea = receiverNameByKorea;
-    }
-    public String getSetOwnerContent() {
-        return setOwnerContent;
-    }
-    
-    public void setOwnerContent(String setOwnerContent) {
-        this.setOwnerContent = setOwnerContent;
     }
 
     public String getReceiverNameByEnglish() {
@@ -142,14 +109,6 @@ public class BuyingServiceModel {
     
     public void setTransitNumber(String transitNumber) {
         this.transitNumber = transitNumber;
-    }
-
-    public String getAgreeWithCollection() {
-        return agreeWithCollection;
-    }
-    
-    public void setAgreeWithCollection(String agreeWithCollection) {
-        this.agreeWithCollection = agreeWithCollection;
     }
     
     public String getPostCode() {
@@ -193,12 +152,12 @@ public class BuyingServiceModel {
         this.timeStamp = timeStamp;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public String getOrderid() {
+        return orderid;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setOrderid(String orderId) {
+        this.orderid = orderId;
     }
     
     public double getShippingPrice() {
@@ -209,24 +168,24 @@ public class BuyingServiceModel {
         this.shippingPrice = shippingPrice;
     }
     
-    public int getBuyingState() {
+    public BuyingServiceState getBuyingState() {
         return buyingState;
     }
     
     public void setBuyingState(BuyingServiceState buyingState) {
-        this.buyingState = buyingState.getCode();
+        this.buyingState = buyingState;
     }
     
-    public int getPaymentState() {
-        return paymentState;
+    public BuyingServicePaymentState getBuyingServicePaymentState() {
+        return buyingServicePaymentState;
     }
     
-    public void setPaymentState(PaymentState paymentState) {
-        this.paymentState = paymentState.getCode();
+    public void setBuyingServicePaymentState(BuyingServicePaymentState buyingServicePaymentState) {
+        this.buyingServicePaymentState = buyingServicePaymentState;
     }
     
-    public double getBuyingProductspriceSum() {
-        return buyingProductspriceSum;
+    public double getBuyingProductsPriceSum() {
+        return buyingProductsPriceSum;
     }
     
     public String getPhonenumberSecond() {
@@ -251,5 +210,69 @@ public class BuyingServiceModel {
     
     public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public double getBuyingPrice() {
+        return buyingPrice;
+    }
+
+    public void setBuyingPrice(double buyingPrice) {
+        this.buyingPrice = buyingPrice;
+    }
+
+    public OptionalServices getOptionalServices() {
+        return optionalServices;
+    }
+
+    public void setOptionalServices(OptionalServices optionalServices) {
+        this.optionalServices = optionalServices;
+    }
+
+    public String getTrackingCompanyWorld() {
+        return trackingCompanyWorld;
+    }
+
+    public void setTrackingCompanyWorld(String trackingCompanyWorld) {
+        this.trackingCompanyWorld = trackingCompanyWorld;
+    }
+
+    public String getTrackingNumberWorld() {
+        return trackingNumberWorld;
+    }
+
+    public void setTrackingNumberWorld(String trackingNumberWorld) {
+        this.trackingNumberWorld = trackingNumberWorld;
+    }
+
+    public String getTrackingCompanyKor() {
+        return trackingCompanyKor;
+    }
+
+    public void setTrackingCompanyKor(String trackingCompanyKor) {
+        this.trackingCompanyKor = trackingCompanyKor;
+    }
+
+    public String getTrackingNumberKor() {
+        return trackingNumberKor;
+    }
+
+    public void setTrackingNumberKor(String trackingNumberKor) {
+        this.trackingNumberKor = trackingNumberKor;
+    }
+
+    public double getBoxActualWeight() {
+        return boxActualWeight;
+    }
+
+    public void setBoxActualWeight(double boxActualWeight) {
+        this.boxActualWeight = boxActualWeight;
+    }
+
+    public double getBoxVolumeWeight() {
+        return boxVolumeWeight;
+    }
+
+    public void setBoxVolumeWeight(double boxVolumeWeight) {
+        this.boxVolumeWeight = boxVolumeWeight;
     }
 }

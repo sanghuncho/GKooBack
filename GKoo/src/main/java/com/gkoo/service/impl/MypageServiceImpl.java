@@ -1,15 +1,14 @@
 package com.gkoo.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.gkoo.data.FavoriteAddress;
+import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
 import com.gkoo.repository.MypageRepository;
 import com.gkoo.service.MypageService;
+import payment.PaymentData;
 
 public class MypageServiceImpl implements MypageService {
     private final MypageRepository mypageRepository;
@@ -31,5 +30,15 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public ResponseEntity<?> updateTrackingNumber(String userid,String orderid, String trackingCompany,String trackingNumber) {
         return mypageRepository.updateTrackingNumber(userid, orderid, trackingCompany, trackingNumber);
+    }
+
+    @Override
+    public List<PaymentData> getPaymentData(String userid) {
+        return mypageRepository.getPaymentData(userid);
+    }
+
+    @Override
+    public List<DeliveryKoreaData> getDeliveryKoreaData(String userid) {
+        return mypageRepository.getDeliveryKoreaData(userid);;
     }
 }

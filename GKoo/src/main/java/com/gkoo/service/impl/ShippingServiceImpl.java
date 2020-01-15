@@ -2,7 +2,6 @@ package com.gkoo.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.UserBaseInfo;
-import com.gkoo.exception.CustomerStatusException;
 import com.gkoo.repository.ShippingServiceRepository;
 import com.gkoo.service.ShippingService;
 import payment.PaymentState;

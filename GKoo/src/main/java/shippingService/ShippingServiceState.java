@@ -1,5 +1,14 @@
 package shippingService;
 
+/**
+ *
+ * @author sanghuncho
+ *
+ * @since  13.01.2020
+ * 
+ * ToDO: ShippingServiceState includes PaymentState
+ *
+ */
 public enum ShippingServiceState {
 
 		//입고대기

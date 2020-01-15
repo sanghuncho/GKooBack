@@ -9,6 +9,8 @@ package com.gkoo.enums;
  */
 public enum BuyingServiceState {
     
+    //구매대행  신청함
+    
     //구매대행 결제대기    
     PRODUCT_PAYMENT_READY(1),
     

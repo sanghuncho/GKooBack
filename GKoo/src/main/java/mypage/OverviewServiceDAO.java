@@ -10,14 +10,14 @@ import payment.PaymentData;
 
 public interface OverviewServiceDAO {
 	
-	public List<OrderInformation> getOrderInformationFromDB(String username);
-	
-	public List<WarehouseInformation> getWarehouseInformationFromDB(String username);
-	
-	public ResponseEntity<?> updateTrackingNumber(String memberId, String orderNumber, String trackingCompany,String trackngNumber);
-	
-	public List<PaymentData> getPaymentData(String userid);
-	
-	public List<DeliveryKoreaData> getDeliveryKoreaData(String userid);
+//	public List<OrderInformation> getOrderInformationFromDB(String username);
+//	
+//	public List<WarehouseInformation> getWarehouseInformationFromDB(String username);
+//	
+//	public ResponseEntity<?> updateTrackingNumber(String memberId, String orderNumber, String trackingCompany,String trackngNumber);
+//	
+//	public List<PaymentData> getPaymentData(String userid);
+//	
+//	public List<DeliveryKoreaData> getDeliveryKoreaData(String userid);
 	
 }

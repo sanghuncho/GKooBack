@@ -24,50 +24,50 @@ import util.AuthentificationService;
 
 @RestController
 public class OverviewServiceController {
-	public OverviewServiceController() {}
+	//public OverviewServiceController() {}
 	
 	//autowired OverviewInformationImpl?
 	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
-	@RequestMapping("/orderinformation")
-	public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
-		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-        String userid = SecurityConfig.getUserid(request);      
-		return overviewImp.getOrderInformationFromDB(userid);
-	}
-	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
-	@RequestMapping("/warehouseinformation")
-	public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
-		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-		String userid = SecurityConfig.getUserid(request);
-		return overviewImp.getWarehouseInformationFromDB(userid);
-	}
-	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
-    @RequestMapping("/paymentData")
-    public List<PaymentData> requestPaymentData(HttpServletRequest request) throws SQLException  {
-        OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-        String userid = SecurityConfig.getUserid(request);
-        return overviewImp.getPaymentData(userid);
-    }
-	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
-    @RequestMapping("/deliveryKoreaData")
-    public List<DeliveryKoreaData> requestDeliveryKoreaData(HttpServletRequest request) throws SQLException  {
-        OverviewInformationImpl overviewImp = new OverviewInformationImpl();
-        String userid = SecurityConfig.getUserid(request);
-        return overviewImp.getDeliveryKoreaData(userid);
-    }
-	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
-	@RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
-	public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-		OverviewInformationImpl overviewImpl = new OverviewInformationImpl();
-		String userid = SecurityConfig.getUserid(request);
-		String orderid = data[0].get("orderid").toString();
-		String trackingCompany = data[1].get("trackingCompany").toString();
-	    String trackingNumber = data[2].get("trackingNumber").toString();
-		return overviewImpl.updateTrackingNumber(userid, orderid, trackingCompany, trackingNumber);
-	}
+//	@CrossOrigin(origins = ServicePath.MYPAGE)
+//	@RequestMapping("/orderinformation")
+//	public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
+//		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
+//        String userid = SecurityConfig.getUserid(request);      
+//		return overviewImp.getOrderInformationFromDB(userid);
+//	}
+//	
+//	@CrossOrigin(origins = ServicePath.MYPAGE)
+//	@RequestMapping("/warehouseinformation")
+//	public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
+//		OverviewInformationImpl overviewImp = new OverviewInformationImpl();
+//		String userid = SecurityConfig.getUserid(request);
+//		return overviewImp.getWarehouseInformationFromDB(userid);
+//	}
+//	
+//	@CrossOrigin(origins = ServicePath.MYPAGE)
+//    @RequestMapping("/paymentData")
+//    public List<PaymentData> requestPaymentData(HttpServletRequest request) throws SQLException  {
+//        OverviewInformationImpl overviewImp = new OverviewInformationImpl();
+//        String userid = SecurityConfig.getUserid(request);
+//        return overviewImp.getPaymentData(userid);
+//    }
+//	
+//	@CrossOrigin(origins = ServicePath.MYPAGE)
+//    @RequestMapping("/deliveryKoreaData")
+//    public List<DeliveryKoreaData> requestDeliveryKoreaData(HttpServletRequest request) throws SQLException  {
+//        OverviewInformationImpl overviewImp = new OverviewInformationImpl();
+//        String userid = SecurityConfig.getUserid(request);
+//        return overviewImp.getDeliveryKoreaData(userid);
+//    }
+//	
+//	@CrossOrigin(origins = ServicePath.MYPAGE)
+//	@RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
+//	public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
+//		OverviewInformationImpl overviewImpl = new OverviewInformationImpl();
+//		String userid = SecurityConfig.getUserid(request);
+//		String orderid = data[0].get("orderid").toString();
+//		String trackingCompany = data[1].get("trackingCompany").toString();
+//	    String trackingNumber = data[2].get("trackingNumber").toString();
+//		return overviewImpl.updateTrackingNumber(userid, orderid, trackingCompany, trackingNumber);
+//	}
 }
