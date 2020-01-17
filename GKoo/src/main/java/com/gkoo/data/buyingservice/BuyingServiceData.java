@@ -16,10 +16,10 @@ import shippingService.DeliveryDataObject;
  * @since  09.01.2020
  *
  */
-public class BuyingServiceModel {
+public class BuyingServiceData {
     
+    private int buyingServiceid;
     private String userid;
-    private String timeStamp;
     private String orderid;
     private LocalDate orderDate;
 
@@ -134,22 +134,13 @@ public class BuyingServiceModel {
     public void setDeliveryMessage(String deliveryMessage) {
         this.deliveryMessage = deliveryMessage;
     }
-    
 
     public String getUserid() {
         return userid;
     }
 
-    public void setUserid(String memberId) {
-        this.userid = memberId;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getOrderid() {
@@ -274,5 +265,13 @@ public class BuyingServiceModel {
 
     public void setBoxVolumeWeight(double boxVolumeWeight) {
         this.boxVolumeWeight = boxVolumeWeight;
+    }
+
+    public int getBuyingServiceid() {
+        return buyingServiceid;
+    }
+
+    public void setBuyingServiceid(int buyingServiceid) {
+        this.buyingServiceid = buyingServiceid;
     }
 }

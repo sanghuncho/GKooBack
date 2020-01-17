@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.EstimationService;
 import com.gkoo.data.buyingservice.BuyingProduct;
-import com.gkoo.data.buyingservice.BuyingServiceModel;
+import com.gkoo.data.buyingservice.BuyingServiceData;
 import com.gkoo.enums.BuyingServicePaymentState;
 import com.gkoo.enums.BuyingServiceState;
 import com.gkoo.service.BuyingService;
@@ -39,13 +39,13 @@ public class BuyingServiceImpl implements BuyingService {
     private final String currencyServiceUrl = "https://api.exchangeratesapi.io/latest?base=EUR";
     private final double INITIAL_SHIP_PRICE = 0;
     private static final String CREATE_BUYING_SERVICE = 
-            "insert into buying_service(id, userid, orderid, buying_price, payment_state,"
-            + "ship_state, ship_price, box_actual_weight, box_volume_weight, tracking_company_kor, tracking_company_world, trackingnr_kor, trackingnr_world, shop_url, fk_buying_service_payment"
-            + "address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING buying_service.id";
-    private static final String CREATE_BUYING_SERVICE_PAYMENT =  "insert into buying_service_payment(userid, orderid, buying_service_payment_state, fk_orderstate) values(?,?,?,?)";
-    private static final String CREATE_BUYING_PRODUCTS = "insert into product(userd, orderid, order_stamp, "
-            + "pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
-            + "pd_amount, pd_price, pd_totalprice) values(?,?,?,?,?,?,?,?,?,?)";
+            "insert into buying_service(id, userid, orderid, buying_price, payment_state, ship_state, shop_url, address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING buying_service.id";
+    
+    private static final String CREATE_BUYING_SERVICE_PAYMENT =  "insert into buying_service_payment(userid, orderid, buying_service_payment_state, fk_buying_service) values(?,?,?,?)";
+    
+    private static final String CREATE_BUYING_PRODUCT = "insert into product(userid, orderid, pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
+            + "pd_amount, pd_price, pd_totalprice) values(?,?,?,?,?,?,?,?,?)";
+    
     @Override
     public EstimationService estimateBuyingService(HashMap<String, Object>[] data, String userid) {
         double totalPrice = 15.9;
@@ -84,54 +84,49 @@ public class BuyingServiceImpl implements BuyingService {
     }
     
     public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, String userid){
-        String timeStamp = TimeStamp.getCurrentTimeStampKorea();
         String orderid = OrderID.generateOrderID();
         LocalDate orderDate = TimeStamp.getRequestDate();
         
         LOGGER.info("구매대행 서비스 신청: "+ userid + "/배송대행 서비스주문번호: " + orderid);
         
-        BuyingServiceModel buyingModel = new BuyingServiceModel();
-        buyingModel.setUserid(userid);
-        buyingModel.setTimeStamp(timeStamp);
-        buyingModel.setOrderid(orderid);
-        buyingModel.setOrderDate(orderDate);
+        BuyingServiceData buyingServiceData = new BuyingServiceData();
+        buyingServiceData.setUserid(userid);
+        buyingServiceData.setOrderid(orderid);
+        buyingServiceData.setOrderDate(orderDate);
         
         ObjectMapper mapper = new ObjectMapper();
         
         try {
-            buyingModel = mapper.readValue(data[1].get("buyingServiceObject").toString(), BuyingServiceModel.class);
+            buyingServiceData = mapper.readValue(data[1].get("buyingServiceObject").toString(), BuyingServiceData.class);
         } catch (IOException e) {
             LOGGER.error("Mapping of deliveryDataObject is failed:" + userid + "/" + orderid, e);
         }
         
-        buyingModel.setShippingPrice(INITIAL_SHIP_PRICE);
-        buyingModel.setBuyingState(BuyingServiceState.PRODUCT_PAYMENT_READY);
-        buyingModel.setBuyingServicePaymentState(BuyingServicePaymentState.PRODUCT_PAYMENT_READY);
+        buyingServiceData.setShippingPrice(INITIAL_SHIP_PRICE);
+        buyingServiceData.setBuyingState(BuyingServiceState.PRODUCT_PAYMENT_READY);
+        buyingServiceData.setBuyingServicePaymentState(BuyingServicePaymentState.PRODUCT_PAYMENT_READY);
         
-        return createBuyingService(buyingModel);
+        return createBuyingService(buyingServiceData);
     }
     
-    private  ResponseEntity<?> createBuyingService(BuyingServiceModel buyingModel){
+   
+    private  ResponseEntity<?> createBuyingService(BuyingServiceData buyingservicedata){
         ConnectionDB.connectSQL();
         ResultSet resultSet = null;
         int buyingServiceId = 0;
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_SERVICE);) {
-            psmt.setString(1, buyingModel.getUserid());
-            psmt.setString(2, buyingModel.getOrderid());
-            psmt.setDouble(3, buyingModel.getBuyingPrice());
-            psmt.setInt(4, buyingModel.getBuyingServicePaymentState().getCode());
-            psmt.setInt(5, buyingModel.getBuyingState().getCode());
-            psmt.setDouble(6, buyingModel.getShippingPrice());
-            psmt.setDouble(7, buyingModel.getBoxActualWeight());
-            psmt.setDouble(8, buyingModel.getBoxVolumeWeight());
-            psmt.setString(9, buyingModel.getTrackingCompanyKor());
-            psmt.setString(10, buyingModel.getTrackingCompanyWorld());
-            psmt.setString(11, buyingModel.getTrackingNumberKor());
-            psmt.setString(12, buyingModel.getTrackingNumberWorld());
-            psmt.setString(13, buyingModel.getShopUrl());
+            psmt.setString(1, buyingservicedata.getUserid());
+            psmt.setString(2, buyingservicedata.getOrderid());
+            psmt.setDouble(3, buyingservicedata.getBuyingPrice());
+            psmt.setInt(4, buyingservicedata.getBuyingServicePaymentState().getCode());
+            psmt.setInt(5, buyingservicedata.getBuyingState().getCode());
+            psmt.setString(6, buyingservicedata.getShopUrl());
+            psmt.setString(7, buyingservicedata.getDeliveryAddress());
+            psmt.setString(8, buyingservicedata.getDeliveryMessage());
             resultSet  = psmt.executeQuery();
             buyingServiceId = getBuyingServiceId(resultSet);
+            buyingservicedata.setBuyingServiceid(buyingServiceId);
         } catch (SQLException e) {
               LOGGER.error("Creating BuyingService is failed", e);
         }
@@ -139,37 +134,36 @@ public class BuyingServiceImpl implements BuyingService {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_SERVICE_PAYMENT);) {
-            psmt.setString(1, buyingModel.getUserid());
-            psmt.setString(2, buyingModel.getOrderid());
-            psmt.setInt(3, buyingModel.getBuyingServicePaymentState().getCode());
-            psmt.setInt(4, buyingServiceId);
+            psmt.setString(1, buyingservicedata.getUserid());
+            psmt.setString(2, buyingservicedata.getOrderid());
+            psmt.setInt(3, buyingservicedata.getBuyingServicePaymentState().getCode());
+            psmt.setInt(4, buyingservicedata.getBuyingServiceid());
             psmt.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating BuyingServicePayment is failed", e);
         } 
         
-        createBuyingProductList(buyingModel);
+        createBuyingProductList(buyingservicedata);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
     
-    private void createBuyingProductList(BuyingServiceModel buyingModel) {
-        ArrayList<BuyingProduct> products = buyingModel.getBuyingProductList();
+    private void createBuyingProductList(BuyingServiceData buyingServiceData) {
+        ArrayList<BuyingProduct> products = buyingServiceData.getBuyingProductList();
         ConnectionDB.connectSQL();
             try (Connection conn = ConnectionDB.getConnectInstance();
-                    PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_PRODUCTS);) {
+                    PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_PRODUCT);) {
                 
                 for(int i=0; i< products.size(); i++) {
-                    psmt.setString(1, buyingModel.getUserid());
-                    psmt.setString(2, buyingModel.getOrderid());
-                    psmt.setTimestamp(3, TimeStamp.getTimestampKorea());
-                    psmt.setString(4, products.get(i).getCategoryTitle());
-                    psmt.setString(5, products.get(i).getItemTitle());
-                    psmt.setString(6, products.get(i).getBrandName());
-                    psmt.setString(7, products.get(i).getItemName());
-                    psmt.setInt(8, products.get(i).getProductAmount());
-                    psmt.setDouble(9, products.get(i).getProductPrice());
-                    psmt.setDouble(10, products.get(i).getProductTotalPrice());
+                    psmt.setString(1, buyingServiceData.getUserid());
+                    psmt.setString(2, buyingServiceData.getOrderid());
+                    psmt.setString(3, products.get(i).getCategoryTitle());
+                    psmt.setString(4, products.get(i).getItemTitle());
+                    psmt.setString(5, products.get(i).getBrandName());
+                    psmt.setString(6, products.get(i).getItemName());
+                    psmt.setInt(7, products.get(i).getProductAmount());
+                    psmt.setDouble(8, products.get(i).getProductPrice());
+                    psmt.setDouble(9, products.get(i).getProductTotalPrice());
                         
                     psmt.executeUpdate();
                 }

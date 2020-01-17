@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
+import com.gkoo.data.buyingservice.BuyingServiceData;
 import com.gkoo.repository.MypageRepository;
 import com.gkoo.service.MypageService;
 import payment.PaymentData;
@@ -39,6 +40,11 @@ public class MypageServiceImpl implements MypageService {
 
     @Override
     public List<DeliveryKoreaData> getDeliveryKoreaData(String userid) {
-        return mypageRepository.getDeliveryKoreaData(userid);;
+        return mypageRepository.getDeliveryKoreaData(userid);
+    }
+
+    @Override
+    public BuyingServiceData getMypageBuyingServiceData(String userid) {
+        return null;
     }
 }

@@ -157,7 +157,7 @@ ADD COLUMN userid String;
 
 CREATE TABLE buying_service
 (
-    id integer serial primary key,
+    object_id integer serial primary key,
     userid character varying(50) NOT NULL,
     orderid character varying(50) NOT NULL,
     buying_price numeric,
@@ -171,11 +171,10 @@ CREATE TABLE buying_service
     trackingnr_kor character varying(50),
     trackingnr_world character varying(50) ,
     shop_url character varying(50) ,
-    fk_buying_service_payment integer,
 )
 
 create table buying_service_payment (
-    paymentid serial primary key,
+    object_id serial primary key,
     userid VARCHAR(50) NOT NULL,
     orderid VARCHAR(50) NOT NULL,
     buying_deposit_payment numeric,
@@ -185,5 +184,6 @@ create table buying_service_payment (
     buying_deposit_ownername VARCHAR(50),
     shipping_deposit_ownername VARCHAR(50),
     payment_art integer,
-    buying_service_payment_state
+    buying_service_payment_state,
+    fk_buying_service integer REFERENCES buying_service
 );

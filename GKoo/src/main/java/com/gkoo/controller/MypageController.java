@@ -16,6 +16,7 @@ import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
+import com.gkoo.data.buyingservice.BuyingServiceData;
 //import com.gkoo.configuration.SecurityConfig;
 //import com.gkoo.data.OrderInformation;
 //import com.gkoo.data.WarehouseInformation;
@@ -44,6 +45,9 @@ public class MypageController {
         this.mypageService = mypageService;
     }
     
+    ///////////////////////
+    /// ShippingService ///
+    ///////////////////////
     @CrossOrigin(origins = ServicePath.MYPAGE)
     @RequestMapping("/orderinformation")
     public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
@@ -59,16 +63,6 @@ public class MypageController {
     }
     
     @CrossOrigin(origins = ServicePath.MYPAGE)
-    @RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
-    public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
-        String orderNumber = data[0].get("orderid").toString();
-        String trackingCompany = data[1].get("trackingCompany").toString();
-        String trackingNumber = data[2].get("trackingNumber").toString();
-        return mypageService.updateTrackingNumber(userid, orderNumber, trackingCompany, trackingNumber);
-    }
-
-    @CrossOrigin(origins = ServicePath.MYPAGE)
     @RequestMapping("/paymentData")
     public List<PaymentData> requestPaymentData(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
@@ -81,4 +75,25 @@ public class MypageController {
         String userid = SecurityConfig.getUserid(request);
         return mypageService.getDeliveryKoreaData(userid);
     }
+    
+    @CrossOrigin(origins = ServicePath.MYPAGE)
+    @RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
+    public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        String orderNumber = data[0].get("orderid").toString();
+        String trackingCompany = data[1].get("trackingCompany").toString();
+        String trackingNumber = data[2].get("trackingNumber").toString();
+        return mypageService.updateTrackingNumber(userid, orderNumber, trackingCompany, trackingNumber);
+    }
+    
+    /////////////////////
+    /// BuyingService ///
+    /////////////////////
+    @CrossOrigin(origins = ServicePath.MYPAGE)
+    @RequestMapping("/getMypageBuyingServiceData")
+    public BuyingServiceData getMypageBuyingServiceData(HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);        
+        return mypageService.getMypageBuyingServiceData(userid);
+    }
+    
 }
