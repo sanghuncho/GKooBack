@@ -121,6 +121,8 @@ public class BuyingServiceImpl implements BuyingService {
         return createBuyingService(buyingServiceData);
     }
     
+    
+    // do configure
     private  ResponseEntity<?> createBuyingService(BuyingServiceData buyingservicedata){
         ConnectionDB.connectSQL();
         ResultSet resultSet = null;
