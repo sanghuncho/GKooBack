@@ -1,7 +1,7 @@
 package mypage;
 
+import com.gkoo.data.RecipientData;
 import mypage.information.ProductsCommonInformation;
-import mypage.information.RecipientData;
 
 public class MypageDetailData {
     private RecipientData recipientData;

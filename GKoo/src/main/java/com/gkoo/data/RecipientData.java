@@ -1,5 +1,10 @@
-package mypage.information;
+package com.gkoo.data;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component("recipientData")
+@Scope(value="prototype")
 public class RecipientData {
 	private String userid;
 	private String orderNumber;

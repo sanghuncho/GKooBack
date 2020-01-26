@@ -3,7 +3,10 @@ package com.gkoo.data.buyingservice;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import com.gkoo.data.OptionalServices;
+import com.gkoo.data.RecipientData;
 import com.gkoo.enums.BuyingServiceState;
 import payment.PaymentState;
 import shippingService.DeliveryDataObject;
@@ -15,32 +18,19 @@ import shippingService.DeliveryDataObject;
  * @since  09.01.2020
  *
  */
+@Component("buyingServiceModel")
+@Scope(value="prototype")
 public class BuyingServiceModel {
     
     private String userid;
-    private String timeStamp;
     private String orderId;
     private LocalDate orderDate;
 
-    private String easyship;
     private String shopUrl;
     private String trackingCompany;
     private String trackingNumber;
     
-    private String receiverNameByKorea;
-    private String setOwnerContent;
-    private String receiverNameByEnglish;
-    
-    private String privateTransit;
-    private String transitNumber;
-    private String agreeWithCollection;
-    
-    private String phonenumberFirst;
-    private String phonenumberSecond;
-
-    private String postCode;
-    private String deliveryAddress;
-    private String deliveryMessage;
+    private RecipientData recipientData;
     
     private double buyingPrice;
     private OptionalServices optionalServices;
@@ -81,14 +71,6 @@ public class BuyingServiceModel {
         this.shopUrl = shopUrl;
     }
     
-    public String getEasyship() {
-        return easyship;
-    }
-    
-    public void setEasyship(String easyship) {
-        this.easyship = easyship;
-    }
-    
     public String getTrackingCompany() {
         return trackingCompany;
     }
@@ -103,79 +85,7 @@ public class BuyingServiceModel {
     
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
-    }
-    
-    public String getReceiverNameByKorea() {
-        return receiverNameByKorea;
-    }
-    
-    public void setReceiverNameByKorea(String receiverNameByKorea) {
-        this.receiverNameByKorea = receiverNameByKorea;
-    }
-    public String getSetOwnerContent() {
-        return setOwnerContent;
-    }
-    
-    public void setOwnerContent(String setOwnerContent) {
-        this.setOwnerContent = setOwnerContent;
-    }
-
-    public String getReceiverNameByEnglish() {
-        return receiverNameByEnglish;
-    }
-    
-    public void setReceiverNameByEnglish(String receiverNameByEnglish) {
-        this.receiverNameByEnglish = receiverNameByEnglish;
-    }
-    
-    public String getPrivateTransit() {
-        return privateTransit;
-    }
-    
-    public void setPrivateTransit(String privateTransit) {
-        this.privateTransit = privateTransit;
-    }
-    
-    public String getTransitNumber() {
-        return transitNumber;
-    }
-    
-    public void setTransitNumber(String transitNumber) {
-        this.transitNumber = transitNumber;
-    }
-
-    public String getAgreeWithCollection() {
-        return agreeWithCollection;
-    }
-    
-    public void setAgreeWithCollection(String agreeWithCollection) {
-        this.agreeWithCollection = agreeWithCollection;
-    }
-    
-    public String getPostCode() {
-        return postCode;
-    }
-    
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
-    
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
-
-    public String getDeliveryMessage() {
-        return deliveryMessage;
-    }
-    
-    public void setDeliveryMessage(String deliveryMessage) {
-        this.deliveryMessage = deliveryMessage;
-    }
-    
+    }    
 
     public String getUserid() {
         return userid;
@@ -183,14 +93,6 @@ public class BuyingServiceModel {
 
     public void setUserid(String memberId) {
         this.userid = memberId;
-    }
-
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
     public String getOrderId() {
@@ -229,27 +131,19 @@ public class BuyingServiceModel {
         return buyingProductspriceSum;
     }
     
-    public String getPhonenumberSecond() {
-        return phonenumberSecond;
-    }
-    
-    public void setPhonenumberSecond(String phonenumberSecond) {
-        this.phonenumberSecond = phonenumberSecond;
-    }
-    
-    public String getPhonenumberFirst() {
-        return phonenumberFirst;
-    }
-    
-    public void setPhonenumberFirst(String phonenumberFirst) {
-        this.phonenumberFirst = phonenumberFirst;
-    }
-    
     public java.sql.Date getOrderDate() {
         return java.sql.Date.valueOf(orderDate);
     }
     
     public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public RecipientData getRecipientData() {
+        return recipientData;
+    }
+
+    public void setRecipientData(RecipientData recipientData) {
+        this.recipientData = recipientData;
     }
 }

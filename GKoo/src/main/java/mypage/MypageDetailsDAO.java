@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.gkoo.data.RecipientData;
 import mypage.information.ProductsCommonInformation;
-import mypage.information.RecipientData;
 import mypage.information.ProductsInformation.Product;
 
 public interface MypageDetailsDAO {
