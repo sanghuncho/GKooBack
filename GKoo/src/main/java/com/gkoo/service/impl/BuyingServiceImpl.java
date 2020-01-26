@@ -1,11 +1,17 @@
 package com.gkoo.service.impl;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,31 +21,38 @@ import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.EstimationService;
 import com.gkoo.data.RecipientData;
 import com.gkoo.data.buyingservice.BuyingProduct;
-import com.gkoo.data.buyingservice.BuyingServiceModel;
+import com.gkoo.data.buyingservice.BuyingServiceData;
+import com.gkoo.enums.BuyingServicePaymentState;
+import com.gkoo.enums.BuyingServiceState;
 import com.gkoo.repository.BuyingServiceRepository;
 import com.gkoo.service.BuyingService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import databaseUtil.ConnectionDB;
 import util.OrderID;
 import util.TimeStamp;
+import org.springframework.http.HttpStatus;
+
 
 @Service
 public class BuyingServiceImpl implements BuyingService {
     private final String currencyServiceUrl = "https://api.exchangeratesapi.io/latest?base=EUR";
-    private final BuyingServiceRepository buyingServiceRepository;
     private static final Logger LOGGER = LogManager.getLogger();
-
+    private final double INITIAL_SHIP_PRICE = 0;
+    private static final String CREATE_BUYING_SERVICE = 
+            "insert into buying_service(id, userid, orderid, buying_price, payment_state, ship_state, shop_url, address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING buying_service.id";
+    
+    private static final String CREATE_BUYING_SERVICE_PAYMENT =  "insert into buying_service_payment(userid, orderid, buying_service_payment_state, fk_buying_service) values(?,?,?,?)";
+    
+    private static final String CREATE_BUYING_PRODUCT = "insert into product(userid, orderid, pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
+            + "pd_amount, pd_price, pd_totalprice) values(?,?,?,?,?,?,?,?,?)";
+    
     @Autowired
-    private BuyingServiceModel buyingServiceModel;
+    private BuyingServiceData buyingServiceData;
     
     @Autowired
     private RecipientData recipientData;
-    
-    @Autowired
-    public BuyingServiceImpl(BuyingServiceRepository buyingServiceRepository) {
-        this.buyingServiceRepository = buyingServiceRepository;
-    }
     
     @Override
     public EstimationService estimateBuyingService(HashMap<String, Object>[] data, String userid) {
@@ -83,23 +96,98 @@ public class BuyingServiceImpl implements BuyingService {
         LocalDate orderDate = TimeStamp.getRequestDate();
         ObjectMapper mapper = new ObjectMapper();
         BuyingProduct[] buyingProducts = null;
-        buyingServiceModel.setOrderId(orderid);
-        buyingServiceModel.setOrderDate(orderDate);
-        buyingServiceModel.setShopUrl(data[0].get("shopUrl").toString());
+        buyingServiceData.setOrderid(orderid);
+        buyingServiceData.setOrderDate(orderDate);
+        buyingServiceData.setShopUrl(data[0].get("shopUrl").toString());
         
         try {
             buyingProducts = mapper.readValue(data[1].get("productContentObjectList").toString(), BuyingProduct[].class);
         } catch (IOException e) {
             LOGGER.error("Mapping of buyingProductsList is failed:"+ userid + "/" + orderid, e);
         }
-        buyingServiceModel.setBuyingProductsList(buyingProducts);
+        buyingServiceData.setBuyingProductsList(buyingProducts);
         
         try {
             recipientData = mapper.readValue(data[2].get("recipientObjectData").toString(), RecipientData.class);
         } catch (IOException e) {
             LOGGER.error("Mapping of recipientData is failed:"+ userid + "/" + orderid, e);
         }
-        buyingServiceModel.setRecipientData(recipientData);
-        return buyingServiceRepository.createBuyingService(buyingServiceModel);
+        buyingServiceData.setRecipientData(recipientData);
+        
+        buyingServiceData.setShippingPrice(INITIAL_SHIP_PRICE);
+        buyingServiceData.setBuyingState(BuyingServiceState.PRODUCT_PAYMENT_READY);
+        buyingServiceData.setBuyingServicePaymentState(BuyingServicePaymentState.PRODUCT_PAYMENT_READY);
+        
+        return createBuyingService(buyingServiceData);
+    }
+    
+    private  ResponseEntity<?> createBuyingService(BuyingServiceData buyingservicedata){
+        ConnectionDB.connectSQL();
+        ResultSet resultSet = null;
+        int buyingServiceId = 0;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_SERVICE);) {
+            psmt.setString(1, buyingservicedata.getUserid());
+            psmt.setString(2, buyingservicedata.getOrderid());
+            psmt.setDouble(3, buyingservicedata.getBuyingPrice());
+            psmt.setInt(4, buyingservicedata.getBuyingServicePaymentState().getCode());
+            psmt.setInt(5, buyingservicedata.getBuyingState().getCode());
+            psmt.setString(6, buyingservicedata.getShopUrl());
+            //psmt.setString(7, buyingservicedata.getDeliveryAddress());
+            //psmt.setString(8, buyingservicedata.getDeliveryMessage());
+            resultSet  = psmt.executeQuery();
+            buyingServiceId = getBuyingServiceId(resultSet);
+            buyingservicedata.setBuyingServiceid(buyingServiceId);
+        } catch (SQLException e) {
+              LOGGER.error("Creating BuyingService is failed", e);
+        }
+        
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_SERVICE_PAYMENT);) {
+            psmt.setString(1, buyingservicedata.getUserid());
+            psmt.setString(2, buyingservicedata.getOrderid());
+            psmt.setInt(3, buyingservicedata.getBuyingServicePaymentState().getCode());
+            psmt.setInt(4, buyingservicedata.getBuyingServiceid());
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Creating BuyingServicePayment is failed", e);
+        } 
+        
+        createBuyingProductList(buyingservicedata);
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+    }
+    
+    private void createBuyingProductList(BuyingServiceData buyingServiceData) {
+        ArrayList<BuyingProduct> products = buyingServiceData.getBuyingProductList();
+        ConnectionDB.connectSQL();
+            try (Connection conn = ConnectionDB.getConnectInstance();
+                    PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_PRODUCT);) {
+                
+                for(int i=0; i< products.size(); i++) {
+                    psmt.setString(1, buyingServiceData.getUserid());
+                    psmt.setString(2, buyingServiceData.getOrderid());
+                    psmt.setString(3, products.get(i).getCategoryTitle());
+                    psmt.setString(4, products.get(i).getItemTitle());
+                    psmt.setString(5, products.get(i).getBrandName());
+                    psmt.setString(6, products.get(i).getItemName());
+                    psmt.setInt(7, products.get(i).getProductAmount());
+                    psmt.setDouble(8, products.get(i).getProductPrice());
+                    psmt.setDouble(9, products.get(i).getProductTotalPrice());
+                        
+                    psmt.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                LOGGER.error("Creating BuyingServiceProducts is failed", ex);
+            }
+    }
+    
+    private int getBuyingServiceId(ResultSet rs) throws SQLException {
+        int buyingServiceId = 0;
+        while (rs.next()) {
+            buyingServiceId = rs.getInt("id");
+        }
+        return buyingServiceId;
     }
 }

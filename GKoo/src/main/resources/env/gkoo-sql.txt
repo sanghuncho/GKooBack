@@ -153,3 +153,37 @@ CREATE TYPE answer_state AS ENUM('READY_TO_ANSWER', 'COMPLETE_ANSWER');
 
 ALTER TABLE question_answer
 ADD COLUMN userid String;
+
+
+CREATE TABLE buying_service
+(
+    object_id integer serial primary key,
+    userid character varying(50) NOT NULL,
+    orderid character varying(50) NOT NULL,
+    buying_price numeric,
+    payment_state integer,
+    ship_state integer,
+    ship_price numeric,
+    box_actual_weight numeric,
+    box_volume_weight numeric,
+    tracking_company_kor character varying(50),
+    tracking_company_world character varying(50), 
+    trackingnr_kor character varying(50),
+    trackingnr_world character varying(50) ,
+    shop_url character varying(50) ,
+)
+
+create table buying_service_payment (
+    object_id serial primary key,
+    userid VARCHAR(50) NOT NULL,
+    orderid VARCHAR(50) NOT NULL,
+    buying_deposit_payment numeric,
+    shipping_deposit_payment numeric,
+    buying_payment_date date,
+    shipping_payment_date date,  
+    buying_deposit_ownername VARCHAR(50),
+    shipping_deposit_ownername VARCHAR(50),
+    payment_art integer,
+    buying_service_payment_state,
+    fk_buying_service integer REFERENCES buying_service
+);
