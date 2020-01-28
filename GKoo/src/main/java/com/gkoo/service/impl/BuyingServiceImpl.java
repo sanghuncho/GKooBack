@@ -37,7 +37,7 @@ import org.springframework.http.HttpStatus;
 
 @Service
 public class BuyingServiceImpl implements BuyingService {
-    private final String currencyServiceUrl = "https://api.exchangeratesapi.io/latest?base=EUR";
+    private final String CURRENTCY_SERVICE_URL = "https://api.exchangeratesapi.io/latest?base=EUR";
     private static final Logger LOGGER = LogManager.getLogger();
     private final double INITIAL_SHIP_PRICE = 0;
     private static final String CREATE_BUYING_SERVICE = 
@@ -55,15 +55,42 @@ public class BuyingServiceImpl implements BuyingService {
     private RecipientData recipientData;
     
     @Override
-    public EstimationService estimateBuyingService(HashMap<String, Object>[] data, String userid) {
+    public EstimationService fastEstimationBuyingService(HashMap<String, Object>[] data, String userid) {
         double totalPrice = 15.9;
         //options
         boolean mergeBox = false;
         boolean inputDeliveryFee = false;
         
+        double currentEurToKRW = getCurrentEurToKrw();
+        
+        EstimationService estimation = new EstimationService();
+        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice, mergeBox));
+        estimation.setInputDeliveryFee(inputDeliveryFee);
+        
+        return estimation;
+    }
+    
+    @Override
+    public EstimationService estimationBuyingService(HashMap<String, Object>[] data, String userid) {
+        double totalPrice = 15.9;
+        //options
+        boolean mergeBox = false;
+        boolean inputDeliveryFee = false;
+        
+        double currentEurToKRW = getCurrentEurToKrw();
+        
+        EstimationService estimation = new EstimationService();
+        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice, mergeBox));
+        estimation.setInputDeliveryFee(inputDeliveryFee);
+        
+        return estimation;
+    }
+    
+    private double getCurrentEurToKrw() {
+        
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response
-          = restTemplate.getForEntity(currencyServiceUrl, String.class);
+          = restTemplate.getForEntity(CURRENTCY_SERVICE_URL, String.class);
         
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject)parser.parse(response.getBody());
@@ -71,14 +98,8 @@ public class BuyingServiceImpl implements BuyingService {
         JsonElement jsonElement = jsonObject.get("rates");
         
         JsonObject rates = jsonElement.getAsJsonObject();
-        System.out.println(rates.get("KRW").getAsDouble());
-        
-        double currentEurToKRW = rates.get("KRW").getAsDouble();
-        EstimationService estimation = new EstimationService();
-        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice, mergeBox));
-        estimation.setInputDeliveryFee(inputDeliveryFee);
-        
-        return estimation;
+        //System.out.println(rates.get("KRW").getAsDouble());
+        return rates.get("KRW").getAsDouble();
     }
     
     public double getEstimationBuyingService(double currentEurToKRW, double totalPrice, boolean mergeBox) {

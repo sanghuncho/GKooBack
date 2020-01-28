@@ -37,10 +37,17 @@ public class BuyingServiceController {
     }
     
     @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
-    @RequestMapping(value = "/estimateBuyingService", method = RequestMethod.POST)
-    public EstimationService requestestimateBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
+    @RequestMapping(value = "/fastEstimationBuyingService", method = RequestMethod.POST)
+    public EstimationService requestFastEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
         String userid = SecurityConfig.getUserid(request);      
-        return buyingService.estimateBuyingService(data, userid);
+        return buyingService.fastEstimationBuyingService(data, userid);
+    }
+    
+    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
+    @RequestMapping(value = "/estimationBuyingService", method = RequestMethod.POST)
+    public EstimationService requestEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
+        String userid = SecurityConfig.getUserid(request);      
+        return buyingService.estimationBuyingService(data, userid);
     }
     
     @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
