@@ -38,6 +38,9 @@ public class BuyingServiceData {
     /** 구매대행 견적, 배송비 제외 */
     private double buyingPrice;
     
+    /** 해외 현지 배송비*/
+    private double shopDeliveryPrice;
+    
     /** 국제배송비 */
     private double shippingPrice;
     private double boxActualWeight;
@@ -204,5 +207,13 @@ public class BuyingServiceData {
 
     public void setBuyingServiceid(int buyingServiceid) {
         this.buyingServiceid = buyingServiceid;
+    }
+
+    public double getShopDeliveryPrice() {
+        return shopDeliveryPrice;
+    }
+
+    public void setShopDeliveryPrice(double shopDeliveryPrice) {
+        this.shopDeliveryPrice = shopDeliveryPrice;
     }
 }

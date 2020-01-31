@@ -3,6 +3,7 @@ package com.gkoo.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
@@ -11,6 +12,7 @@ import com.gkoo.repository.MypageRepository;
 import com.gkoo.service.MypageService;
 import payment.PaymentData;
 
+@Service
 public class MypageServiceImpl implements MypageService {
     private final MypageRepository mypageRepository;
     

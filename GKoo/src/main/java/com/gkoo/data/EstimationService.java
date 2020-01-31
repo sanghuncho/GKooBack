@@ -1,25 +1,15 @@
 package com.gkoo.data;
 
 public class EstimationService {
-    private double resultPrice;
-    private boolean mergeBox;
-    private boolean inputDeliveryFee;
+    private int resultPrice;
     
     public EstimationService() {}
 
-    public double getResultPrice() {
+    public int getResultPrice() {
         return resultPrice;
     }
 
-    public void setResultPrice(double resultPrice) {
+    public void setResultPrice(int resultPrice) {
         this.resultPrice = resultPrice;
-    }
-
-    public boolean isInputDeliveryFee() {
-        return inputDeliveryFee;
-    }
-
-    public void setInputDeliveryFee(boolean inputDeliveryFee) {
-        this.inputDeliveryFee = inputDeliveryFee;
     }
 }

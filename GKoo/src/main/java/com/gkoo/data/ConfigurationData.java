@@ -33,7 +33,7 @@ public class ConfigurationData {
                  
             feePercent = prop.getProperty("buyingservice_fee_percentage");
             mergingBoxFee = prop.getProperty("mergingBoxFee");
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Exception: " + e);
         } finally {
             inputStream.close();

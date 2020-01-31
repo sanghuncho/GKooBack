@@ -24,7 +24,6 @@ import com.gkoo.data.buyingservice.BuyingProduct;
 import com.gkoo.data.buyingservice.BuyingServiceData;
 import com.gkoo.enums.BuyingServicePaymentState;
 import com.gkoo.enums.BuyingServiceState;
-import com.gkoo.repository.BuyingServiceRepository;
 import com.gkoo.service.BuyingService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -56,32 +55,33 @@ public class BuyingServiceImpl implements BuyingService {
     
     @Override
     public EstimationService fastEstimationBuyingService(HashMap<String, Object>[] data, String userid) {
-        double totalPrice = 15.9;
-        //options
-        boolean mergeBox = false;
-        boolean inputDeliveryFee = false;
-        
+        double productsValue = Double.parseDouble(data[0].get("productsValue").toString());
+        double deliveryValue = Double.parseDouble(data[1].get("deliveryValue").toString());
         double currentEurToKRW = getCurrentEurToKrw();
-        
+        double totalPrice = productsValue + deliveryValue;
         EstimationService estimation = new EstimationService();
-        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice, mergeBox));
-        estimation.setInputDeliveryFee(inputDeliveryFee);
-        
+        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice));        
         return estimation;
     }
     
     @Override
     public EstimationService estimationBuyingService(HashMap<String, Object>[] data, String userid) {
-        double totalPrice = 15.9;
-        //options
-        boolean mergeBox = false;
-        boolean inputDeliveryFee = false;
         
+        ObjectMapper mapper = new ObjectMapper();
+        BuyingProduct[] buyingProducts = null;
+        buyingServiceData.setShopDeliveryPrice(Double.parseDouble(data[0].get("shopDeliveryPrice").toString()));
+        try {
+            buyingProducts = mapper.readValue(data[1].get("productContentObjectList").toString(), BuyingProduct[].class);
+        } catch (IOException e) {
+            LOGGER.error("Mapping of estimationService is failed:"+ userid, e);
+        }
+        buyingServiceData.setBuyingProductsList(buyingProducts);
         double currentEurToKRW = getCurrentEurToKrw();
         
+        double totalPrice = buyingServiceData.getBuyingProductsPriceSum() + buyingServiceData.getShopDeliveryPrice();
+        
         EstimationService estimation = new EstimationService();
-        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice, mergeBox));
-        estimation.setInputDeliveryFee(inputDeliveryFee);
+        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice));
         
         return estimation;
     }
@@ -102,14 +102,20 @@ public class BuyingServiceImpl implements BuyingService {
         return rates.get("KRW").getAsDouble();
     }
     
-    public double getEstimationBuyingService(double currentEurToKRW, double totalPrice, boolean mergeBox) {
+    public int getEstimationBuyingService(double currentEurToKRW, double totalPrice) {
         double feePercent = ConfigurationData.BUYING_SERVICE_FEE_PERCENT;
         double result = (currentEurToKRW*totalPrice)*(1 + feePercent);
-        if (mergeBox) {
-            double mergingBoxFee = ConfigurationData.MERGING_BOX_FEE;
-            result = result + mergingBoxFee;
-        }
-        return result;
+//        if (mergeBox) {
+//            double mergingBoxFee = ConfigurationData.MERGING_BOX_FEE;
+//            result = result + mergingBoxFee;
+//        }
+        return mathCeilDigit(2, result);
+    }
+    
+    private int mathCeilDigit(int digit, double price) {
+        int power = (int) Math.pow(10, digit);
+        int newPrice = (int) Math.ceil(price/power);
+        return (newPrice*power);
     }
     
     public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, String userid){
