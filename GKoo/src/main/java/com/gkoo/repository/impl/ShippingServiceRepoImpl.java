@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.UserBaseInfo;
+import com.gkoo.db.CustomerStatusDB;
 import com.gkoo.exception.CustomerStatusException;
 import com.gkoo.exception.MypageException;
 import com.gkoo.repository.ShippingServiceRepository;
@@ -157,20 +158,23 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
 
     @Override
     public UserBaseInfo getUserBaseInfo(String userid) {
-        ConnectionDB.connectSQL();
-        ResultSet resultSet = null;
-        UserBaseInfo userBaseInfo = null;
-        try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt = conn.prepareStatement(FETCH_USERBASEINFO);){
-            psmt.setString(1, userid);
-            resultSet = psmt.executeQuery();
-            userBaseInfo = writeUserBaseInfo(resultSet);
-        } catch (SQLException e) {
-            String error = "Error fetching userBaseInfo";
-            LOGGER.error(error, e);
-            throw new CustomerStatusException(error, e);
-        }
-        return userBaseInfo;
+//        ConnectionDB.connectSQL();
+//        ResultSet resultSet = null;
+//        UserBaseInfo userBaseInfo = null;
+//        try (Connection conn = ConnectionDB.getConnectInstance();
+//                PreparedStatement psmt = conn.prepareStatement(FETCH_USERBASEINFO);){
+//            psmt.setString(1, userid);
+//            resultSet = psmt.executeQuery();
+//            userBaseInfo = writeUserBaseInfo(resultSet);
+//        } catch (SQLException e) {
+//            String error = "Error fetching userBaseInfo";
+//            LOGGER.error(error, e);
+//            throw new CustomerStatusException(error, e);
+//        }
+//        return userBaseInfo;
+        
+        //Todo : if runs, then delete above code
+        return CustomerStatusDB.getUserBaseInfo(userid);
     }
     
     private static UserBaseInfo writeUserBaseInfo(ResultSet resultSet) throws SQLException {
@@ -190,6 +194,7 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
     }
 
     @Override
+    //use AddressManagerDB.createFavoriteAddress
     public ResponseEntity<?> registerFavoriteAddress(FavoriteAddress favoriteAddress, String userid) {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();

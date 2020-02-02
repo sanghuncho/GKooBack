@@ -19,9 +19,13 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.EstimationService;
+import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.RecipientData;
+import com.gkoo.data.UserBaseInfo;
 import com.gkoo.data.buyingservice.BuyingProduct;
 import com.gkoo.data.buyingservice.BuyingServiceData;
+import com.gkoo.db.AddressManagerDB;
+import com.gkoo.db.CustomerStatusDB;
 import com.gkoo.enums.BuyingServicePaymentState;
 import com.gkoo.enums.BuyingServiceState;
 import com.gkoo.service.BuyingService;
@@ -218,5 +222,24 @@ public class BuyingServiceImpl implements BuyingService {
             buyingServiceId = rs.getInt("id");
         }
         return buyingServiceId;
+    }
+
+    @Override
+    public UserBaseInfo getUserBaseInfo(String userid) {
+        return CustomerStatusDB.getUserBaseInfo(userid);
+    }
+
+    @Override
+    public ResponseEntity<?> registerFavoriteAddress(HashMap<String, Object>[] data, String userid) {
+        ObjectMapper mapper = new ObjectMapper();
+        FavoriteAddress favoriteAddress = null;
+        try {
+            favoriteAddress = mapper.readValue(data[0].get("favoriteAddressData").toString(), FavoriteAddress.class);
+            favoriteAddress.setUserid(userid);
+        } catch (IOException ex) {
+            String error = "Error mapping for registering favoriteAddress";
+            LOGGER.error(error, ex);
+        }
+        return AddressManagerDB.createFavoriteAddress(favoriteAddress, userid);
     }
 }
