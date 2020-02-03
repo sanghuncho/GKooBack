@@ -1,6 +1,7 @@
 package com.gkoo.db;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.data.UserBaseInfo;
 import com.gkoo.exception.CustomerStatusException;
@@ -94,9 +96,10 @@ public class CustomerStatusDB {
     }
     
     public static UserBaseInfo getUserBaseInfo(String userid) {
-        ConnectionDB.connectSQL();
         ResultSet resultSet = null;
         UserBaseInfo userBaseInfo = null;
+        
+        ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(FETCH_USERBASEINFO);){
             psmt.setString(1, userid);

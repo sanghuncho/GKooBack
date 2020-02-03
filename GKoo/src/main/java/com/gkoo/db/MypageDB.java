@@ -1,6 +1,7 @@
 package com.gkoo.db;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
@@ -26,10 +28,10 @@ public class MypageDB {
     private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
     public static List<OrderInformation> getOrderData(String userid) {
-        ConnectionDB.connectSQL();
         List<OrderInformation> orderInformationList = new ArrayList<>();
         ResultSet resultSet = null;
         
+        ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(FETTCH_ORDER_DATA);){
             psmt.setString(1, userid);
@@ -42,6 +44,7 @@ public class MypageDB {
         }
         return orderInformationList;
     }
+    
     
     private static List<OrderInformation> writeOrderInformation(ResultSet rs, List<OrderInformation> orderInformationList) throws SQLException {
         while (rs.next()) {
