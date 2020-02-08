@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
-import com.gkoo.data.buyingservice.BuyingServiceData;
+import com.gkoo.db.MypageDB;
 import com.gkoo.repository.MypageRepository;
 import com.gkoo.service.MypageService;
 import payment.PaymentData;
@@ -46,7 +46,17 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public BuyingServiceData getMypageBuyingServiceData(String userid) {
-        return null;
+    public List<OrderInformation> getOrderDataBuyingService(String userid) {
+        return MypageDB.getOrderDataBuyingService(userid);
+    }
+
+    @Override
+    public List<PaymentData> getPaymentDataBuyingService(String userid) {
+        return MypageDB.getPaymentDataBuyingService(userid);
+    }
+
+    @Override
+    public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid) {
+        return MypageDB.getDeliveryKoreaDataBuyingService(userid);
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
-import com.gkoo.data.buyingservice.BuyingServiceData;
 import payment.PaymentData;
 
 public interface MypageService {
@@ -14,6 +13,11 @@ public interface MypageService {
     public ResponseEntity<?> updateTrackingNumber(String userid, String orderNumber, String trackingCompany, String trackingNumber);
     public List<PaymentData> getPaymentData(String userid);
     public List<DeliveryKoreaData> getDeliveryKoreaData(String userid);
-    public BuyingServiceData getMypageBuyingServiceData(String userid);
     
+    /////////////////////
+    /// BuyingService ///
+    /////////////////////
+    public List<OrderInformation> getOrderDataBuyingService(String userid);
+    public List<PaymentData> getPaymentDataBuyingService(String userid);
+    public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid);
 }

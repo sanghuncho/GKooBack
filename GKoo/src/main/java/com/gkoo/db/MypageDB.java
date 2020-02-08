@@ -1,7 +1,6 @@
 package com.gkoo.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
@@ -27,6 +25,9 @@ public class MypageDB {
             + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
     private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
+    private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, os.order_date, rp.name_kor "
+            + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
+    
     public static List<OrderInformation> getOrderData(String userid) {
         List<OrderInformation> orderInformationList = new ArrayList<>();
         ResultSet resultSet = null;
@@ -44,7 +45,6 @@ public class MypageDB {
         }
         return orderInformationList;
     }
-    
     
     private static List<OrderInformation> writeOrderInformation(ResultSet rs, List<OrderInformation> orderInformationList) throws SQLException {
         while (rs.next()) {
@@ -202,6 +202,105 @@ public class MypageDB {
     }
     
     private static List<DeliveryKoreaData> writeDeliveryKoreaData(ResultSet rs, List<DeliveryKoreaData> deliveryKoreaDataList){
+        try {
+            while (rs.next()) {
+                DeliveryKoreaData deliveryKoreaData = new DeliveryKoreaData();
+                try {
+                    deliveryKoreaData.setId(rs.getInt("id"));
+                    deliveryKoreaData.setOrderid(rs.getString("orderid"));
+                    deliveryKoreaData.setDeliveryState(rs.getInt("ship_state"));
+                    deliveryKoreaData.setDeliveryTracking(rs.getString("trackingnr_kor"));
+                } catch (SQLException e) {
+                    String error = "Error fetching delivery korea data";
+                    LOGGER.error(error, e);
+                }
+                deliveryKoreaDataList.add(deliveryKoreaData);
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching delivery korea data";
+            LOGGER.error(error, e);
+        }
+        return deliveryKoreaDataList;
+    }
+    
+    /////////////////////
+    /// BuyingService ///
+    /////////////////////
+    public static List<OrderInformation> getOrderDataBuyingService(String userid) {
+        List<OrderInformation> orderInformationList = new ArrayList<>();
+        ResultSet resultSet = null;
+        
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(FETTCH_ORDER_DATA_BUYINGSERVICE);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            orderInformationList = writeOrderInformation(resultSet, orderInformationList);
+        } catch (SQLException e) {
+            String error = "Error fetching orderdata";
+            LOGGER.error(error, e);
+            throw new MypageException(error, e);
+        }
+        return orderInformationList;
+    }
+    
+    public static List<PaymentData> getPaymentDataBuyingService(String userid) {
+        ConnectionDB.connectSQL();
+        final String GET_PAYMENTDATA = "SELECT * FROM PAYMENT WHERE (payment_state = 1 or payment_state = 2 or payment_state = 3) AND userid=?";
+        ResultSet resultSet = null;
+        List<PaymentData> paymentDataList = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            paymentDataList = writePaymentDataBuyingService(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+    
+    private static List<PaymentData> writePaymentDataBuyingService(ResultSet rs){
+        List<PaymentData> paymentDataList = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                PaymentData payment = new PaymentData();
+                try {
+                    payment.setPaymentid(rs.getInt("paymentid"));
+                    payment.setOrderid(rs.getString("orderid"));
+                    payment.setPaymentState(rs.getInt("payment_state"));
+                } catch (SQLException e) {
+                    String error = "Error fetching paymentData";
+                    LOGGER.error(error, e);
+                }
+                paymentDataList.add(payment);
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+    
+    public static List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid) {
+        ConnectionDB.connectSQL();
+        final String GET_DELIVERYKOREADATA = "SELECT * FROM ORDERSTATE WHERE ship_state > 4 AND userid=?";
+        ResultSet resultSet = null;
+        List<DeliveryKoreaData> deliveryKoreaDataList = new ArrayList<>();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_DELIVERYKOREADATA);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            deliveryKoreaDataList = writeDeliveryKoreaDataBuyingService(resultSet, deliveryKoreaDataList);
+        } catch (SQLException e) {
+            String error = "Error fetching delivery korea data";
+            LOGGER.error(error, e);
+        }
+        return deliveryKoreaDataList;
+    }
+    
+    private static List<DeliveryKoreaData> writeDeliveryKoreaDataBuyingService(ResultSet rs, List<DeliveryKoreaData> deliveryKoreaDataList){
         try {
             while (rs.next()) {
                 DeliveryKoreaData deliveryKoreaData = new DeliveryKoreaData();

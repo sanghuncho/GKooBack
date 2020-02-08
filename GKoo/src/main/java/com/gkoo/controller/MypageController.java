@@ -48,7 +48,7 @@ public class MypageController {
     ///////////////////////
     /// ShippingService ///
     ///////////////////////
-    @CrossOrigin(origins = ServicePath.MYPAGE)
+    //@CrossOrigin(origins = ServicePath.MYPAGE)
     @RequestMapping("/orderinformation")
     public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);        
@@ -89,11 +89,22 @@ public class MypageController {
     /////////////////////
     /// BuyingService ///
     /////////////////////
-    @CrossOrigin(origins = ServicePath.MYPAGE)
-    @RequestMapping("/getMypageBuyingServiceData")
-    public BuyingServiceData getMypageBuyingServiceData(HttpServletRequest request) throws SQLException  {
+    @RequestMapping("/orderdataBuyingService")
+    public List<OrderInformation> requestOrderDataBuyingService(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);        
-        return mypageService.getMypageBuyingServiceData(userid);
+        return mypageService.getOrderDataBuyingService(userid);
+    }
+    
+    @RequestMapping("/paymentDataBuyingService")
+    public List<PaymentData> requestPaymentDataBuyingService(HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return mypageService.getPaymentDataBuyingService(userid);
+    }
+    
+    @RequestMapping("/deliveryKoreaDataBuyingService")
+    public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return mypageService.getDeliveryKoreaDataBuyingService(userid);
     }
     
 }

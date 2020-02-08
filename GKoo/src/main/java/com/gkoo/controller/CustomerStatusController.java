@@ -36,7 +36,7 @@ public class CustomerStatusController {
         this.customerstatusService = customerstatusService;
     }
 
-	@CrossOrigin(origins = ServicePath.MYPAGE)
+	//@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping("/customerstatus")
 	public CustomerStatus requestCustomerStatus(HttpServletRequest request) throws SQLException {
         AccessToken accessToken = SecurityConfig.getAccessToken(request);
