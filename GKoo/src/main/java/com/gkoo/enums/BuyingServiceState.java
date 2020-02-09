@@ -23,11 +23,11 @@ public enum BuyingServiceState {
     //입고완료
     RECEIVE_BOX_COMPLETION(4),
     
-    //추가 결제요청
-    ADDITIONAL_PAYMENT_READY(5),
+    //배송비 및 추가서비스 결제요청
+    DELIVERY_PAYMENT_READY(5),
     
-    //추가 결제완료
-    ADDITIONAL_PAYMENT_COMPLETION(6),
+    //배송비 및 추가서비스 결제완료
+    DELIVERY_PAYMENT_COMPLETION(6),
     
     //해외배송중
     DELIVERY_WORLD(5),

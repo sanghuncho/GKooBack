@@ -16,10 +16,10 @@ public enum BuyingServicePaymentState {
     PRODUCT_PAYMENT_COMPLETION(2),
     
     //추가 결제요청
-    ADDITIONAL_PAYMENT_READY(3),
+    DELIVERY_PAYMENT_READY(3),
     
     //추가 결제완료
-    ADDITIONAL_PAYMENT_COMPLETION(4),
+    DELIVERY_PAYMENT_COMPLETION(4),
     
     //전체 결제완료
     BUYING_SERVICE_PAYMENT_COMPLETION(5);
@@ -44,10 +44,10 @@ public enum BuyingServicePaymentState {
                 stateName = "구매대행 결제완료";
                 break;
             case 3 : 
-                stateName = "추가 결제요청";
+                stateName = "배송비 및 추가비용 결제요청";
                 break;
             case 4 : 
-                stateName = "추가 결제완료";
+                stateName = "배송비 및 추가비용 결제완료";
                 break;
         }
         return stateName;

@@ -45,7 +45,7 @@ public class CustomerStatusController {
         return customerstatusService.getCustomerStatus(userid);
 	}
 	
-	@CrossOrigin(origins = ServicePath.MYPAGE)
+	//@CrossOrigin(origins = ServicePath.MYPAGE)
     @RequestMapping("/fetchuserbaseinfo")
     public UserBaseInfo requestUserBaseInfo(HttpServletRequest request) throws SQLException {
 	    String userid = SecurityConfig.getUserid(request);

@@ -157,7 +157,7 @@ ADD COLUMN userid String;
 
 CREATE TABLE buying_service
 (
-    object_id integer serial primary key,
+    object_id serial primary key,
     userid character varying(50) NOT NULL,
     orderid character varying(50) NOT NULL,
     buying_price numeric,
@@ -173,10 +173,22 @@ CREATE TABLE buying_service
     shop_url character varying(50) ,
 )
 
+CREATE TABLE buying_service_recipient
+(
+	object_id serial primary key,
+    name_kor VARCHAR(50) NOT NULL,
+    name_eng VARCHAR(50),
+    transit_nr VARCHAR(50),
+    phonenumber_first VARCHAR(50),
+    phonenumber_second VARCHAR(50),
+    zip_code VARCHAR(10),
+    address text,
+    usercomment text,
+    fk_buying_service integer REFERENCES buying_service
+)
+
 create table buying_service_payment (
     object_id serial primary key,
-    userid VARCHAR(50) NOT NULL,
-    orderid VARCHAR(50) NOT NULL,
     buying_deposit_payment numeric,
     shipping_deposit_payment numeric,
     buying_payment_date date,
@@ -184,6 +196,18 @@ create table buying_service_payment (
     buying_deposit_ownername VARCHAR(50),
     shipping_deposit_ownername VARCHAR(50),
     payment_art integer,
-    buying_service_payment_state,
+    buying_service_payment_state integer,
+    fk_buying_service integer REFERENCES buying_service
+);
+
+create table buying_service_product (
+    object_id serial primary key,
+    pd_categorytitle VARCHAR(50),
+    pd_itemtitle VARCHAR(50),
+    pd_brandname VARCHAR(50),
+    pd_itemname VARCHAR(50),
+    pd_amount integer,
+    pd_price numeric,
+    pd_totalprice numeric,
     fk_buying_service integer REFERENCES buying_service
 );

@@ -40,16 +40,25 @@ import org.springframework.http.HttpStatus;
 
 @Service
 public class BuyingServiceImpl implements BuyingService {
-    private final String CURRENTCY_SERVICE_URL = "https://api.exchangeratesapi.io/latest?base=EUR";
     private static final Logger LOGGER = LogManager.getLogger();
+    private final String CURRENTCY_SERVICE_URL = "https://api.exchangeratesapi.io/latest?base=EUR";
     private final double INITIAL_SHIP_PRICE = 0;
+    
     private static final String CREATE_BUYING_SERVICE = 
-            "insert into buying_service(id, userid, orderid, buying_price, payment_state, ship_state, shop_url, address, userComment ) values (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING buying_service.id";
+            "insert into buying_service(userid, orderid, buying_price,   payment_state, ship_state, shop_url ) values (?, ?, ?,   ?, ?, ?) RETURNING buying_service.object_id";
     
-    private static final String CREATE_BUYING_SERVICE_PAYMENT =  "insert into buying_service_payment(userid, orderid, buying_service_payment_state, fk_buying_service) values(?,?,?,?)";
+    private static final String CREATE_BUYING_SERVICE_RECIPIENT = 
+            "insert into buying_service_recipient(name_kor, name_eng, transit_nr, "
+            + "phonenumber_first, phonenumber_second, zip_code,"
+            + "address, userComment, fk_buying_service) values (?, ?, ?,   ?, ?, ?,   ?, ?, ?)";
     
-    private static final String CREATE_BUYING_PRODUCT = "insert into product(userid, orderid, pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, "
-            + "pd_amount, pd_price, pd_totalprice) values(?,?,?,?,?,?,?,?,?)";
+    private static final String CREATE_BUYING_SERVICE_PAYMENT =  
+            "insert into buying_service_payment(buying_service_payment_state, fk_buying_service) values(?, ?)";
+    
+    private static final String CREATE_BUYING_PRODUCT = 
+            "insert into buying_service_product(pd_categorytitle, pd_itemtitle, pd_brandname, "
+            + "pd_itemname, pd_amount, pd_price, "
+            + "pd_totalprice, fk_buying_service) values(?, ?, ?,   ?, ?, ?,   ?, ?)";
     
     @Autowired
     private BuyingServiceData buyingServiceData;
@@ -124,9 +133,11 @@ public class BuyingServiceImpl implements BuyingService {
     
     public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, String userid){
         String orderid = OrderID.generateOrderID();
+        LOGGER.error("Creating BuyingService is started", orderid);
         LocalDate orderDate = TimeStamp.getRequestDate();
         ObjectMapper mapper = new ObjectMapper();
         BuyingProduct[] buyingProducts = null;
+        buyingServiceData.setUserid(userid);
         buyingServiceData.setOrderid(orderid);
         buyingServiceData.setOrderDate(orderDate);
         buyingServiceData.setShopUrl(data[0].get("shopUrl").toString());
@@ -166,8 +177,6 @@ public class BuyingServiceImpl implements BuyingService {
             psmt.setInt(4, buyingservicedata.getBuyingServicePaymentState().getCode());
             psmt.setInt(5, buyingservicedata.getBuyingState().getCode());
             psmt.setString(6, buyingservicedata.getShopUrl());
-            //psmt.setString(7, buyingservicedata.getDeliveryAddress());
-            //psmt.setString(8, buyingservicedata.getDeliveryMessage());
             resultSet  = psmt.executeQuery();
             buyingServiceId = getBuyingServiceId(resultSet);
             buyingservicedata.setBuyingServiceid(buyingServiceId);
@@ -177,11 +186,27 @@ public class BuyingServiceImpl implements BuyingService {
         
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_SERVICE_RECIPIENT);) {
+            RecipientData recipientData = buyingservicedata.getRecipientData();
+            psmt.setString(1, recipientData.getNameKor());
+            psmt.setString(2, recipientData.getNameEng());
+            psmt.setString(3, recipientData.getTransitNr());
+            psmt.setString(4, recipientData.getPhonenumberFirst());
+            psmt.setString(5, recipientData.getPhonenumberSecond());
+            psmt.setString(6, recipientData.getZipCode());
+            psmt.setString(7, recipientData.getAddress());
+            psmt.setString(8, recipientData.getUsercomment());
+            psmt.setInt(9, buyingservicedata.getBuyingServiceid());
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+              LOGGER.error("Creating BuyingService is failed", e);
+        }
+        
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_SERVICE_PAYMENT);) {
-            psmt.setString(1, buyingservicedata.getUserid());
-            psmt.setString(2, buyingservicedata.getOrderid());
-            psmt.setInt(3, buyingservicedata.getBuyingServicePaymentState().getCode());
-            psmt.setInt(4, buyingservicedata.getBuyingServiceid());
+            psmt.setInt(1, buyingservicedata.getBuyingServicePaymentState().getCode());
+            psmt.setInt(2, buyingservicedata.getBuyingServiceid());
             psmt.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating BuyingServicePayment is failed", e);
@@ -199,16 +224,14 @@ public class BuyingServiceImpl implements BuyingService {
                     PreparedStatement psmt = conn.prepareStatement(CREATE_BUYING_PRODUCT);) {
                 
                 for(int i=0; i< products.size(); i++) {
-                    psmt.setString(1, buyingServiceData.getUserid());
-                    psmt.setString(2, buyingServiceData.getOrderid());
-                    psmt.setString(3, products.get(i).getCategoryTitle());
-                    psmt.setString(4, products.get(i).getItemTitle());
-                    psmt.setString(5, products.get(i).getBrandName());
-                    psmt.setString(6, products.get(i).getItemName());
-                    psmt.setInt(7, products.get(i).getProductAmount());
-                    psmt.setDouble(8, products.get(i).getProductPrice());
-                    psmt.setDouble(9, products.get(i).getProductTotalPrice());
-                        
+                    psmt.setString(1, products.get(i).getCategoryTitle());
+                    psmt.setString(2, products.get(i).getItemTitle());
+                    psmt.setString(3, products.get(i).getBrandName());
+                    psmt.setString(4, products.get(i).getItemName());
+                    psmt.setInt(5, products.get(i).getProductAmount());
+                    psmt.setDouble(6, products.get(i).getProductPrice());
+                    psmt.setDouble(7, products.get(i).getProductTotalPrice());
+                    psmt.setInt(8, buyingServiceData.getBuyingServiceid());
                     psmt.executeUpdate();
                 }
             } catch (SQLException ex) {
@@ -219,7 +242,7 @@ public class BuyingServiceImpl implements BuyingService {
     private int getBuyingServiceId(ResultSet rs) throws SQLException {
         int buyingServiceId = 0;
         while (rs.next()) {
-            buyingServiceId = rs.getInt("id");
+            buyingServiceId = rs.getInt("object_id");
         }
         return buyingServiceId;
     }

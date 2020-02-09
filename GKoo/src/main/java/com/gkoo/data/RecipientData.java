@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 @Component("recipientData")
 @Scope(value="prototype")
 public class RecipientData {
-	private String userid;
-	private String orderNumber;
+
+    //DB nomalization userid, ordernumber should deleted.
+//	private String userid;
+//	private String orderNumber;
 	
     private String nameKor;
 	private String nameEng;
@@ -22,13 +24,13 @@ public class RecipientData {
 	
 	public RecipientData() {}
 	 
-	public String getOrderNumber() {
-	     return orderNumber;
-	}
-
-	public void setOrderNumber(String orderNumber) {
-	    this.orderNumber = orderNumber;
-	}
+//	public String getOrderNumber() {
+//	     return orderNumber;
+//	}
+//
+//	public void setOrderNumber(String orderNumber) {
+//	    this.orderNumber = orderNumber;
+//	}
 	
 	public String getNameKor() {
 		return nameKor;
@@ -79,13 +81,13 @@ public class RecipientData {
 		this.usercomment = usercomment;
 	}
 
-	public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
+//	public String getUserid() {
+//        return userid;
+//    }
+//
+//    public void setUserid(String userid) {
+//        this.userid = userid;
+//    }
 
     public String getPhonenumberFirst() {
         return phonenumberFirst;
@@ -104,8 +106,8 @@ public class RecipientData {
     }
 
     public static class Builder {
-	    private String userid;
-	    private String orderNumber;
+//	    private String userid;
+//	    private String orderNumber;
 	    
 	    private String nameKor;
 	    private String nameEng;
@@ -122,15 +124,15 @@ public class RecipientData {
 	    
 	    public Builder(){}
 	    
-	    public Builder setUserid(String userid) {
-	        this.userid = userid;
-	        return this;
-	    }
-	    
-	    public Builder setOrderNumber(String orderNumber) {
-            this.orderNumber = orderNumber;
-            return this;
-        }
+//	    public Builder setUserid(String userid) {
+//	        this.userid = userid;
+//	        return this;
+//	    }
+//	    
+//	    public Builder setOrderNumber(String orderNumber) {
+//            this.orderNumber = orderNumber;
+//            return this;
+//        }
 	    
 	    public Builder setNameKorEng(String nameKor, String nameEng) {
             this.nameKor = nameKor;
@@ -163,8 +165,8 @@ public class RecipientData {
 	    
 	    public RecipientData build() {
 	        RecipientData data = new RecipientData();
-	        data.setUserid(this.userid);
-	        data.orderNumber = this.orderNumber;
+//	        data.setUserid(this.userid);
+//	        data.orderNumber = this.orderNumber;
 	        data.nameKor = this.nameKor;
 	        data.nameEng = this.nameEng;
 	        data.transitNr = this.transitNr;
