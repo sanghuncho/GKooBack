@@ -141,16 +141,17 @@ public class BuyingServiceImpl implements BuyingService {
         buyingServiceData.setOrderid(orderid);
         buyingServiceData.setOrderDate(orderDate);
         buyingServiceData.setShopUrl(data[0].get("shopUrl").toString());
+        buyingServiceData.setBuyingPrice(Double.parseDouble(data[1].get("buyingPrice").toString()));
         
         try {
-            buyingProducts = mapper.readValue(data[1].get("productContentObjectList").toString(), BuyingProduct[].class);
+            buyingProducts = mapper.readValue(data[2].get("productContentObjectList").toString(), BuyingProduct[].class);
         } catch (IOException e) {
             LOGGER.error("Mapping of buyingProductsList is failed:"+ userid + "/" + orderid, e);
         }
         buyingServiceData.setBuyingProductsList(buyingProducts);
         
         try {
-            recipientData = mapper.readValue(data[2].get("recipientObjectData").toString(), RecipientData.class);
+            recipientData = mapper.readValue(data[3].get("recipientObjectData").toString(), RecipientData.class);
         } catch (IOException e) {
             LOGGER.error("Mapping of recipientData is failed:"+ userid + "/" + orderid, e);
         }
