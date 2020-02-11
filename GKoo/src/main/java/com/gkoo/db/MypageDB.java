@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.BuyingOrderData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
@@ -25,8 +26,7 @@ public class MypageDB {
             + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
     private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
-    private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, os.order_date, rp.name_kor "
-            + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
+    
     
     public static List<OrderInformation> getOrderData(String userid) {
         List<OrderInformation> orderInformationList = new ArrayList<>();
@@ -226,8 +226,11 @@ public class MypageDB {
     /////////////////////
     /// BuyingService ///
     /////////////////////
-    public static List<OrderInformation> getOrderDataBuyingService(String userid) {
-        List<OrderInformation> orderInformationList = new ArrayList<>();
+    private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT object_id, orderid, buying_price, ship_price, "
+            + "buying_service_state, trackingnr_kor, order_date FROM BUYING_SERVICE bs WHERE userid=?";
+    
+    public static List<BuyingOrderData> getOrderDataBuyingService(String userid) {
+        List<BuyingOrderData> buyingOrderDataList = new ArrayList<>();
         ResultSet resultSet = null;
         
         ConnectionDB.connectSQL();
@@ -235,13 +238,51 @@ public class MypageDB {
                 PreparedStatement psmt = conn.prepareStatement(FETTCH_ORDER_DATA_BUYINGSERVICE);){
             psmt.setString(1, userid);
             resultSet = psmt.executeQuery();
-            orderInformationList = writeOrderInformation(resultSet, orderInformationList);
+            buyingOrderDataList = writeBuyingOrderData(resultSet, buyingOrderDataList);
         } catch (SQLException e) {
             String error = "Error fetching orderdata";
             LOGGER.error(error, e);
             throw new MypageException(error, e);
         }
-        return orderInformationList;
+        return buyingOrderDataList;
+    }
+    
+    private static List<BuyingOrderData> writeBuyingOrderData(ResultSet rs, List<BuyingOrderData> buyingOrderDataList) throws SQLException {
+        while (rs.next()) {
+            BuyingOrderData buyingOrderData = new BuyingOrderData();
+            buyingOrderData.setOrderid(rs.getString("orderid"));
+            buyingOrderData.setProductInfo(collectProductData(rs.getInt("object_id")));
+            buyingOrderData.setBuyingPrice(rs.getDouble("buying_price"));
+            buyingOrderData.setDeliveryPayment(rs.getDouble("ship_price"));
+            buyingOrderData.setDeliveryState(rs.getInt("ship_state"));
+            buyingOrderData.setDeliveryTracking(rs.getString("trackingnr_world"));
+            buyingOrderData.setOrderDate(rs.getDate("order_date"));
+            buyingOrderDataList.add(buyingOrderData);
+        }
+        return buyingOrderDataList;
+    }
+    
+    private static String collectProductData(int object_id) {
+        List<String> products = new ArrayList<>();
+        ResultSet resultSet = null;
+        
+        final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ?";
+        
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PRODUCTS_NAME);){
+            psmt.setInt(1, object_id);
+            resultSet = psmt.executeQuery();
+            while (resultSet.next()) {
+                products.add(resultSet.getString("pd_itemtitle"));
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching product information";
+            LOGGER.error(error, e);
+            throw new MypageException(error, e);
+        }
+
+        return products.toString().replace("[", "").replace("]", "");
     }
     
     public static List<PaymentData> getPaymentDataBuyingService(String userid) {

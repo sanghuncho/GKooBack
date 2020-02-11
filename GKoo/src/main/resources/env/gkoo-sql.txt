@@ -162,7 +162,7 @@ CREATE TABLE buying_service
     orderid character varying(50) NOT NULL,
     buying_price numeric,
     payment_state integer,
-    ship_state integer,
+    buying_service_state integer,
     ship_price numeric,
     box_actual_weight numeric,
     box_volume_weight numeric,
@@ -170,7 +170,8 @@ CREATE TABLE buying_service
     tracking_company_world character varying(50), 
     trackingnr_kor character varying(50),
     trackingnr_world character varying(50) ,
-    shop_url character varying(50) ,
+    shop_url character varying(50),
+    order_date date, 
 )
 
 CREATE TABLE buying_service_recipient
@@ -211,3 +212,9 @@ create table buying_service_product (
     pd_totalprice numeric,
     fk_buying_service integer REFERENCES buying_service
 );
+
+ALTER TABLE buying_service
+  RENAME COLUMN ship_state TO buying_service_state;
+  
+ALTER TABLE buying_service
+	ADD COLUMN order_date date;

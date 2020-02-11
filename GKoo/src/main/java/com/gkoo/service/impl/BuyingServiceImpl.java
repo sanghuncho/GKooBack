@@ -45,7 +45,7 @@ public class BuyingServiceImpl implements BuyingService {
     private final double INITIAL_SHIP_PRICE = 0;
     
     private static final String CREATE_BUYING_SERVICE = 
-            "insert into buying_service(userid, orderid, buying_price,   payment_state, ship_state, shop_url ) values (?, ?, ?,   ?, ?, ?) RETURNING buying_service.object_id";
+            "insert into buying_service(userid, orderid, buying_price,   payment_state, buying_service_state, shop_url ) values (?, ?, ?,   ?, ?, ?) RETURNING buying_service.object_id";
     
     private static final String CREATE_BUYING_SERVICE_RECIPIENT = 
             "insert into buying_service_recipient(name_kor, name_eng, transit_nr, "
@@ -178,6 +178,7 @@ public class BuyingServiceImpl implements BuyingService {
             psmt.setInt(4, buyingservicedata.getBuyingServicePaymentState().getCode());
             psmt.setInt(5, buyingservicedata.getBuyingState().getCode());
             psmt.setString(6, buyingservicedata.getShopUrl());
+            //LocalDate orderDate = TimeStamp.getRequestDate(); orderdate
             resultSet  = psmt.executeQuery();
             buyingServiceId = getBuyingServiceId(resultSet);
             buyingservicedata.setBuyingServiceid(buyingServiceId);
