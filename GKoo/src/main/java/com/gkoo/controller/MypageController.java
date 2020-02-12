@@ -107,5 +107,4 @@ public class MypageController {
         String userid = SecurityConfig.getUserid(request);
         return mypageService.getDeliveryKoreaDataBuyingService(userid);
     }
-    
 }
