@@ -214,7 +214,11 @@ create table buying_service_product (
 );
 
 ALTER TABLE buying_service
+<<<<<<< HEAD
   RENAME COLUMN ship_state TO buying_service_state;
   
 ALTER TABLE buying_service
 	ADD COLUMN order_date date;
+=======
+  RENAME COLUMN ship_state TO buying_service_state;
+>>>>>>> branch 'master' of https://github.com/sanghuncho/GKooBack.git

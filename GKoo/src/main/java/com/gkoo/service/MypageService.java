@@ -2,6 +2,7 @@ package com.gkoo.service;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import com.gkoo.data.BuyingOrderData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
@@ -17,7 +18,7 @@ public interface MypageService {
     /////////////////////
     /// BuyingService ///
     /////////////////////
-    public List<OrderInformation> getOrderDataBuyingService(String userid);
+    public List<BuyingOrderData> getOrderDataBuyingService(String userid);
     public List<PaymentData> getPaymentDataBuyingService(String userid);
     public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid);
 }
