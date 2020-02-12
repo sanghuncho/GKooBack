@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.gkoo.configuration.SecurityConfig;
+import com.gkoo.data.BuyingOrderData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.OrderInformation;
@@ -90,7 +91,7 @@ public class MypageController {
     /// BuyingService ///
     /////////////////////
     @RequestMapping("/orderdataBuyingService")
-    public List<OrderInformation> requestOrderDataBuyingService(HttpServletRequest request) throws SQLException  {
+    public List<BuyingOrderData> requestOrderDataBuyingService(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);        
         return mypageService.getOrderDataBuyingService(userid);
     }

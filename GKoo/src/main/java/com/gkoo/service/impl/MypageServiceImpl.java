@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.gkoo.data.BuyingOrderData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
@@ -46,7 +47,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public List<OrderInformation> getOrderDataBuyingService(String userid) {
+    public List<BuyingOrderData> getOrderDataBuyingService(String userid) {
         return MypageDB.getOrderDataBuyingService(userid);
     }
 
