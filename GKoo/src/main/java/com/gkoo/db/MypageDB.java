@@ -22,9 +22,8 @@ import payment.PaymentData;
 public class MypageDB {
     private static final Logger LOGGER = LogManager.getLogger();
     
-    private static final String FETTCH_ORDER_DATA = "SELECT bs.object_id, bs.orderid, bs.ship_price, "
-            + " bs.buying_service_state, os.trackingnr_kor, os.trackingnr_world, os.order_date, rp.name_kor "
-            + " FROM BUYING_SERVICE bs, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
+    private static final String FETTCH_ORDER_DATA = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, os.order_date, rp.name_kor "
+            + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
     
     private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
@@ -227,8 +226,10 @@ public class MypageDB {
     /// BuyingService ///
     /////////////////////
     private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT object_id, orderid, buying_price, ship_price, "
-            + "buying_service_state, trackingnr_kor, order_date FROM BUYING_SERVICE bs WHERE userid=?";
+            + "buying_service_state, order_date FROM BUYING_SERVICE bs WHERE userid=?";
     
+    private static final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ?";
+
     public static List<BuyingOrderData> getOrderDataBuyingService(String userid) {
         List<BuyingOrderData> buyingOrderDataList = new ArrayList<>();
         ResultSet resultSet = null;
@@ -254,8 +255,7 @@ public class MypageDB {
             buyingOrderData.setProductInfo(collectProductData(rs.getInt("object_id")));
             buyingOrderData.setBuyingPrice(rs.getDouble("buying_price"));
             buyingOrderData.setDeliveryPayment(rs.getDouble("ship_price"));
-            buyingOrderData.setDeliveryState(rs.getInt("ship_state"));
-            buyingOrderData.setDeliveryTracking(rs.getString("trackingnr_world"));
+            buyingOrderData.setBuyingServiceState(rs.getInt("buying_service_state"));
             buyingOrderData.setOrderDate(rs.getDate("order_date"));
             buyingOrderDataList.add(buyingOrderData);
         }
@@ -266,7 +266,6 @@ public class MypageDB {
         List<String> products = new ArrayList<>();
         ResultSet resultSet = null;
         
-        final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ?";
         
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();

@@ -7,8 +7,7 @@ public class BuyingOrderData {
     private String productInfo;
     private double buyingPrice;
     private double deliveryPayment;
-    private int deliveryState;
-    private String deliveryTracking;
+    private int buyingServiceState;
     private Date orderDate;
     
     public BuyingOrderData(){}
@@ -37,20 +36,12 @@ public class BuyingOrderData {
         this.deliveryPayment = deliveryPayment;
     }
 
-    public int getDeliveryState() {
-        return deliveryState;
+    public int getBuyingServiceState() {
+        return buyingServiceState;
     }
 
-    public void setDeliveryState(int deliveryState) {
-        this.deliveryState = deliveryState;
-    }
-
-    public String getDeliveryTracking() {
-        return deliveryTracking;
-    }
-
-    public void setDeliveryTracking(String deliveryTracking) {
-        this.deliveryTracking = deliveryTracking;
+    public void setBuyingServiceState(int buyingServiceState) {
+        this.buyingServiceState = buyingServiceState;
     }
     
     public Date getOrderDate() {
