@@ -221,3 +221,5 @@ ALTER TABLE buying_service
 
 INSERT INTO buying_service_product (pd_itemtitle, fk_buying_service) VALUES ('장남감', 11);
 
+ALTER TABLE buying_service DROP COLUMN payment_state CASCADE;
+

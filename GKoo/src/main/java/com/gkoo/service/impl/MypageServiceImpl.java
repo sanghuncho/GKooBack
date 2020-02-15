@@ -60,4 +60,9 @@ public class MypageServiceImpl implements MypageService {
     public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid) {
         return MypageDB.getDeliveryKoreaDataBuyingService(userid);
     }
+
+    @Override
+    public List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
+        return MypageDB.getPaymentDeliveryBuyingService(userid);
+    }
 }

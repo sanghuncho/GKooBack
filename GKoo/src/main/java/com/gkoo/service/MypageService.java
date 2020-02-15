@@ -20,5 +20,6 @@ public interface MypageService {
     /////////////////////
     public List<BuyingOrderData> getOrderDataBuyingService(String userid);
     public List<PaymentData> getPaymentDataBuyingService(String userid);
+    public List<PaymentData> getPaymentDeliveryBuyingService(String userid);
     public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid);
 }

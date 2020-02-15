@@ -225,8 +225,8 @@ public class MypageDB {
     /////////////////////
     /// BuyingService ///
     /////////////////////
-    private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT object_id, orderid, buying_price, ship_price, "
-            + "buying_service_state, order_date FROM BUYING_SERVICE bs WHERE userid=?";
+    private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT bs.object_id, bs.orderid, bs.buying_price, bs.ship_price, "
+            + "bs.buying_service_state, bs.order_date FROM BUYING_SERVICE bs WHERE bs.userid=?";
     
     private static final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ?";
 
@@ -245,14 +245,18 @@ public class MypageDB {
             LOGGER.error(error, e);
             throw new MypageException(error, e);
         }
+        
+        //Todo : shippingService also modified
+        collectProductData(buyingOrderDataList);
+        
         return buyingOrderDataList;
     }
     
     private static List<BuyingOrderData> writeBuyingOrderData(ResultSet rs, List<BuyingOrderData> buyingOrderDataList) throws SQLException {
         while (rs.next()) {
             BuyingOrderData buyingOrderData = new BuyingOrderData();
+            buyingOrderData.setObjectid(rs.getInt("object_id"));
             buyingOrderData.setOrderid(rs.getString("orderid"));
-            buyingOrderData.setProductInfo(collectProductData(rs.getInt("object_id")));
             buyingOrderData.setBuyingPrice(rs.getDouble("buying_price"));
             buyingOrderData.setDeliveryPayment(rs.getDouble("ship_price"));
             buyingOrderData.setBuyingServiceState(rs.getInt("buying_service_state"));
@@ -262,31 +266,54 @@ public class MypageDB {
         return buyingOrderDataList;
     }
     
-    private static String collectProductData(int object_id) {
-        List<String> products = new ArrayList<>();
-        ResultSet resultSet = null;
+    private static void collectProductData(List<BuyingOrderData> buyingOrderDataList) {
         
-        
-        ConnectionDB.connectSQL();
-        try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt = conn.prepareStatement(GET_PRODUCTS_NAME);){
-            psmt.setInt(1, object_id);
-            resultSet = psmt.executeQuery();
-            while (resultSet.next()) {
-                products.add(resultSet.getString("pd_itemtitle"));
+        for(BuyingOrderData data : buyingOrderDataList) {
+            List<String> products = new ArrayList<>();
+            
+            ConnectionDB.connectSQL();
+            ResultSet resultSet = null;
+            try (Connection conn = ConnectionDB.getConnectInstance();
+                    PreparedStatement psmt = conn.prepareStatement(GET_PRODUCTS_NAME);){
+                psmt.setInt(1, data.getObjectid());
+                resultSet = psmt.executeQuery();
+                while (resultSet.next()) {
+                    products.add(resultSet.getString("pd_itemtitle"));
+                }
+            } catch (SQLException e) {
+                String error = "Error fetching product information";
+                LOGGER.error(error, e);
+                throw new MypageException(error, e);
             }
-        } catch (SQLException e) {
-            String error = "Error fetching product information";
-            LOGGER.error(error, e);
-            throw new MypageException(error, e);
+            data.setProductInfo(products.toString().replace("[", "").replace("]", ""));
         }
-
-        return products.toString().replace("[", "").replace("]", "");
+        //return products.toString().replace("[", "").replace("]", "");
     }
     
     public static List<PaymentData> getPaymentDataBuyingService(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_PAYMENTDATA = "SELECT * FROM PAYMENT WHERE (payment_state = 1 or payment_state = 2 or payment_state = 3) AND userid=?";
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, "
+                + "bs.orderid FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
+                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2)";
+        ResultSet resultSet = null;
+        List<PaymentData> paymentDataList = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            paymentDataList = writePaymentDataBuyingService(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+
+    public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
+        ConnectionDB.connectSQL();
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, "
+                + "bs.orderid FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
+                + "and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -307,9 +334,9 @@ public class MypageDB {
             while (rs.next()) {
                 PaymentData payment = new PaymentData();
                 try {
-                    payment.setPaymentid(rs.getInt("paymentid"));
+                    payment.setPaymentid(rs.getInt("object_id"));
                     payment.setOrderid(rs.getString("orderid"));
-                    payment.setPaymentState(rs.getInt("payment_state"));
+                    payment.setPaymentState(rs.getInt("buying_service_payment_state"));
                 } catch (SQLException e) {
                     String error = "Error fetching paymentData";
                     LOGGER.error(error, e);

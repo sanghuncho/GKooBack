@@ -3,6 +3,7 @@ package com.gkoo.data;
 import java.util.Date;
 
 public class BuyingOrderData {
+    private int objectid;
     private String orderid;
     private String productInfo;
     private double buyingPrice;
@@ -58,5 +59,13 @@ public class BuyingOrderData {
 
     public void setBuyingPrice(double buyingPrice) {
         this.buyingPrice = buyingPrice;
+    }
+
+    public int getObjectid() {
+        return objectid;
+    }
+
+    public void setObjectid(int objectid) {
+        this.objectid = objectid;
     }
 }

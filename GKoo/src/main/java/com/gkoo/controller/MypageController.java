@@ -102,6 +102,12 @@ public class MypageController {
         return mypageService.getPaymentDataBuyingService(userid);
     }
     
+    @RequestMapping("/paymentDeliveryBuyingService")
+    public List<PaymentData> requestPaymentDeliveryBuyingService(HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return mypageService.getPaymentDeliveryBuyingService(userid);
+    }
+    
     @RequestMapping("/deliveryKoreaDataBuyingService")
     public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
