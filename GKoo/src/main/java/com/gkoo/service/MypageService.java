@@ -1,6 +1,8 @@
 package com.gkoo.service;
 
+import java.util.HashMap;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import com.gkoo.data.BuyingOrderData;
 import com.gkoo.data.DeliveryKoreaData;
@@ -22,4 +24,5 @@ public interface MypageService {
     public List<PaymentData> getPaymentDataBuyingService(String userid);
     public List<PaymentData> getPaymentDeliveryBuyingService(String userid);
     public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid);
+    public ResponseEntity<?> updatePaymentProductBuyingService(HashMap<String, Object>[] data, String userid);
 }

@@ -246,7 +246,6 @@ public class MypageDB {
             throw new MypageException(error, e);
         }
         
-        //Todo : shippingService also modified
         collectProductData(buyingOrderDataList);
         
         return buyingOrderDataList;
@@ -292,28 +291,9 @@ public class MypageDB {
     
     public static List<PaymentData> getPaymentDataBuyingService(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, "
-                + "bs.orderid FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.buying_deposit_ownername, bsp.payment_art,"
+                + "bs.orderid, bs.buying_price FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
                 + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2)";
-        ResultSet resultSet = null;
-        List<PaymentData> paymentDataList = null;
-        try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
-            psmt.setString(1, userid);
-            resultSet = psmt.executeQuery();
-            paymentDataList = writePaymentDataBuyingService(resultSet);
-        } catch (SQLException e) {
-            String error = "Error fetching paymentData";
-            LOGGER.error(error, e);
-        }
-        return paymentDataList;
-    }
-
-    public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
-        ConnectionDB.connectSQL();
-        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, "
-                + "bs.orderid FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
-                + "and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -337,12 +317,34 @@ public class MypageDB {
                     payment.setPaymentid(rs.getInt("object_id"));
                     payment.setOrderid(rs.getString("orderid"));
                     payment.setPaymentState(rs.getInt("buying_service_payment_state"));
+                    payment.setBuyingPrice(rs.getDouble("buying_price"));
+                    payment.setPaymentOwnername(rs.getString("buying_deposit_ownername"));
+                    payment.setPaymentArt(rs.getInt("payment_art"));
                 } catch (SQLException e) {
                     String error = "Error fetching paymentData";
                     LOGGER.error(error, e);
                 }
                 paymentDataList.add(payment);
             }
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+
+    public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
+        ConnectionDB.connectSQL();
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, "
+                + "bs.orderid FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
+                + "and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+        ResultSet resultSet = null;
+        List<PaymentData> paymentDataList = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            paymentDataList = writePaymentDataBuyingService(resultSet);
         } catch (SQLException e) {
             String error = "Error fetching paymentData";
             LOGGER.error(error, e);
@@ -387,5 +389,23 @@ public class MypageDB {
             LOGGER.error(error, e);
         }
         return deliveryKoreaDataList;
+    }
+    
+    public static ResponseEntity<?> updatePaymentProductBuyingService(int objectid, String paymentOwnername, int paymentArt) {
+        ConnectionDB.connectSQL();
+        final String UPDATE_PAYMENT_DEPOSIT_OWNERNAME = 
+                "UPDATE BUYING_SERVICE_PAYMENT SET buying_deposit_ownername = ? , payment_art = ? WHERE object_id = ?";
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_PAYMENT_DEPOSIT_OWNERNAME);){
+            psmt.setString(1, paymentOwnername);
+            psmt.setInt(2, paymentArt);
+            psmt.setInt(3, objectid);
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            String error = "Error updating of payment deposit ownername";
+            LOGGER.error(error, e);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }
 }

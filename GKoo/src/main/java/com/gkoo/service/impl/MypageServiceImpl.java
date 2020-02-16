@@ -1,6 +1,8 @@
 package com.gkoo.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -64,5 +66,13 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
         return MypageDB.getPaymentDeliveryBuyingService(userid);
+    }
+
+    @Override
+    public ResponseEntity<?> updatePaymentProductBuyingService(HashMap<String, Object>[] data, String userid) {
+        int objectid = Integer.parseInt(data[0].get("paymentid").toString());
+        String paymentOwnername = data[1].get("paymentOwnername").toString();
+        int paymentArt = Integer.parseInt(data[2].get("paymentArt").toString());
+        return MypageDB.updatePaymentProductBuyingService(objectid, paymentOwnername, paymentArt);
     }
 }
