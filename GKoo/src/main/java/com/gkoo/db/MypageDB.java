@@ -333,18 +333,45 @@ public class MypageDB {
         return paymentDataList;
     }
 
+    private static List<PaymentData> writePaymentDeliveryBuyingService(ResultSet rs){
+        List<PaymentData> paymentDataList = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                PaymentData payment = new PaymentData();
+                try {
+                    payment.setPaymentid(rs.getInt("object_id"));
+                    payment.setOrderid(rs.getString("orderid"));
+                    payment.setPaymentState(rs.getInt("buying_service_payment_state"));
+                    payment.setShipPrice(rs.getDouble("ship_price"));
+                    payment.setBoxActualWeight(rs.getDouble("box_actual_weight"));
+                    payment.setBoxVolumeWeight(rs.getDouble("box_volume_weight"));
+                    payment.setPaymentOwnername(rs.getString("shipping_deposit_ownername"));
+                    payment.setPaymentArt(rs.getInt("payment_art"));
+                } catch (SQLException e) {
+                    String error = "Error fetching paymentDeliveryData";
+                    LOGGER.error(error, e);
+                }
+                paymentDataList.add(payment);
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching paymentDeliveryData";
+            LOGGER.error(error, e);
+        }
+        return paymentDataList;
+    }
+    
     public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, "
-                + "bs.orderid FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
-                + "and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.shipping_deposit_ownername, bsp.payment_art,bs.orderid, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? "
+                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+        
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
             psmt.setString(1, userid);
             resultSet = psmt.executeQuery();
-            paymentDataList = writePaymentDataBuyingService(resultSet);
+            paymentDataList = writePaymentDeliveryBuyingService(resultSet);
         } catch (SQLException e) {
             String error = "Error fetching paymentData";
             LOGGER.error(error, e);

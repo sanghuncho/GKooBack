@@ -12,13 +12,13 @@ public enum BuyingServicePaymentState {
     //구매대행 결제대기    
     PRODUCT_PAYMENT_READY(1),
     
-    //구매대행 결제완료
+    //구매대행 결제완료(관리자결제확인함)
     PRODUCT_PAYMENT_COMPLETION(2),
     
-    //추가 결제요청
+    //배송비 및 추가 결제요청
     DELIVERY_PAYMENT_READY(3),
     
-    //추가 결제완료
+    //배송비 및 추가  결제완료
     DELIVERY_PAYMENT_COMPLETION(4),
     
     //전체 결제완료

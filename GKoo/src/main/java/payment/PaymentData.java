@@ -7,6 +7,9 @@ public class PaymentData {
     private String orderid;
     private int paymentState;
     private double buyingPrice;
+    private double shipPrice;
+    private double boxActualWeight;
+    private double boxVolumeWeight;
     private String paymentOwnername;
     private Date paymentDate;
     private int paymentArt;
@@ -72,4 +75,29 @@ public class PaymentData {
     public void setPaymentArt(int paymentArt) {
         this.paymentArt = paymentArt;
     }
+
+    public double getShipPrice() {
+        return shipPrice;
+    }
+
+    public void setShipPrice(double shipPrice) {
+        this.shipPrice = shipPrice;
+    }
+
+    public double getBoxActualWeight() {
+        return boxActualWeight;
+    }
+
+    public void setBoxActualWeight(double boxActualWeight) {
+        this.boxActualWeight = boxActualWeight;
+    }
+
+    public double getBoxVolumeWeight() {
+        return boxVolumeWeight;
+    }
+
+    public void setBoxVolumeWeight(double boxVolumeWeight) {
+        this.boxVolumeWeight = boxVolumeWeight;
+    }
+
 }
