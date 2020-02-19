@@ -346,7 +346,7 @@ public class MypageDB {
                     payment.setBoxActualWeight(rs.getDouble("box_actual_weight"));
                     payment.setBoxVolumeWeight(rs.getDouble("box_volume_weight"));
                     payment.setPaymentOwnername(rs.getString("shipping_deposit_ownername"));
-                    payment.setPaymentArt(rs.getInt("payment_art"));
+                    payment.setPaymentArt(rs.getInt("payment_art_shipping_price"));
                 } catch (SQLException e) {
                     String error = "Error fetching paymentDeliveryData";
                     LOGGER.error(error, e);
@@ -362,7 +362,7 @@ public class MypageDB {
     
     public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.shipping_deposit_ownername, bsp.payment_art,bs.orderid, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? "
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.shipping_deposit_ownername, bsp.payment_art_shipping_price, bs.orderid, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? "
                 + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
         
         ResultSet resultSet = null;
@@ -422,6 +422,24 @@ public class MypageDB {
         ConnectionDB.connectSQL();
         final String UPDATE_PAYMENT_DEPOSIT_OWNERNAME = 
                 "UPDATE BUYING_SERVICE_PAYMENT SET buying_deposit_ownername = ? , payment_art = ? WHERE object_id = ?";
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_PAYMENT_DEPOSIT_OWNERNAME);){
+            psmt.setString(1, paymentOwnername);
+            psmt.setInt(2, paymentArt);
+            psmt.setInt(3, objectid);
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            String error = "Error updating of payment deposit ownername";
+            LOGGER.error(error, e);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+    }
+    
+    public static ResponseEntity<?> updatePaymentDeliveryBuyingService(int objectid, String paymentOwnername, int paymentArt) {
+        ConnectionDB.connectSQL();
+        final String UPDATE_PAYMENT_DEPOSIT_OWNERNAME = 
+                "UPDATE BUYING_SERVICE_PAYMENT SET shipping_deposit_ownername = ?, payment_art_shipping_price = ? WHERE object_id = ?";
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt = conn.prepareStatement(UPDATE_PAYMENT_DEPOSIT_OWNERNAME);){
             psmt.setString(1, paymentOwnername);

@@ -228,3 +228,6 @@ UPDATE buying_service SET buying_service_state = 2 WHERE object_id=14;
 
 UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE object_id=14;
 UPDATE buying_service SET ship_price = 15000, box_actual_weight=3, box_volume_weight=5, buying_service_state = 3 WHERE object_id=13;
+
+ALTER TABLE buying_service_payment
+	ADD COLUMN payment_art_shipping_price numeric;
