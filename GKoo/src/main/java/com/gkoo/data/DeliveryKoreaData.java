@@ -5,9 +5,13 @@ package com.gkoo.data;
  *
  */
 public class DeliveryKoreaData {
+    //@deprecated use objectid
     private int id;
+    
+    private int objectid;
     private String orderid;
     private int deliveryState;
+    //송장번호
     private String deliveryTracking;
     
     public DeliveryKoreaData() {}
@@ -42,5 +46,13 @@ public class DeliveryKoreaData {
 
     public void setDeliveryTracking(String deliveryTracking) {
         this.deliveryTracking = deliveryTracking;
+    }
+
+    public int getObjectid() {
+        return objectid;
+    }
+
+    public void setObjectid(int objectid) {
+        this.objectid = objectid;
     }
 }

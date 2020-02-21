@@ -21,7 +21,7 @@ public enum BuyingServicePaymentState {
     //배송비 및 추가  결제완료
     DELIVERY_PAYMENT_COMPLETION(4),
     
-    //전체 결제완료
+    //전체 결제완료 , 해외배송중이면 전제결제로 변경
     BUYING_SERVICE_PAYMENT_COMPLETION(5);
     
     private final int stateCode;

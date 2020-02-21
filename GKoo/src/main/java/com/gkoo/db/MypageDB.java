@@ -293,7 +293,7 @@ public class MypageDB {
         ConnectionDB.connectSQL();
         final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.buying_deposit_ownername, bsp.payment_art,"
                 + "bs.orderid, bs.buying_price FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
-                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2)";
+                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2 or bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -381,7 +381,7 @@ public class MypageDB {
     
     public static List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_DELIVERYKOREADATA = "SELECT * FROM ORDERSTATE WHERE ship_state > 4 AND userid=?";
+        final String GET_DELIVERYKOREADATA = "SELECT * FROM BUYING_SERVICE WHERE buying_service_state > 4 AND userid=?";
         ResultSet resultSet = null;
         List<DeliveryKoreaData> deliveryKoreaDataList = new ArrayList<>();
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -401,9 +401,9 @@ public class MypageDB {
             while (rs.next()) {
                 DeliveryKoreaData deliveryKoreaData = new DeliveryKoreaData();
                 try {
-                    deliveryKoreaData.setId(rs.getInt("id"));
+                    deliveryKoreaData.setId(rs.getInt("object_id"));
                     deliveryKoreaData.setOrderid(rs.getString("orderid"));
-                    deliveryKoreaData.setDeliveryState(rs.getInt("ship_state"));
+                    deliveryKoreaData.setDeliveryState(rs.getInt("buying_service_state"));
                     deliveryKoreaData.setDeliveryTracking(rs.getString("trackingnr_kor"));
                 } catch (SQLException e) {
                     String error = "Error fetching delivery korea data";
@@ -435,7 +435,7 @@ public class MypageDB {
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }
-    
+
     public static ResponseEntity<?> updatePaymentDeliveryBuyingService(int objectid, String paymentOwnername, int paymentArt) {
         ConnectionDB.connectSQL();
         final String UPDATE_PAYMENT_DEPOSIT_OWNERNAME = 
@@ -447,7 +447,7 @@ public class MypageDB {
             psmt.setInt(3, objectid);
             psmt.executeUpdate();
         } catch (SQLException e) {
-            String error = "Error updating of payment deposit ownername";
+            String error = "Error updating of payment shipping deposit ownername";
             LOGGER.error(error, e);
         }
         HttpHeaders headers = new HttpHeaders();

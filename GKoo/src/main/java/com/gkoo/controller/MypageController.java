@@ -108,6 +108,12 @@ public class MypageController {
         return mypageService.updatePaymentProductBuyingService(data, userid);
     }
     
+    @RequestMapping("/updatePaymentDeliveryBuyingService")
+    public ResponseEntity<?> updatePaymentDeliveryBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return mypageService.updatePaymentDeliveryBuyingService(data, userid);
+    }
+    
     @RequestMapping("/paymentDeliveryBuyingService")
     public List<PaymentData> requestPaymentDeliveryBuyingService(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);

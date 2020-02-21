@@ -223,11 +223,19 @@ INSERT INTO buying_service_product (pd_itemtitle, fk_buying_service) VALUES ('�
 
 ALTER TABLE buying_service DROP COLUMN payment_state CASCADE;
 
-UPDATE buying_service_payment SET buying_deposit_ownername = '박아름', buying_service_payment_state = 2 WHERE object_id=13;
-UPDATE buying_service SET buying_service_state = 2 WHERE object_id=14;
+UPDATE buying_service_payment SET buying_deposit_ownername = '박아름', buying_service_payment_state = 2 WHERE object_id = 13;
+UPDATE buying_service SET buying_service_state = 2 WHERE object_id = 14;
 
-UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE object_id=14;
-UPDATE buying_service SET ship_price = 15000, box_actual_weight=3, box_volume_weight=5, buying_service_state = 3 WHERE object_id=13;
+UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE object_id = 14;
+UPDATE buying_service SET ship_price = 15000, box_actual_weight=3, box_volume_weight = 5, buying_service_state = 3 WHERE object_id = 13;
 
 ALTER TABLE buying_service_payment
 	ADD COLUMN payment_art_shipping_price numeric;
+
+UPDATE buying_service SET buying_service_state = 4 WHERE object_id = 1;
+UPDATE buying_service_payment SET buying_service_payment_state = 4 WHERE fk_buying_service = 14;
+
+UPDATE buying_service SET buying_service_state = 5 WHERE object_id = 14;
+UPDATE buying_service_payment SET buying_service_payment_state = 5 WHERE fk_buying_service = 14;
+
+UPDATE buying_service SET buying_service_state = 5 WHERE object_id=14;

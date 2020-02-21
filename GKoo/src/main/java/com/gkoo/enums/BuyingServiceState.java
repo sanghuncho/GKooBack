@@ -17,9 +17,6 @@ public enum BuyingServiceState {
     //구매대행 결제완료
     PRODUCT_PAYMENT_COMPLETION(2),
     
-    //입고대기
-    //RECEIVE_BOX_READY(3),
-    
     //배송비 및 추가서비스 결제요청
     DELIVERY_PAYMENT_READY(3),
     
