@@ -54,18 +54,18 @@ public class MypageServiceImpl implements MypageService {
     }
 
     @Override
-    public List<PaymentData> getPaymentDataBuyingService(String userid) {
-        return MypageDB.getPaymentDataBuyingService(userid);
+    public List<PaymentData> getPaymentProductBuyingService(String userid) {
+        return MypageDB.getPaymentProductBuyingService(userid);
+    }
+    
+    @Override
+    public List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
+        return MypageDB.getPaymentDeliveryBuyingService(userid);
     }
 
     @Override
     public List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid) {
         return MypageDB.getDeliveryKoreaDataBuyingService(userid);
-    }
-
-    @Override
-    public List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
-        return MypageDB.getPaymentDeliveryBuyingService(userid);
     }
 
     @Override

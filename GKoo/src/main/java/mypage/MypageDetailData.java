@@ -27,8 +27,4 @@ public class MypageDetailData {
     public void setProductsCommonInformation(ProductsCommonInformation productsCommonInformation) {
         this.productsCommonInformation = productsCommonInformation;
     }
-
-    
-    
-    
 }

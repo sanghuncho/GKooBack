@@ -96,10 +96,10 @@ public class MypageController {
         return mypageService.getOrderDataBuyingService(userid);
     }
     
-    @RequestMapping("/paymentDataBuyingService")
-    public List<PaymentData> requestPaymentDataBuyingService(HttpServletRequest request) throws SQLException  {
+    @RequestMapping("/paymentProductBuyingService")
+    public List<PaymentData> requestPaymentProductBuyingService(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
-        return mypageService.getPaymentDataBuyingService(userid);
+        return mypageService.getPaymentProductBuyingService(userid);
     }
     
     @RequestMapping("/updatePaymentProductBuyingService")

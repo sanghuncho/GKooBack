@@ -5,8 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,12 +18,14 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gkoo.data.BuyingServiceDetailData;
 import com.gkoo.data.RecipientData;
 import com.gkoo.repository.ShippingServiceRepository;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
 import mypage.information.ProductsInformation;
 import mypage.information.ProductsInformation.Product;
+import payment.PaymentData;
 import payment.PaymentState;
 import shippingService.DeliveryDataObject;
 import shippingService.ShippingProduct;
@@ -29,7 +34,7 @@ import shippingService.ShippingServiceState;
 
 @Service
 public class MypageDetailsImpl implements MypageDetailsDAO {
-	
+    private static final Logger LOGGER = LogManager.getLogger();
 	private final int PAYMENT_REQEUST_STATE = 2; //결제요청 - 무통장입금전
 	private ShippingServiceRepository shippingServiceRepository;
 	
@@ -66,6 +71,26 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		}		
 		return recipient;
 	}
+	
+	@Override
+    public RecipientData getRecipientBuyingService(String userid, String orderid) {
+        ResultSet resultSet = null;
+        ConnectionDB.connectSQL();
+        //SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid='20200214055847' and  bs.object_id=bsr.fk_buying_service
+        String query = "SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid = ? and bs.object_id = bsr.fk_buying_service";
+        RecipientData recipient = new RecipientData();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(query);){
+            //psmt.setString(1, userid);
+            psmt.setString(1, orderid);
+            resultSet = psmt.executeQuery();
+            recipient = writeRecipientInformation(resultSet, recipient);
+        } catch (SQLException ex) {
+            String error = "Error fetching the recipient for buying service";
+            LOGGER.error(error, ex);
+        }       
+        return recipient;
+    }
 	
 //	payment
 //	1 결제대기 - 결제전
@@ -108,7 +133,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		}	
 	}
 	
-	public RecipientData writeRecipientInformation(ResultSet rs, RecipientData recipient) throws SQLException {
+	private RecipientData writeRecipientInformation(ResultSet rs, RecipientData recipient) throws SQLException {
 		while (rs.next()) {
 			recipient.setNameKor(rs.getString("name_kor"));
 			recipient.setNameEng(rs.getString("name_eng"));
@@ -284,5 +309,128 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         RecipientData recipientData = getRecipientInfo(userid, orderid);
         ProductsCommonInformation productsCommonInformation = getProductsCommonInfo(userid, orderid);  
         return new MypageDetailData(recipientData, productsCommonInformation);
+    }
+
+    @Override
+    public BuyingServiceDetailData getMypageBuyingServiceDetailData(String userid, String orderid) {
+        RecipientData recipientData = getRecipientBuyingService(userid, orderid);
+        PaymentData productPayment =  getPaymentProductBuyingServiceByOrderid(orderid);
+        PaymentData deliveryPayment = getPaymentDeliveryBuyingServiceByOrderid(orderid);
+        List<Product> productsList = getProductDataBuyingService(userid, orderid);
+        return new BuyingServiceDetailData(recipientData, productPayment, deliveryPayment, productsList);
+    }
+
+    @Override
+    public PaymentData getPaymentProductBuyingServiceByOrderid(String orderid) {
+        ConnectionDB.connectSQL();
+        final String GET_PAYMENT_PRODUCT_DATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.buying_deposit_ownername, bsp.payment_art,"
+                + "bs.orderid, bs.buying_price, bs.buying_service_state FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.orderid=? and bs.object_id=bsp.fk_buying_service";
+        ResultSet resultSet = null;
+        PaymentData paymentData = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENT_PRODUCT_DATA);){
+            psmt.setString(1, orderid);
+            resultSet = psmt.executeQuery();
+            paymentData = writePaymentProductBuyingService(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentData;
+    }
+    
+    private static PaymentData writePaymentProductBuyingService(ResultSet rs){
+        PaymentData payment = null;
+        try {
+            while (rs.next()) {
+                payment = new PaymentData();
+                try {
+                    payment.setPaymentid(rs.getInt("object_id"));
+                    payment.setOrderid(rs.getString("orderid"));
+                    payment.setPaymentState(rs.getInt("buying_service_payment_state"));
+                    payment.setBuyingServiceState(rs.getInt("buying_service_state"));
+                    payment.setBuyingPrice(rs.getDouble("buying_price"));
+                    payment.setPaymentOwnername(rs.getString("buying_deposit_ownername"));
+                    payment.setPaymentArt(rs.getInt("payment_art"));
+                } catch (SQLException e) {
+                    String error = "Error fetching paymentData";
+                    LOGGER.error(error, e);
+                }
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching payment product Data by orderid";
+            LOGGER.error(error, e);
+        }
+        return payment;
+    }
+    
+    @Override
+    public PaymentData getPaymentDeliveryBuyingServiceByOrderid(String orderid) {
+        ConnectionDB.connectSQL();
+        final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.shipping_deposit_ownername, "
+                + "bsp.payment_art_shipping_price, bs.orderid, bs.ship_price, "
+                + "bs.box_actual_weight, bs.box_volume_weight "
+                + "FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.orderid = ? "
+                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+        
+        ResultSet resultSet = null;
+        PaymentData paymentData = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PAYMENTDATA);){
+            psmt.setString(1, orderid);
+            resultSet = psmt.executeQuery();
+            paymentData = writePaymentDeliveryBuyingService(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching paymentData";
+            LOGGER.error(error, e);
+        }
+        return paymentData;
+    }
+    
+    private static PaymentData writePaymentDeliveryBuyingService(ResultSet rs){
+        PaymentData payment = null;
+        try {
+            while (rs.next()) {
+                payment = new PaymentData();
+                try {
+                    payment.setPaymentid(rs.getInt("object_id"));
+                    payment.setOrderid(rs.getString("orderid"));
+                    payment.setPaymentState(rs.getInt("buying_service_payment_state"));
+                    payment.setShipPrice(rs.getDouble("ship_price"));
+                    payment.setBoxActualWeight(rs.getDouble("box_actual_weight"));
+                    payment.setBoxVolumeWeight(rs.getDouble("box_volume_weight"));
+                    payment.setPaymentOwnername(rs.getString("shipping_deposit_ownername"));
+                    payment.setPaymentArt(rs.getInt("payment_art_shipping_price"));
+                } catch (SQLException e) {
+                    String error = "Error fetching paymentDeliveryData";
+                    LOGGER.error(error, e);
+                }
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching paymentDeliveryData";
+            LOGGER.error(error, e);
+        }
+        return payment;
+    }
+
+    @Override
+    public List<Product> getProductDataBuyingService(String userid, String orderid) {
+        ResultSet resultSet = null;
+        ConnectionDB.connectSQL();
+        String query = "SELECT bsp.pd_categorytitle"
+                + ", bsp.pd_itemtitle, bsp.pd_itemname, bsp.pd_brandname, bsp.pd_amount, bsp.pd_price, bsp.pd_totalprice "
+                + "FROM BUYING_SERVICE bs, BUYING_SERVICE_PRODUCT bsp WHERE (bs.userid = ? AND bs.orderid = ?) AND (bs.object_id = bsp.fk_buying_service)";
+        ProductsInformation productsInfo = new ProductsInformation();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(query);){
+            psmt.setString(1, userid);
+            psmt.setString(2, orderid);
+            resultSet = psmt.executeQuery();
+            productsInfo = writeProductsInformation(resultSet, productsInfo);
+        } catch (SQLException e) {
+            String error = "Error fetching products data for buyingService";
+            LOGGER.error(error, e);
+        }       
+        return productsInfo.getProductsList();
     }
 }

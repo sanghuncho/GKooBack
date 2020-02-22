@@ -239,3 +239,5 @@ UPDATE buying_service SET buying_service_state = 5 WHERE object_id = 14;
 UPDATE buying_service_payment SET buying_service_payment_state = 5 WHERE fk_buying_service = 14;
 
 UPDATE buying_service SET buying_service_state = 5 WHERE object_id=14;
+
+SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid='20200214055847' and bs.object_id=bsr.fk_buying_service

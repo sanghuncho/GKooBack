@@ -6,6 +6,8 @@ public class PaymentData {
     private int paymentid;
     private String orderid;
     private int paymentState;
+    
+    private int buyingServiceState;
     private double buyingPrice;
     private double shipPrice;
     private double boxActualWeight;
@@ -51,6 +53,15 @@ public class PaymentData {
     public int getPaymentState() {
         return paymentState;
     }
+    
+    public int getBuyingServiceState() {
+        return buyingServiceState;
+    }
+
+    public void setBuyingServiceState(int buyingServiceState) {
+        this.buyingServiceState = buyingServiceState;
+    }
+
 
     public double getBuyingPrice() {
         return buyingPrice;

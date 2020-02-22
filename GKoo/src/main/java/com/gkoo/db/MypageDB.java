@@ -289,7 +289,7 @@ public class MypageDB {
         //return products.toString().replace("[", "").replace("]", "");
     }
     
-    public static List<PaymentData> getPaymentDataBuyingService(String userid) {
+    public static List<PaymentData> getPaymentProductBuyingService(String userid) {
         ConnectionDB.connectSQL();
         final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.buying_deposit_ownername, bsp.payment_art,"
                 + "bs.orderid, bs.buying_price FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "

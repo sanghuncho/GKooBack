@@ -7,6 +7,7 @@ public class ProductsCommonInformation {
     private String shopUrl;
 	private String trackingCompany;
 	private String trackingNr;
+	
 	private String shipState;
 	private double totalPrice;
 	

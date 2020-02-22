@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.gkoo.configuration.SecurityConfig;
+import com.gkoo.data.BuyingServiceDetailData;
 import com.gkoo.data.RecipientData;
 import mypage.information.ProductsCommonInformation;
 import serviceBase.ServicePath;
@@ -29,7 +30,8 @@ public class MypageDetailsController {
     public MypageDetailsController(MypageDetailsImpl detailsImp) {
         this.detailsImp = detailsImp;
     }
-	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+    
+	//@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/orderingpersoninfo")
 	public OrderingPersonInformation requestOrderingpersonInfo(HttpServletRequest request) throws SQLException  {
 		
@@ -38,7 +40,7 @@ public class MypageDetailsController {
 		return detailsImp.getOrderingpersonInfo(fullname);
 	}
 	
-	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+	//@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/recipientinfo/{orderid}")
 	public RecipientData requestRecipientInfo(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);      
@@ -46,7 +48,7 @@ public class MypageDetailsController {
 		return detailsImp.getRecipientInfo(userid, orderid);
 	}
 	
-	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+	//@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/productscommoninfo/{number}")
 	public ProductsCommonInformation requestProductsCommonInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
 		String userid = SecurityConfig.getUserid(request);		
@@ -54,7 +56,7 @@ public class MypageDetailsController {
 		return detailsImp.getProductsCommonInfo(userid, number);
 	}
 	
-	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+	//@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 	@RequestMapping("/productslistinfo/{number}")
 	public List<Product> requestProductsListInfo(HttpServletRequest request, @PathVariable String number) throws SQLException  {
 		String memberId = AuthentificationService.getAuthenficatedMemberID(request);		
@@ -62,13 +64,19 @@ public class MypageDetailsController {
 		return detailsImp.getProductsInfo(memberId, number);
 	}
 	
-	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
+	//@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
     @RequestMapping("/mypageDetailData/{orderid}")
     public MypageDetailData requestMypageDetailData(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
         String userid = AuthentificationService.getAuthenficatedMemberID(request);        
         return detailsImp.getMypageDetailData(userid, orderid);
     }
-	
+
+    @RequestMapping("/mypageBuyingServiceDetailData/{orderid}")
+    public BuyingServiceDetailData requestMypageBuyingServiceDetailData(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
+        String userid = AuthentificationService.getAuthenficatedMemberID(request);        
+        return detailsImp.getMypageBuyingServiceDetailData(userid, orderid);
+    }
+    
 //	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 //	@RequestMapping(value = "/willpaydeleveryfee", method = RequestMethod.POST)
 //	public ResponseEntity<?> willPayDeliveryFee(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
