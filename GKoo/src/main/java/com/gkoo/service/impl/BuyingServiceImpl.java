@@ -37,7 +37,6 @@ import util.OrderID;
 import util.TimeStamp;
 import org.springframework.http.HttpStatus;
 
-
 @Service
 public class BuyingServiceImpl implements BuyingService {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -45,7 +44,7 @@ public class BuyingServiceImpl implements BuyingService {
     private final double INITIAL_SHIP_PRICE = 0;
     
     private static final String CREATE_BUYING_SERVICE = 
-            "insert into buying_service(userid, orderid, buying_price,   buying_service_state, shop_url, order_date ) values (?, ?, ?,   ?, ?, ?) RETURNING buying_service.object_id";
+            "insert into buying_service(userid, orderid, buying_price,   buying_service_state, shop_url, order_date,   product_list_total_price ) values (?, ?, ?,   ?, ?, ?,   ?) RETURNING buying_service.object_id";
     
     private static final String CREATE_BUYING_SERVICE_RECIPIENT = 
             "insert into buying_service_recipient(name_kor, name_eng, transit_nr, "
@@ -91,7 +90,7 @@ public class BuyingServiceImpl implements BuyingService {
         buyingServiceData.setBuyingProductsList(buyingProducts);
         double currentEurToKRW = getCurrentEurToKrw();
         
-        double totalPrice = buyingServiceData.getBuyingProductsPriceSum() + buyingServiceData.getShopDeliveryPrice();
+        double totalPrice = buyingServiceData.getProductsListTotalPrice() + buyingServiceData.getShopDeliveryPrice();
         
         EstimationService estimation = new EstimationService();
         estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice));
@@ -178,6 +177,7 @@ public class BuyingServiceImpl implements BuyingService {
             psmt.setInt(4, buyingservicedata.getBuyingState().getCode());
             psmt.setString(5, buyingservicedata.getShopUrl());
             psmt.setDate(6, java.sql.Date.valueOf(TimeStamp.getRequestDate()));
+            psmt.setDouble(7, buyingservicedata.getProductsListTotalPrice());
             resultSet  = psmt.executeQuery();
             buyingServiceId = getBuyingServiceId(resultSet);
             buyingservicedata.setBuyingServiceid(buyingServiceId);

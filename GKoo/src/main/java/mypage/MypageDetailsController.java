@@ -71,12 +71,6 @@ public class MypageDetailsController {
         return detailsImp.getMypageDetailData(userid, orderid);
     }
 
-    @RequestMapping("/mypageBuyingServiceDetailData/{orderid}")
-    public BuyingServiceDetailData requestMypageBuyingServiceDetailData(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
-        String userid = AuthentificationService.getAuthenficatedMemberID(request);        
-        return detailsImp.getMypageBuyingServiceDetailData(userid, orderid);
-    }
-    
 //	@CrossOrigin(origins = ServicePath.DETAILS_MYPAGE)
 //	@RequestMapping(value = "/willpaydeleveryfee", method = RequestMethod.POST)
 //	public ResponseEntity<?> willPayDeliveryFee(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
@@ -128,5 +122,28 @@ public class MypageDetailsController {
     public ResponseEntity<?> deleteShipingServiceData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException, JsonParseException, JsonMappingException, IOException  {
         String memberId = AuthentificationService.getAuthenficatedMemberID(request);
         return detailsImp.deleteShipingServiceData(memberId, data);
+    }
+	
+    /////////////////////
+	/// MyPage        ///
+    /// BuyingService ///
+    /////////////////////
+	@RequestMapping("/mypageBuyingServiceDetailData/{orderid}")
+    public BuyingServiceDetailData requestMypageBuyingServiceDetailData(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
+        String userid = AuthentificationService.getAuthenficatedMemberID(request);        
+        return detailsImp.getMypageBuyingServiceDetailData(userid, orderid);
+    }
+	
+	//share react component @see updateRecipientData
+	@RequestMapping(value = "/updateRecipientdataBuyingService", method = RequestMethod.POST)
+    public ResponseEntity<?> updateRecipientdataBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return detailsImp.updateRecipientdataBuyingService(userid, data);
+    }
+	
+	@RequestMapping(value = "/getRecipientDataBuyingService/{orderid}")
+    public RecipientData getRecipientDataBuyingService(HttpServletRequest request, @PathVariable String orderid) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return detailsImp.getRecipientDataBuyingService(userid, orderid);
     }
 }

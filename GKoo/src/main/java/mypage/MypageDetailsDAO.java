@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.gkoo.data.BuyingServiceCommonData;
 import com.gkoo.data.BuyingServiceDetailData;
 import com.gkoo.data.RecipientData;
 import mypage.information.ProductsCommonInformation;
+import mypage.information.ProductsInformation;
 import mypage.information.ProductsInformation.Product;
 import payment.PaymentData;
 
@@ -36,4 +38,6 @@ public interface MypageDetailsDAO {
 	public PaymentData getPaymentProductBuyingServiceByOrderid(String orderid);
 	public PaymentData getPaymentDeliveryBuyingServiceByOrderid(String orderid);
 	public List<Product> getProductDataBuyingService(String userid, String orderid);
+	public BuyingServiceCommonData getBuyingServiceCommonData(String orderid);
+	public RecipientData getRecipientDataBuyingService(String userid, String orderid);
 }

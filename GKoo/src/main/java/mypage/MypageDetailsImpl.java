@@ -18,8 +18,12 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gkoo.data.BuyingServiceCommonData;
 import com.gkoo.data.BuyingServiceDetailData;
+import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.RecipientData;
+import com.gkoo.data.buyingservice.BuyingProduct;
+import com.gkoo.data.buyingservice.BuyingServiceData;
 import com.gkoo.repository.ShippingServiceRepository;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
@@ -245,6 +249,46 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		return commonInfo;
 	}
 	
+	public ResponseEntity<?> updateRecipientdataBuyingService(String userid, HashMap<String, Object>[] data) {
+        String orderid = data[0].get("orderid").toString();
+        String nameKor = data[1].get("nameKor").toString();
+        String nameEng = data[2].get("nameEng").toString();
+        String transitNr = data[3].get("transitNr").toString();
+        String phonenumberFirst = data[4].get("phonenumberFirst").toString();
+        //String phonenumberSecondTmp = data[5].get("phonenumberSecond").toString();
+        String phonenumberSecond = data[5].get("phonenumberSecond") == null ? "" : data[5].get("phonenumberSecond").toString(); 
+        String zipCode = data[6].get("zipCode").toString();
+        String address = data[7].get("address").toString();
+        //String usercommentTmp = data[8].get("usercomment").toString();
+        String usercomment = data[8].get("usercomment") == null ? "" : data[8].get("usercomment").toString();
+        
+        ConnectionDB.connectSQL();
+        final String UPDATE_RECIPIENT_DATA = 
+                "UPDATE BUYING_SERVICE_RECIPIENT SET name_kor = ?, name_eng = ?, transit_nr = ?, phonenumber_first = ?, phonenumber_second = ?, zip_code = ?, address= ?, usercomment = ?"
+                + "FROM BUYING_SERVICE_RECIPIENT bsp, BUYING_SERVICE bs WHERE bs.orderid = ? and bs.object_id = bsp.fk_buying_service";
+        
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_RECIPIENT_DATA);){
+            psmt.setString(1, nameKor);
+            psmt.setString(2, nameEng);
+            psmt.setString(3, transitNr);
+            psmt.setString(4, phonenumberFirst);
+            psmt.setString(5, phonenumberSecond);
+            psmt.setString(6, zipCode);
+            psmt.setString(7, address);
+            psmt.setString(8, usercomment);
+            psmt.setString(9, orderid);
+            
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            String error = "Error updating Recipient for buyingService";
+            LOGGER.error(error, e);
+        }
+        
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
+    }
+	
 	public ResponseEntity<?> updateRecipientData(String userid, HashMap<String, Object>[] data) {
 	    String orderid = data[0].get("orderid").toString();
         String nameKor = data[1].get("nameKor").toString();
@@ -316,8 +360,52 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         RecipientData recipientData = getRecipientBuyingService(userid, orderid);
         PaymentData productPayment =  getPaymentProductBuyingServiceByOrderid(orderid);
         PaymentData deliveryPayment = getPaymentDeliveryBuyingServiceByOrderid(orderid);
-        List<Product> productsList = getProductDataBuyingService(userid, orderid);
-        return new BuyingServiceDetailData(recipientData, productPayment, deliveryPayment, productsList);
+        DeliveryKoreaData deliveryKoreaData = getDeliveryKoreaDataBuyingServiceByOrderid(orderid);
+        List<Product> productsInfo = getProductDataBuyingService(userid, orderid);
+        BuyingServiceCommonData buyingServiceCommonData = getBuyingServiceCommonData(orderid);
+        return new BuyingServiceDetailData(recipientData, productPayment, deliveryPayment, deliveryKoreaData, productsInfo, buyingServiceCommonData);
+    }
+    
+    public RecipientData getRecipientDataBuyingService(String userid, String orderid) {
+        return getRecipientBuyingService(userid, orderid);
+    }
+    
+    private DeliveryKoreaData getDeliveryKoreaDataBuyingServiceByOrderid(String orderid) {
+        ConnectionDB.connectSQL();
+        final String GET_DELIVERYKOREADATA = "SELECT * FROM BUYING_SERVICE WHERE buying_service_state > 4 AND orderid=?";
+        ResultSet resultSet = null;
+        DeliveryKoreaData deliveryKoreaData = null;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_DELIVERYKOREADATA);){
+            psmt.setString(1, orderid);
+            resultSet = psmt.executeQuery();
+            deliveryKoreaData = writeDeliveryKoreaDataBuyingService(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching delivery korea data";
+            LOGGER.error(error, e);
+        }
+        return deliveryKoreaData;
+    }
+    
+    private static DeliveryKoreaData writeDeliveryKoreaDataBuyingService(ResultSet rs){
+        DeliveryKoreaData deliveryKoreaData = new DeliveryKoreaData();
+        try {
+            while (rs.next()) {
+                try {
+                    deliveryKoreaData.setId(rs.getInt("object_id"));
+                    deliveryKoreaData.setOrderid(rs.getString("orderid"));
+                    deliveryKoreaData.setDeliveryState(rs.getInt("buying_service_state"));
+                    deliveryKoreaData.setDeliveryTracking(rs.getString("trackingnr_kor"));
+                } catch (SQLException e) {
+                    String error = "Error fetching delivery korea data";
+                    LOGGER.error(error, e);
+                }
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching delivery korea data by orderid";
+            LOGGER.error(error, e);
+        }
+        return deliveryKoreaData;
     }
 
     @Override
@@ -371,7 +459,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
                 + "bsp.payment_art_shipping_price, bs.orderid, bs.ship_price, "
                 + "bs.box_actual_weight, bs.box_volume_weight "
                 + "FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.orderid = ? "
-                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5)";
         
         ResultSet resultSet = null;
         PaymentData paymentData = null;
@@ -430,7 +518,46 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         } catch (SQLException e) {
             String error = "Error fetching products data for buyingService";
             LOGGER.error(error, e);
-        }       
+        } 
         return productsInfo.getProductsList();
+    }
+    
+    
+
+    @Override
+    public BuyingServiceCommonData getBuyingServiceCommonData(String orderid) {
+      ResultSet resultSet = null;
+      ConnectionDB.connectSQL();
+      BuyingServiceCommonData buyingServiceCommonData = null;
+      String queryShopUrl =  "SELECT shop_url, product_list_total_price FROM BUYING_SERVICE WHERE orderid=?";
+      try (Connection conn = ConnectionDB.getConnectInstance();
+              PreparedStatement psmt = conn.prepareStatement(queryShopUrl);){
+          psmt.setString(1, orderid);
+          resultSet = psmt.executeQuery();
+          buyingServiceCommonData = writeBuyingServiceCommonData(resultSet);
+      } catch (SQLException e) {
+          String error = "Error fetching BuyingServiceCommonData";
+          LOGGER.error(error, e);
+      } 
+        return buyingServiceCommonData;
+    }
+    
+    private static BuyingServiceCommonData writeBuyingServiceCommonData(ResultSet rs) {
+        BuyingServiceCommonData buyingServiceCommonData = new BuyingServiceCommonData();
+        try {
+            while (rs.next()) {
+                try {
+                    buyingServiceCommonData.setShopUrl(rs.getString("shop_url"));
+                    buyingServiceCommonData.setProductListTotalPrice(rs.getDouble("product_list_total_price"));
+                } catch (SQLException e) {
+                    String error = "Error writing buyingServiceCommonData";
+                    LOGGER.error(error, e);
+                }
+            }
+        } catch (SQLException e) {
+            String error = "Error writing buyingServiceCommonData by orderid";
+            LOGGER.error(error, e);
+        }
+        return buyingServiceCommonData;
     }
 }

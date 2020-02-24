@@ -4,15 +4,28 @@ import java.util.List;
 import mypage.information.ProductsInformation.Product;
 import payment.PaymentData;
 
+/**
+ * @author sanghuncho
+ *
+ */
 public class BuyingServiceDetailData {
     private RecipientData recipientData;
     private int buyingServiceState;
     private PaymentData productPayment;
     private PaymentData deliveryPayment;
-    private List<Product> productsList;
+    private DeliveryKoreaData deliveryKoreaData;
+    private List<Product> productsInfo;
+    private BuyingServiceCommonData buyingServiceCommonData;
         
-    public BuyingServiceDetailData(RecipientData recipientData, PaymentData productPayment, PaymentData deliveryPayment, List<Product> productsList) {
+    public BuyingServiceDetailData(RecipientData recipientData, PaymentData productPayment, 
+                PaymentData deliveryPayment, DeliveryKoreaData deliveryKoreaData, List<Product> productsInfo, BuyingServiceCommonData buyingServiceCommonData) {
         this.recipientData = recipientData;
+        this.productPayment = productPayment;
+        this.buyingServiceState = productPayment.getBuyingServiceState();
+        this.deliveryPayment = deliveryPayment;
+        this.deliveryKoreaData = deliveryKoreaData;
+        this.productsInfo = productsInfo;
+        this.buyingServiceCommonData = buyingServiceCommonData;
     }
 
     public RecipientData getRecipientData() {
@@ -35,7 +48,23 @@ public class BuyingServiceDetailData {
         return deliveryPayment;
     }
 
-    public List<Product> getProductsList() {
-        return productsList;
+    public DeliveryKoreaData getDeliveryKoreaData() {
+        return deliveryKoreaData;
+    }
+
+    public void setDeliveryKoreaData(DeliveryKoreaData deliveryKoreaData) {
+        this.deliveryKoreaData = deliveryKoreaData;
+    }
+
+    public List<Product> getProductsInfo() {
+        return productsInfo;
+    }
+
+    public BuyingServiceCommonData getBuyingServiceCommonData() {
+        return buyingServiceCommonData;
+    }
+
+    public void setBuyingServiceCommonData(BuyingServiceCommonData buyingServiceCommonData) {
+        this.buyingServiceCommonData = buyingServiceCommonData;
     }
 }

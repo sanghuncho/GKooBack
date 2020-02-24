@@ -293,7 +293,7 @@ public class MypageDB {
         ConnectionDB.connectSQL();
         final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.buying_deposit_ownername, bsp.payment_art,"
                 + "bs.orderid, bs.buying_price FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
-                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2 or bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2 or bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5)";
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -363,7 +363,7 @@ public class MypageDB {
     public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
         ConnectionDB.connectSQL();
         final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.shipping_deposit_ownername, bsp.payment_art_shipping_price, bs.orderid, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? "
-                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4)";
+                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5)";
         
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;

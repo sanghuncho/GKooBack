@@ -20,8 +20,8 @@ public class ProductsInformation {
 	public Product createProduct() {
 		return new ProductsInformation.Product();
 	}
-	
-	public class Product {
+
+    public class Product {
 		
 		private String categoryTitle;
 		private String itemTitle;

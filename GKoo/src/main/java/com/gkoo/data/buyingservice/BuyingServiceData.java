@@ -54,7 +54,7 @@ public class BuyingServiceData {
     private BuyingServicePaymentState buyingServicePaymentState;
 
     private ArrayList<BuyingProduct> buyingProductList = new ArrayList<>();
-    private double buyingProductsPriceSum;
+    private double productsListTotalPrice;
     
     public BuyingServiceData() {}
     
@@ -65,7 +65,7 @@ public class BuyingServiceData {
     
     public void setBuyingProductsList(BuyingProduct[] buyingProducts) {
         ArrayList<BuyingProduct> arrayList = new ArrayList<BuyingProduct>(Arrays.asList(buyingProducts));
-        this.buyingProductsPriceSum = arrayList.stream().mapToDouble(BuyingProduct::getProductTotalPrice).sum();
+        this.productsListTotalPrice = arrayList.stream().mapToDouble(BuyingProduct::getProductTotalPrice).sum();
         this.buyingProductList = arrayList;
     }
     
@@ -117,8 +117,8 @@ public class BuyingServiceData {
         this.buyingServicePaymentState = buyingServicePaymentState;
     }
     
-    public double getBuyingProductsPriceSum() {
-        return buyingProductsPriceSum;
+    public double getProductsListTotalPrice() {
+        return productsListTotalPrice;
     }
     
     public java.sql.Date getOrderDate() {

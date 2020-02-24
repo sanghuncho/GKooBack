@@ -102,6 +102,12 @@ public class MypageController {
         return mypageService.getPaymentProductBuyingService(userid);
     }
     
+    @RequestMapping("/deliveryKoreaDataBuyingService")
+    public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request) throws SQLException  {
+        String userid = SecurityConfig.getUserid(request);
+        return mypageService.getDeliveryKoreaDataBuyingService(userid);
+    }
+    
     @RequestMapping("/updatePaymentProductBuyingService")
     public ResponseEntity<?> updatePaymentProductBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
@@ -118,11 +124,5 @@ public class MypageController {
     public List<PaymentData> requestPaymentDeliveryBuyingService(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
         return mypageService.getPaymentDeliveryBuyingService(userid);
-    }
-    
-    @RequestMapping("/deliveryKoreaDataBuyingService")
-    public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
-        return mypageService.getDeliveryKoreaDataBuyingService(userid);
     }
 }
