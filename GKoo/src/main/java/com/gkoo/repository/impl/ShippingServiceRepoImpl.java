@@ -48,7 +48,7 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
 
     private static final String REGISTER_FAVORITE_ADDRESS = "INSERT INTO favorite_address (userid, name_kor, name_eng, transit_nr, phonenumber_first, phonenumber_second, zip_code, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
 
-    private static final String DELETE_SHIPPING_SERVICE_PRODUCTS = "DELETE FROM PRODUCT WHERE userid=? and orderid=?";
+    private static final String DELETE_SHIPPING_SERVICE_PRODUCTS = "DELETE FROM PRODUCT WHERE orderid=?";
 
     private static final String DELETE_SHIPPING_SERVICE_ORDERSTATE = "DELETE FROM ORDERSTATE WHERE userid=? and orderid=?";
     
@@ -230,8 +230,7 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             psmt.setString(4, model.getUserid());
             psmt.setString(5, model.getOrderId());
             
-            psmt_delete.setString(1, model.getUserid());
-            psmt_delete.setString(2, model.getOrderId());
+            psmt_delete.setString(1, model.getOrderId());
             
             psmt.executeUpdate();
             psmt_delete.executeUpdate();
@@ -245,30 +244,32 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
     }
 
     @Override
-    public ResponseEntity<?> deleteShipingServiceData(String userid, String orderNumber) {
+    public ResponseEntity<?> deleteShipingServiceData(String userid, String orderid) {
         ConnectionDB.connectSQL();
+        
         try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt_orderstate = conn.prepareStatement(DELETE_SHIPPING_SERVICE_ORDERSTATE);
                 PreparedStatement psmt_payment = conn.prepareStatement(DELETE_SHIPPING_SERVICE_PAYMENT);
+                PreparedStatement psmt_orderstate = conn.prepareStatement(DELETE_SHIPPING_SERVICE_ORDERSTATE);
                 PreparedStatement psmt_recipient = conn.prepareStatement(DELETE_SHIPPING_SERVICE_RECIPIENT);
                 PreparedStatement psmt_products = conn.prepareStatement(DELETE_SHIPPING_SERVICE_PRODUCTS);                
                 ) {
             ArrayList<PreparedStatement> psmt_list = new ArrayList<>();
-            psmt_list.add(psmt_orderstate);
             psmt_list.add(psmt_payment);
+            psmt_list.add(psmt_orderstate);
             psmt_list.add(psmt_recipient);
-            psmt_list.add(psmt_products);
+            //psmt_list.add(psmt_products);
             for(PreparedStatement psmt : psmt_list) {
                 psmt.setString(1, userid);
-                psmt.setString(2, orderNumber);
+                psmt.setString(2, orderid);
                 psmt.executeUpdate();
             }
+            psmt_products.setString(1, userid);
+            psmt_products.executeUpdate();
+            
         } catch (SQLException ex) {
-            //ShippingServiceDAOException 
-            System.out.println(ex);
-            LOGGER.error("ShipingServiceData har error." + "id: "+ userid + "odernumber: " + orderNumber, ex);
+            LOGGER.error("ShipingServiceData har error." + "id: "+ userid + "odernumber: " + orderid, ex);
         }
-        LOGGER.info("ShipingServiceData is deleted." + "id: "+ userid + "odernumber: " + orderNumber);
+        LOGGER.info("ShipingServiceData is deleted." + "id: "+ userid + "odernumber: " + orderid);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }

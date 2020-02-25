@@ -344,8 +344,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	}
 	
 	public ResponseEntity<?> deleteShipingServiceData(String userid, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException {
-        String orderNumber = data[0].get("orderNumber").toString();
-        return shippingServiceRepository.deleteShipingServiceData(userid, orderNumber);
+        String orderid = data[0].get("orderid").toString();
+        return shippingServiceRepository.deleteShipingServiceData(userid, orderid);
     }
 
     @Override

@@ -5,6 +5,10 @@ import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.UserBaseInfo;
 import shippingService.ShippingServiceModel;
 
+/**
+ * @author sanghuncho
+ *
+ */
 public interface ShippingServiceRepository {
     public ResponseEntity<?> createShippingService(ShippingServiceModel shippingModel);
     public UserBaseInfo getUserBaseInfo(String userid);

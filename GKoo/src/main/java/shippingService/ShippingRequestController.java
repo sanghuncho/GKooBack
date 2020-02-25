@@ -39,6 +39,7 @@ import util.TimeStamp;
  * 
  * @since  24.12.2018
  */
+//@deprecated use MypageController
 //@RestController
 //public class ShippingRequestController {
 //    private static final Logger LOGGER = LogManager.getLogger();
