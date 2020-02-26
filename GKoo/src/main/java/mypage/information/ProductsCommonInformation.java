@@ -21,6 +21,7 @@ public class ProductsCommonInformation {
 	private double paymentDeposit;
 	private String paymentOwnerName;
 	private int paymentState;
+	private int paymentArt;
 
 	public ProductsCommonInformation() {}
 	
@@ -166,5 +167,13 @@ public class ProductsCommonInformation {
 
     public void setShipState(String shipState) {
         this.shipState = shipState;
+    }
+
+    public int getPaymentArt() {
+        return paymentArt;
+    }
+
+    public void setPaymentArt(int paymentArt) {
+        this.paymentArt = paymentArt;
     }
 }

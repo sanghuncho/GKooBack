@@ -25,7 +25,7 @@ public interface MypageDetailsDAO {
 	public List<Product> getProductsInfo(String username, String number);
 	public ProductsCommonInformation getProductsCommonInfo(String username, String number);
 	public MypageDetailData getMypageDetailData(String userid, String orderid);
-	public void willPayDeliveryFee(String username, String orderNumber, String ownerName);
+	public void willPayDeliveryFee(String username, String orderNumber, String paymentOwnername, int paymentArt);
 	public ResponseEntity<?> updateRecipientData(String memberId, HashMap<String, Object>[] data);
 	public ResponseEntity<?> updateDataEditorProductsList(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException;
 	public ResponseEntity<?> deleteShipingServiceData(String memberId, HashMap<String, Object>[] data) throws JsonParseException, JsonMappingException, IOException, SQLException;

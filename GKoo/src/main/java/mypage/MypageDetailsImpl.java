@@ -112,28 +112,35 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 //	배송완료 (8)
 
 	@Override
-	public void willPayDeliveryFee(String userid, String orderid, String ownerName) {
+	public void willPayDeliveryFee(String userid, String orderid, String paymentOwnername, int paymentArt) {
 		ConnectionDB.connectSQL();
-		//String query = "UPDATE PAYMENT SET payment_ownername = ?, payment_state = ? WHERE memberid=? AND orderid=?";
-		String query = "WITH t AS ( UPDATE PAYMENT SET payment_ownername = ?, "
-				+ "payment_state = ?  "
-				+ "WHERE userid = ? AND orderid = ?) "
-				+ "UPDATE orderstate SET ship_state = ?  "
-				+ "WHERE userid = ? AND orderid = ?";
+//		String query = "WITH t AS ( UPDATE PAYMENT SET payment_ownername = ?,"
+//				+ "payment_state = ?, payment_art = ? "
+//				+ "WHERE userid = ? AND orderid = ?)"
+//				+ "UPDATE orderstate SET ship_state = ?"
+//				+ "WHERE userid = ? AND orderid = ?";
+		
+		final String UPDATE_PAYMENT_DELIVERY_FEE = "UPDATE PAYMENT SET payment_ownername = ?, payment_state = ?, payment_art = ? "
+		        + "WHERE userid = ? AND orderid = ?";
+		final String UPDATE_ORDERSTATE_DELIVERY_FEE = "UPDATE orderstate SET ship_state = ? WHERE userid = ? AND orderid = ?";
 		try (Connection conn = ConnectionDB.getConnectInstance();
-				PreparedStatement psmt = conn.prepareStatement(query);){
-			psmt.setString(1, ownerName);
-			psmt.setInt(2, PaymentState.REQUEST.getCode());
-			psmt.setString(3, userid);
-			psmt.setString(4, orderid);
+				PreparedStatement psmt_pymt = conn.prepareStatement(UPDATE_PAYMENT_DELIVERY_FEE);
+		        PreparedStatement psmt_ostate = conn.prepareStatement(UPDATE_ORDERSTATE_DELIVERY_FEE);){
+		    psmt_pymt.setString(1, paymentOwnername);
+		    psmt_pymt.setInt(2, PaymentState.REQUEST.getCode());
+		    psmt_pymt.setInt(3, paymentArt);
+		    psmt_pymt.setString(4, userid);
+		    psmt_pymt.setString(5, orderid);
 			
-			psmt.setInt(5, ShippingServiceState.PAYMENT_READY.getCode());
-			psmt.setString(6, userid);
-			psmt.setString(7, orderid);
+		    psmt_ostate.setInt(1, ShippingServiceState.PAYMENT_READY.getCode());
+		    psmt_ostate.setString(2, userid);
+		    psmt_ostate.setString(3, orderid);
 			
-			psmt.executeQuery();
+		    psmt_pymt.executeUpdate();
+		    psmt_ostate.executeUpdate();
 		} catch (SQLException e) {
-			//Logger
+		    String error = "Error updating the payment for shipping service";
+            LOGGER.error(error, e);
 		}	
 	}
 	
@@ -165,7 +172,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			resultSet = psmt.executeQuery();
 			productsInfo = writeProductsInformation(resultSet, productsInfo);
 		} catch (SQLException e) {
-			//Logger
+		    String error = "Error fetching the products for shipping service";
+            LOGGER.error(error, e);
 		}		
 		return productsInfo.getProductsList();
 	}
@@ -190,7 +198,12 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	public ProductsCommonInformation getProductsCommonInfo(String username, String orderNumber) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
-		String query = "SELECT oState.shop_url, oState.tracking_company_world, oState.trackingnr_world, oState.ship_state, oState.ship_price, oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, paymt.paymentid, paymt.payment_date, paymt.payment_deposit ,paymt.payment_ownername, paymt.payment_state FROM ORDERSTATE oState JOIN PAYMENT paymt ON oState.userid = ? and oState.orderid = ? and oState.id = paymt.fk_orderstate";
+		String query = "SELECT oState.shop_url, oState.tracking_company_world, "
+		        + "oState.trackingnr_world, oState.ship_state, oState.ship_price, "
+		        + "oState.box_actual_weight, oState.box_volume_weight, oState.ship_price_discount, "
+		        + "paymt.paymentid, paymt.payment_date, paymt.payment_deposit, "
+		        + "paymt.payment_ownername, paymt.payment_state, paymt.payment_art "
+		        + "FROM ORDERSTATE oState JOIN PAYMENT paymt ON oState.userid = ? and oState.orderid = ? and oState.id = paymt.fk_orderstate";
 		//String query = "SELECT * from ORDERSTATE where memberid=? and orderid = ? INNER JOIN PAYMENT paymt ON oState.fk_payment = paymt.paymentid and oState.orderid = ?";
 		//ToDo : Jackson
 		//select oState.shop_url, oState.ship_state, paymt.payment_state FROM ORDERSTATE oState 
@@ -203,7 +216,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			resultSet = psmt.executeQuery();
 			commonInfo = writeProductsCommonInformation(resultSet, commonInfo);
 		} catch (SQLException e) {
-		    System.out.println(e);  
+		    String error = "Error fetching the productsCommonInfo for shipping service";
+            LOGGER.error(error, e);
 		}
 		
 		ResultSet resultSetForPrice = null;
@@ -216,7 +230,8 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			resultSetForPrice = psmt.executeQuery();
 			commonInfo = writeTotalPriceProductsCommonInformation(resultSetForPrice, commonInfo);
 		} catch (SQLException e) {
-			//Logger
+		    String error = "Error fetching the total price for shipping service";
+            LOGGER.error(error, e);
 		}
 		return commonInfo;
 	}
@@ -245,6 +260,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			commonInfo.setPaymentid(rs.getInt("paymentid"));
 			commonInfo.setPaymentDate(rs.getDate("payment_date"));
 			commonInfo.setPaymentDeposit(rs.getDouble("payment_deposit"));
+			commonInfo.setPaymentArt(rs.getInt("payment_art"));
 		}
 		return commonInfo;
 	}
