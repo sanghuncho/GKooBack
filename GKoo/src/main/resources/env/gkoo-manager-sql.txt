@@ -40,10 +40,15 @@ UPDATE orderstate SET ship_state = 4
 WHERE orderid = '';
 
 UPDATE payment SET payment_state = 3, 
-payment_date = '2020.01.02', payment_deposit = WHERE orderid = '';
+payment_date = '2020.01.02', payment_deposit = ? WHERE orderid = '';
 
 ship_state = 3 이후에는 물품수정금지
-ship_state = 4 수취인 수정금지 
+ship_state = 4 수취인 수정금지
+
+출고이후 송장번호 저장
+UPDATE orderstate SET ship_state = 5, trackingnr_kor = '' WHERE orderid = '';
+
+
 =======================================
 ========== buying service =============
 =======================================

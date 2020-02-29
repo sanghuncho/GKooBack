@@ -1,0 +1,12 @@
+### keyclok export 
+
+standalone.bat -Dkeycloak.migration.action=export
+-Dkeycloak.migration.provider=dir 
+-Dkeycloak.migration.dir=C:\Users\sanghuncho\KeycloakExport
+
+### keyclok export 
+standalone.bat 
+-Dkeycloak.migration.action=import 
+-Dkeycloak.migration.provider=dir 
+-Dkeycloak.migration.dir=C:\GKoo\Keycloak_import 
+-Dkeycloak.migration.strategy=OVERWRITE_EXISTING
