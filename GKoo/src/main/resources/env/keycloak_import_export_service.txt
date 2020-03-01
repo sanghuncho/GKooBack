@@ -10,3 +10,7 @@ standalone.bat
 -Dkeycloak.migration.provider=dir 
 -Dkeycloak.migration.dir=C:\GKoo\Keycloak_import 
 -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+
+### keyclok Windows Service
+nssm download
+go win64 -> nssm install keycloak[standalone.bat]
