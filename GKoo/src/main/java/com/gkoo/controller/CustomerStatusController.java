@@ -36,6 +36,8 @@ public class CustomerStatusController {
         this.customerstatusService = customerstatusService;
     }
 
+    //production
+	@CrossOrigin(origins = "http://gkoo.co.kr/mypage")
 	//@CrossOrigin(origins = ServicePath.MYPAGE)
 	@RequestMapping("/customerstatus")
 	public CustomerStatus requestCustomerStatus(HttpServletRequest request) throws SQLException {
