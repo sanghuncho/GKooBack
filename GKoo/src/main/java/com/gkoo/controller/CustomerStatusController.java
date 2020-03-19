@@ -40,8 +40,6 @@ public class CustomerStatusController {
         this.customerstatusService = customerstatusService;
     }
 
-    //production
-	@CrossOrigin(origins = "http://gkoo.co.kr/mypage")
 	//@CrossOrigin(origins = ServicePath.MYPAGE)
     //@CrossOrigin(origins = "https://www.gkoo.co.kr/mypage")
     //@RequestMapping("/gkoo/customerstatus")
