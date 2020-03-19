@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>GKooBackend</groupId>
   <artifactId>gkoo</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   
   <name>GKoo Maven Webapp</name>
@@ -17,7 +17,6 @@
   
   <dependencies>
     
-    
 <!-- SpringBoot -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -27,10 +26,7 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
+                
             </exclusions>
     	<version>2.0.3.RELEASE</version>        
     </dependency>
@@ -78,6 +74,9 @@
          </exclusions>
 	    <version>6.0.1</version>
 	</dependency>
+	
+	
+	
 	
 <!-- Logging -->
 	<dependency>
@@ -200,9 +199,24 @@
         	<groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
         </plugin>
+        
+        <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <configuration>
+		        <archive>
+		            <manifest>
+		                <addClasspath>true</addClasspath>
+		                <classpathPrefix>libs/</classpathPrefix>
+		                <mainClass>
+		                    com.gkoo.app.Application
+		                </mainClass>
+		            </manifest>
+		        </archive>
+		    </configuration>
+		</plugin>
     </plugins>
-    
-    <finalName>gkoo</finalName>
+    <finalName>ROOT</finalName>
   </build>
   
   <repositories>

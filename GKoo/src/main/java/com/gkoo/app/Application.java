@@ -1,5 +1,8 @@
 package com.gkoo.app;
 
+import java.io.File;
+import org.apache.catalina.Context;
+import org.apache.catalina.startup.Tomcat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;

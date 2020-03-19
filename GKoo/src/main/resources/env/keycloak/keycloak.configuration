@@ -1,4 +1,15 @@
-server.port = 8888
+## backend
+## server.port = 8889
+
+################ keycloak tomcat deploy
+## in war file
+## [META-INF]
+## context.xml
+
+## [WEB-INF]
+## keycloak.json
+## web.xml
+################
 
 keycloak.auth-server-url=http://localhost:8080/auth
 keycloak.realm=gkoo

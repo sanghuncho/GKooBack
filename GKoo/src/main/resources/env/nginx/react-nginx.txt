@@ -1,0 +1,31 @@
+### Nginx start, Stop Commando
+start nginx
+nginx -s stop
+
+### React deploy - > npm run build
+
+server {
+        listen       3000;
+        server_name  localhost;
+	location / 
+	{
+		root   html;
+	    index  index.html index.htm;
+		try_files $uri $uri/ /index.html;
+	}
+}
+
+### nginx Windows Service
+nssm download
+go win64 -> nssm install nginx[nginx.exe]
+
+
+pid4 shutdown
+port 80 stop
+iisreset /stop or sc stop w3svc
+
+server {
+        listen       80;
+        server_name  www.gkoo.co.kr
+					 180.70.94.132;
+}

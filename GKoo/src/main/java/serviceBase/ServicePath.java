@@ -1,14 +1,17 @@
 package serviceBase;
 
 public class ServicePath {
-
-	private static final String BASE_HOST = "http://localhost:3000/";
+    //dev
+	//public static final String HOST_ADDRESS = "http://localhost:3000/";
 	
-	public static final String BUYING_SERVICE = BASE_HOST + "buyingservice";
-	public static final String SHIPPING_SERVICE = BASE_HOST + "requestshipping";
-	public static final String QUESTION_BOARD = BASE_HOST + "questionBoard";
-	public static final String MYPAGE 		  = BASE_HOST + "mypage";
-	public static final String DETAILS_MYPAGE = BASE_HOST + "detailsmypage";
-	public static final String FAVORITE_ADDRESS_MANAGER    = BASE_HOST + "favoriteAddressManager";
-	public static final String MANAGEMENT	  = BASE_HOST + "management";
+    //prod
+    public static final String HOST_ADDRESS = "http://gkoo.co.kr";
+	
+	public static final String BUYING_SERVICE = HOST_ADDRESS + "buyingservice";
+	public static final String SHIPPING_SERVICE = HOST_ADDRESS + "requestshipping";
+	public static final String QUESTION_BOARD = HOST_ADDRESS + "questionBoard";
+	public static final String MYPAGE 		  = HOST_ADDRESS + "mypage";
+	public static final String DETAILS_MYPAGE = HOST_ADDRESS + "detailsmypage";
+	public static final String FAVORITE_ADDRESS_MANAGER    = HOST_ADDRESS + "favoriteAddressManager";
+	public static final String MANAGEMENT	  = HOST_ADDRESS + "management";
 }

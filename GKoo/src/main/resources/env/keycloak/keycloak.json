@@ -1,0 +1,10 @@
+{
+  "realm" : "gkoo",
+  "auth-server-url" : "http://www.gkoo.co.kr/auth",
+  "resource" : "version_0_1_0",
+  "public-client":true,
+  "enable-cors" : true,
+  "cors-max-age" : 1000,
+  "cors-allowed-methods" : "POST, PUT, DELETE, GET",
+  "bearer-only" : false
+}

@@ -49,35 +49,35 @@ public class MypageController {
     ///////////////////////
     /// ShippingService ///
     ///////////////////////
-    //@CrossOrigin(origins = ServicePath.MYPAGE)
+    @CrossOrigin(origins = "http://gkoo.co.kr")
     @RequestMapping("/orderinformation")
     public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);        
         return mypageService.getOrderData(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.MYPAGE)
+    @CrossOrigin(origins = "http://gkoo.co.kr")
     @RequestMapping("/warehouseinformation")
     public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
         return mypageService.getWarehouseData(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.MYPAGE)
+    @CrossOrigin(origins = "http://gkoo.co.kr")
     @RequestMapping("/paymentData")
     public List<PaymentData> requestPaymentData(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
         return mypageService.getPaymentData(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.MYPAGE)
+    @CrossOrigin(origins = "http://gkoo.co.kr")
     @RequestMapping("/deliveryKoreaData")
     public List<DeliveryKoreaData> requestDeliveryKoreaData(HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
         return mypageService.getDeliveryKoreaData(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.MYPAGE)
+    @CrossOrigin(origins = "http://gkoo.co.kr")
     @RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
     public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
         String userid = SecurityConfig.getUserid(request);
