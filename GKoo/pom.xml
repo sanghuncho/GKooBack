@@ -216,7 +216,7 @@
 		    </configuration>
 		</plugin>
     </plugins>
-    <finalName>ROOT</finalName>
+    <finalName>gkoo</finalName>
   </build>
   
   <repositories>

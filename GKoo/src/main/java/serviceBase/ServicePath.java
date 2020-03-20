@@ -1,17 +1,27 @@
 package serviceBase;
 
 public class ServicePath {
-    //dev
-	//public static final String HOST_ADDRESS = "http://localhost:3000/";
+    
+	public static final String HOST_ADDRESS_DEV = "http://localhost:3000";
+	public static final String HOST_ADDRESS_PROD = "https://gkoo.co.kr";
+		
+	public static final String BUYING_SERVICE_DEV                = HOST_ADDRESS_DEV + "/buyingservice";
+	public static final String SHIPPING_SERVICE_DEV              = HOST_ADDRESS_DEV + "/requestshipping";
+	public static final String QUESTION_BOARD_DEV                = HOST_ADDRESS_DEV + "/questionBoard";
+	public static final String MYPAGE_DEV 		                 = HOST_ADDRESS_DEV + "/mypage";
+	public static final String MYPAGE_BUYING_SERVICE_DEV         = HOST_ADDRESS_DEV + "/mypagebuyingService";
+	public static final String DETAILS_MYPAGE_DEV                = HOST_ADDRESS_DEV + "/detailsmypage";
+	public static final String DETAILS_MYPAGE_BUYINGSERVICE_DEV  = HOST_ADDRESS_DEV + "/detailsbuyingService";
+	public static final String FAVORITE_ADDRESS_MANAGER_DEV      = HOST_ADDRESS_DEV + "/favoriteAddressManager";
+	public static final String MANAGEMENT_DEV	                 = HOST_ADDRESS_DEV + "/management";
 	
-    //prod
-    public static final String HOST_ADDRESS = "http://gkoo.co.kr";
-	
-	public static final String BUYING_SERVICE = HOST_ADDRESS + "buyingservice";
-	public static final String SHIPPING_SERVICE = HOST_ADDRESS + "requestshipping";
-	public static final String QUESTION_BOARD = HOST_ADDRESS + "questionBoard";
-	public static final String MYPAGE 		  = HOST_ADDRESS + "mypage";
-	public static final String DETAILS_MYPAGE = HOST_ADDRESS + "detailsmypage";
-	public static final String FAVORITE_ADDRESS_MANAGER    = HOST_ADDRESS + "favoriteAddressManager";
-	public static final String MANAGEMENT	  = HOST_ADDRESS + "management";
+	public static final String BUYING_SERVICE_PROD               = HOST_ADDRESS_PROD + "/buyingservice";
+    public static final String SHIPPING_SERVICE_PROD             = HOST_ADDRESS_PROD + "/requestshipping";
+    public static final String QUESTION_BOARD_PROD               = HOST_ADDRESS_PROD + "/questionBoard";
+    public static final String MYPAGE_PROD                       = HOST_ADDRESS_PROD + "/mypage";
+    public static final String MYPAGE_BUYING_SERVICE_PROD        = HOST_ADDRESS_PROD + "/mypagebuyingService";
+    public static final String DETAILS_MYPAGE_PROD               = HOST_ADDRESS_PROD + "/detailsmypage";
+    public static final String DETAILS_MYPAGE_BUYINGSERVICE_PROD = HOST_ADDRESS_PROD + "/detailsbuyingService";
+    public static final String FAVORITE_ADDRESS_MANAGER_PROD     = HOST_ADDRESS_PROD + "/favoriteAddressManager";
+    public static final String MANAGEMENT_PROD                   = HOST_ADDRESS_PROD + "/management";
 }

@@ -36,32 +36,32 @@ public class AddressManagerContorller {
         this.addressManagerService = addressManagerService;
     }
 
-    @CrossOrigin(origins = ServicePath.FAVORITE_ADDRESS_MANAGER)
-    @RequestMapping("/getFavoriteAddressList")
-    public List<FavoriteAddress> getFavoriteAddressList(HttpServletRequest request){
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.FAVORITE_ADDRESS_MANAGER_DEV, ServicePath.FAVORITE_ADDRESS_MANAGER_PROD})
+    @RequestMapping("/getFavoriteAddressList/{userid}")
+    public List<FavoriteAddress> getFavoriteAddressList(HttpServletRequest request, @PathVariable String userid){
+        //String userid = SecurityConfig.getUserid(request);
         return addressManagerService.getFavoriteAddressList(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.FAVORITE_ADDRESS_MANAGER)
-    @RequestMapping(value = "/createFavoriteAddress",method = RequestMethod.POST)
-    public ResponseEntity<?> createFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.FAVORITE_ADDRESS_MANAGER_DEV, ServicePath.FAVORITE_ADDRESS_MANAGER_PROD})
+    @RequestMapping(value = "/createFavoriteAddress/{userid}",method = RequestMethod.POST)
+    public ResponseEntity<?> createFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        //String userid = SecurityConfig.getUserid(request);
         LOGGER.info("createFavoriteAddress");
         return  addressManagerService.createFavoriteAddress(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.FAVORITE_ADDRESS_MANAGER)
-    @RequestMapping("/deleteFavoriteAddress")
-    public ResponseEntity<?> deleteFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request){
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.FAVORITE_ADDRESS_MANAGER_DEV, ServicePath.FAVORITE_ADDRESS_MANAGER_PROD})
+    @RequestMapping("/deleteFavoriteAddress/{userid}")
+    public ResponseEntity<?> deleteFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid){
+        //String userid = SecurityConfig.getUserid(request);
         return  addressManagerService.deleteFavoriteAddress(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.FAVORITE_ADDRESS_MANAGER)
-    @RequestMapping("/updateFavoriteAddress")
-    public ResponseEntity<?> updateFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request){
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.FAVORITE_ADDRESS_MANAGER_DEV, ServicePath.FAVORITE_ADDRESS_MANAGER_PROD})
+    @RequestMapping("/updateFavoriteAddress/{userid}")
+    public ResponseEntity<?> updateFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid){
+        //String userid = SecurityConfig.getUserid(request);
         return  addressManagerService.updateFavoriteAddress(data, userid);
     }
 }

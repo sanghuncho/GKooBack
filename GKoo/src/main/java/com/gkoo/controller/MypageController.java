@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gkoo.configuration.SecurityConfig;
 import com.gkoo.data.BuyingOrderData;
 import com.gkoo.data.DeliveryKoreaData;
-import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.OrderInformation;
 import com.gkoo.data.WarehouseInformation;
-import com.gkoo.data.buyingservice.BuyingServiceData;
 //import com.gkoo.configuration.SecurityConfig;
 //import com.gkoo.data.OrderInformation;
 //import com.gkoo.data.WarehouseInformation;
@@ -26,7 +25,6 @@ import com.gkoo.data.buyingservice.BuyingServiceData;
 //import serviceBase.ServicePath;
 //import util.AuthentificationService;
 import com.gkoo.service.MypageService;
-import mypage.OverviewInformationImpl;
 import payment.PaymentData;
 import serviceBase.ServicePath;
 
@@ -49,38 +47,38 @@ public class MypageController {
     ///////////////////////
     /// ShippingService ///
     ///////////////////////
-    @CrossOrigin(origins = "http://gkoo.co.kr")
-    @RequestMapping("/orderinformation")
-    public List<OrderInformation> requestOrderInformation(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);        
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @RequestMapping("/orderinformation/{userid}")
+    public List<OrderInformation> requestOrderInformation(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);        
         return mypageService.getOrderData(userid);
     }
     
-    @CrossOrigin(origins = "http://gkoo.co.kr")
-    @RequestMapping("/warehouseinformation")
-    public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @RequestMapping("/warehouseinformation/{userid}")
+    public List<WarehouseInformation> requestWarehouseInformation(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.getWarehouseData(userid);
     }
     
-    @CrossOrigin(origins = "http://gkoo.co.kr")
-    @RequestMapping("/paymentData")
-    public List<PaymentData> requestPaymentData(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @RequestMapping("/paymentData/{userid}")
+    public List<PaymentData> requestPaymentData(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.getPaymentData(userid);
     }
     
-    @CrossOrigin(origins = "http://gkoo.co.kr")
-    @RequestMapping("/deliveryKoreaData")
-    public List<DeliveryKoreaData> requestDeliveryKoreaData(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @RequestMapping("/deliveryKoreaData/{userid}")
+    public List<DeliveryKoreaData> requestDeliveryKoreaData(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.getDeliveryKoreaData(userid);
     }
     
-    @CrossOrigin(origins = "http://gkoo.co.kr")
-    @RequestMapping(value = "/updatetrackingnumber", method = RequestMethod.POST)
-    public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @RequestMapping(value = "/updatetrackingnumber/{userid}", method = RequestMethod.POST)
+    public ResponseEntity<?> updateTrackingNumber(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         String orderNumber = data[0].get("orderid").toString();
         String trackingCompany = data[1].get("trackingCompany").toString();
         String trackingNumber = data[2].get("trackingNumber").toString();
@@ -90,39 +88,45 @@ public class MypageController {
     /////////////////////
     /// BuyingService ///
     /////////////////////
-    @RequestMapping("/orderdataBuyingService")
-    public List<BuyingOrderData> requestOrderDataBuyingService(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);        
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/orderdataBuyingServicer/{userid}")
+    public List<BuyingOrderData> requestOrderDataBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);        
         return mypageService.getOrderDataBuyingService(userid);
     }
     
-    @RequestMapping("/paymentProductBuyingService")
-    public List<PaymentData> requestPaymentProductBuyingService(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/paymentProductBuyingService/{userid}")
+    public List<PaymentData> requestPaymentProductBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.getPaymentProductBuyingService(userid);
     }
     
-    @RequestMapping("/deliveryKoreaDataBuyingService")
-    public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/deliveryKoreaDataBuyingService/{userid}")
+    public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.getDeliveryKoreaDataBuyingService(userid);
     }
     
-    @RequestMapping("/updatePaymentProductBuyingService")
-    public ResponseEntity<?> updatePaymentProductBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/updatePaymentProductBuyingService/{userid}")
+    public ResponseEntity<?> updatePaymentProductBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.updatePaymentProductBuyingService(data, userid);
     }
     
-    @RequestMapping("/updatePaymentDeliveryBuyingService")
-    public ResponseEntity<?> updatePaymentDeliveryBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/updatePaymentDeliveryBuyingService/{userid}")
+    public ResponseEntity<?> updatePaymentDeliveryBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.updatePaymentDeliveryBuyingService(data, userid);
     }
     
-    @RequestMapping("/paymentDeliveryBuyingService")
-    public List<PaymentData> requestPaymentDeliveryBuyingService(HttpServletRequest request) throws SQLException  {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/paymentDeliveryBuyingService/{userid}")
+    public List<PaymentData> requestPaymentDeliveryBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        //String userid = SecurityConfig.getUserid(request);
         return mypageService.getPaymentDeliveryBuyingService(userid);
     }
 }

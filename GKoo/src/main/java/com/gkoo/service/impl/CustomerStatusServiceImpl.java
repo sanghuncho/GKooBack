@@ -19,8 +19,8 @@ public class CustomerStatusServiceImpl implements CustomerStatusService {
         this.customerStatusRepository = customerStatusRepository;
     }
     
-    public void checkUserid(AccessToken accessToken) {
-        customerStatusRepository.checkUserid(accessToken);;
+    public void checkUserid(String userid, String lastname, String firstname) {
+        customerStatusRepository.checkUserid(userid, lastname, firstname);
     }
 
     @Override

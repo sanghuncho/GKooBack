@@ -20,10 +20,10 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public void checkUserid(AccessToken accessToken) {
-        String userid = accessToken.getPreferredUsername();
-        String lastname = accessToken.getFamilyName();
-        String firstname = accessToken.getGivenName();
+    public void checkUserid(String userid, String lastname, String firstname) {
+//        String userid = accessToken.getPreferredUsername();
+//        String lastname = accessToken.getFamilyName();
+//        String firstname = accessToken.getGivenName();
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {

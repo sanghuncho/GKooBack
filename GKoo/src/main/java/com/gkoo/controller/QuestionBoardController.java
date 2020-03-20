@@ -35,14 +35,14 @@ public class QuestionBoardController {
         this.questionBoardService = questionBoardService;
     }
     
-    @CrossOrigin(origins = ServicePath.QUESTION_BOARD)
+    @CrossOrigin(origins = {ServicePath.QUESTION_BOARD_DEV, ServicePath.QUESTION_BOARD_PROD})
     @RequestMapping(value = "/registerQuestion", method = RequestMethod.POST)
     public ResponseEntity<?> createQuestion(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
         String userid = SecurityConfig.getUserid(request);
         return questionBoardService.createQuestion(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.QUESTION_BOARD)
+    @CrossOrigin(origins = {ServicePath.QUESTION_BOARD_DEV, ServicePath.QUESTION_BOARD_PROD})
     @RequestMapping("/getQuestionAnswerList")
     public List<QuestionAnswerData> getQuestionAnswerList(HttpServletRequest request) throws SQLException {
         String userid = SecurityConfig.getUserid(request);

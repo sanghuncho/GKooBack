@@ -34,28 +34,28 @@ public class ShippingServiceController {
         this.addressManagerService = addressManagerService;
     }
     
-    @CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
+    @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
     @RequestMapping(value = "/createshippingservice", method = RequestMethod.POST)
     public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
         String userid = SecurityConfig.getUserid(request);      
         return shippingService.requestShippingservice(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
+    @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
     @RequestMapping("/fetchcustomerbaseinfo")
     public UserBaseInfo requestCustomerBaseInfo(HttpServletRequest request) throws SQLException {
         String userid = SecurityConfig.getUserid(request);
         return shippingService.getUserBaseInfo(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
+    @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
     @RequestMapping(value = "/registerFavoriteAddress",method = RequestMethod.POST)
     public ResponseEntity<?> registerFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {
         String userid = SecurityConfig.getUserid(request);
         return shippingService.registerFavoriteAddress(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.SHIPPING_SERVICE)
+    @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
     @RequestMapping(value = "/retrieveFavoriteAddressList")
     public List<FavoriteAddress> retriveFavoriteAddressList(HttpServletRequest request) {
         String userid = SecurityConfig.getUserid(request);

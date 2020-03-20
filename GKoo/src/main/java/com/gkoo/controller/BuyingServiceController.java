@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,45 +42,45 @@ public class BuyingServiceController {
         this.configurationData = config;
     }
     
-    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
+    //@CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
     @RequestMapping(value = "/fastEstimationBuyingService", method = RequestMethod.POST)
     public EstimationService requestFastEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
         String userid = SecurityConfig.getUserid(request);      
         return buyingService.fastEstimationBuyingService(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
-    @RequestMapping(value = "/estimationBuyingService", method = RequestMethod.POST)
-    public EstimationService requestEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
-        String userid = SecurityConfig.getUserid(request);      
+    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
+    @RequestMapping(value = "/estimationBuyingService/{userid}", method = RequestMethod.POST)
+    public EstimationService requestEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) {        
+        //String userid = SecurityConfig.getUserid(request);      
         return buyingService.estimationBuyingService(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
-    @RequestMapping(value = "/createBuyingService", method = RequestMethod.POST)
-    public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
-        String userid = SecurityConfig.getUserid(request);      
+    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
+    @RequestMapping(value = "/createBuyingService/{userid}", method = RequestMethod.POST)
+    public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) {        
+        //String userid = SecurityConfig.getUserid(request);      
         return buyingService.createBuyingService(data, userid);
     }
     
-    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
-    @RequestMapping(value = "/fetchFavoriteAddressList")
-    public List<FavoriteAddress> getFavoriteAddressList(HttpServletRequest request) {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
+    @RequestMapping(value = "/fetchFavoriteAddressList/{userid}")
+    public List<FavoriteAddress> getFavoriteAddressList(HttpServletRequest request, @PathVariable String userid) {
+        //String userid = SecurityConfig.getUserid(request);
         return AddressManagerDB.getFavoriteAddressList(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
-    @RequestMapping("/fetchcustomerbaseinfoBuyingService")
-    public UserBaseInfo requestCustomerBaseInfo(HttpServletRequest request) throws SQLException {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
+    @RequestMapping("/fetchcustomerbaseinfoBuyingService/{userid}")
+    public UserBaseInfo requestCustomerBaseInfo(HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        //String userid = SecurityConfig.getUserid(request);
         return buyingService.getUserBaseInfo(userid);
     }
     
-    @CrossOrigin(origins = ServicePath.BUYING_SERVICE)
-    @RequestMapping(value = "/registerFavoriteAddressBuyingService", method = RequestMethod.POST)
-    public ResponseEntity<?> registerFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {
-        String userid = SecurityConfig.getUserid(request);
+    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
+    @RequestMapping(value = "/registerFavoriteAddressBuyingService/{userid}", method = RequestMethod.POST)
+    public ResponseEntity<?> registerFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) {
+        //String userid = SecurityConfig.getUserid(request);
         return buyingService.registerFavoriteAddress(data, userid);
     }
 }

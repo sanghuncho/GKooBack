@@ -15,7 +15,7 @@ import warehouse.WarehouseImp;
 @RestController
 public class ManagementController {
 	
-	@CrossOrigin(origins = ServicePath.MANAGEMENT)
+	@CrossOrigin(origins = ServicePath.MANAGEMENT_DEV)
 	@RequestMapping("/warehousecommonstates")
 	public List<WarehouseCommonModel> requestWarehouseCommonStates(HttpServletRequest request) throws SQLException  {
 		WarehouseImp warehouseImp = new WarehouseImp();
