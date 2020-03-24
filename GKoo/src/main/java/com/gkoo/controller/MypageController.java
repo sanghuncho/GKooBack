@@ -89,7 +89,7 @@ public class MypageController {
     /// BuyingService ///
     /////////////////////
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
-    @RequestMapping("/orderdataBuyingServicer/{userid}")
+    @RequestMapping("/orderdataBuyingService/{userid}")
     public List<BuyingOrderData> requestOrderDataBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
         //String userid = SecurityConfig.getUserid(request);        
         return mypageService.getOrderDataBuyingService(userid);
