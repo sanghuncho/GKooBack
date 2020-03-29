@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.keycloak.representations.AccessToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,9 +20,6 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
 
     @Override
     public void checkUserid(String userid, String lastname, String firstname) {
-//        String userid = accessToken.getPreferredUsername();
-//        String lastname = accessToken.getFamilyName();
-//        String firstname = accessToken.getGivenName();
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {
@@ -32,7 +28,11 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
             LOGGER.error("CustomerStatusRepoImpl-checkUserid:" + userid, e);
         }
         if (!existUserid) {
-            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor);
+            int lastPersonalBoxAddress = CustomerStatusDB.getPersonaBoxAddress();
+            int personalBoxAddress = lastPersonalBoxAddress + 1;
+            String personalBoxAddressStr = "GK" + personalBoxAddress;
+            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor, personalBoxAddressStr);
+            CustomerStatusDB.updatePersonaBoxAddress(personalBoxAddress);
         }
     }
     
@@ -50,7 +50,6 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     public ResponseEntity<?> updateBaseInfo(HashMap<String, Object>[] data, String userid) {
         ObjectMapper mapper = new ObjectMapper();
         UserBaseInfo userBaseInfoData=null;
-        //Objects.requireNonNull(data[0].get("userBaseInfo"));
         try {
             userBaseInfoData = mapper.readValue(data[0].get("userBaseInfoData").toString(), UserBaseInfo.class);
         } catch (IOException ex) {

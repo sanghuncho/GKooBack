@@ -22,12 +22,18 @@ public class CustomerStatusDB {
     private static final String NUMBER_USERID = "select count(userid) from customer where userid = ?";
     private static final String CREATE_CUSTOMER_STATUS = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
             + "VALUES (?, 0, 0, ?)";
-    private static final String CREATE_CUSTOMER = "INSERT INTO customer(userid, name_kor)"
-            + "VALUES (?, ?)";
-    private static final String FETCH_CUSTOMERSTATUS = "select * from customerstatus where gkoo_id = ?";
+    private static final String CREATE_CUSTOMER = "INSERT INTO customer(userid, name_kor, personal_box_address)"
+            + "VALUES (?, ?, ?)";
+    //private static final String FETCH_CUSTOMERSTATUS = "select * from customerstatus where gkoo_id = ?";
+    
+    private static final String FETCH_CUSTOMERSTATUS = "SELECT status.gkoo_id, status.insuranceamount, status.depositeamount, status.pointamount, customer.personal_box_address "
+            + "                                             FROM customerstatus status INNER JOIN customer customer on status.gkoo_id = customer.userid and gkoo_id = ?";
     private static final String FETCH_USERBASEINFO = "select * from customer where userid = ?";
     private static final String UPDATE_USERBASEINFO = "UPDATE CUSTOMER SET name_kor=?, name_eng=?, email=?, transit_nr=?, phonenumber_first=?, phonenumber_second=?, "
             + "zip_code=?, address=? where userid=?";
+    private static final String FETCH_PERSONAL_BOX_ADDRESS = "SELECT last_personalboxaddress from CONFIGURATION;";
+    private static final String UPDATE_PERSONAL_BOX_ADDRESS = "UPDATE CONFIGURATION SET last_personalboxaddress = ?";
+
     
     public static Boolean existUserid(String userid) throws SQLException {
         ResultSet resultSet = null;
@@ -48,7 +54,38 @@ public class CustomerStatusDB {
         return number == 0 ? false : true;
     }
     
-    public static void registerInitialCustomer(String userid, String fullnameKor) {
+    public static int getPersonaBoxAddress() {
+        ResultSet resultSet = null;
+        ConnectionDB.connectSQL();
+        int personalBoxNumber = 0;
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(FETCH_PERSONAL_BOX_ADDRESS);){
+            resultSet = psmt.executeQuery();
+            while(resultSet.next()) {
+                personalBoxNumber = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            String error = "Error fetching the personal box Address";
+            LOGGER.error(error, e);
+            throw new CustomerStatusException(error, e);
+        }
+        return personalBoxNumber;
+    }
+    
+    public static void updatePersonaBoxAddress(int lastPersonalBoxAddress) {
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(UPDATE_PERSONAL_BOX_ADDRESS);){
+            psmt.setInt(1, lastPersonalBoxAddress);
+            psmt.execute();
+        } catch (SQLException e) {
+            String error = "Error updating the personal box Address";
+            LOGGER.error(error, e);
+            throw new CustomerStatusException(error, e);
+        }
+    }
+    
+    public static void registerInitialCustomer(String userid, String fullnameKor, String personalBoxAddressStr) {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt_customerstatus = conn.prepareStatement(CREATE_CUSTOMER_STATUS);
@@ -59,6 +96,7 @@ public class CustomerStatusDB {
             
             psmt_customer.setString(1, userid);
             psmt_customer.setString(2, fullnameKor);
+            psmt_customer.setString(3, personalBoxAddressStr);
             psmt_customer.execute();
         } catch (SQLException e) {
             String error = "Error creating initial customerstatus and customer";
@@ -67,6 +105,7 @@ public class CustomerStatusDB {
         }
     }
     
+    //@deprecated customerstatus merging to customer!!
     public static CustomerStatus getCustomerStatus(String userid) {
         ConnectionDB.connectSQL();
         CustomerStatus customerStatus = null;
@@ -91,6 +130,7 @@ public class CustomerStatusDB {
             customerStatus.setInsuranceAmount(resultSet.getInt("insuranceamount"));
             customerStatus.setDepositeAmount(resultSet.getInt("depositeamount"));
             customerStatus.setPointAmount(resultSet.getInt("pointAmount"));
+            customerStatus.setPersonalBoxAddress(resultSet.getString("personal_box_address"));
         }
         return customerStatus;
     }

@@ -29,7 +29,7 @@ import serviceBase.ServicePath;
 public class CustomerStatusController {
     private static final Logger LOGGER = LogManager.getLogger();
     private final CustomerStatusService customerstatusService;
-    
+
     @Autowired
     public CustomerStatusController(CustomerStatusService customerstatusService){
         this.customerstatusService = customerstatusService;
@@ -38,8 +38,6 @@ public class CustomerStatusController {
     @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
     @RequestMapping("/customerstatus/{userid}")
 	public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-	//public CustomerStatus requestCustomerStatus(HttpServletRequest request) throws SQLException {    
-	    //AccessToken accessToken = SecurityConfig.getAccessToken(request);
         String lastname= data[0].get("lastname").toString();
         String firstname= data[1].get("firstname").toString();
         customerstatusService.checkUserid(userid, lastname, firstname);

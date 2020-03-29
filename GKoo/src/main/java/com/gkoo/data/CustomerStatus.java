@@ -12,12 +12,14 @@ public class CustomerStatus {
 	private int insuranceAmount;
 	private int depositeAmount;
 	private int pointAmount;
+	private String personalBoxAddress;
 	
-	public CustomerStatus(String userid, int insuranceAmount, int depositeAmount, int pointAmount){
+	public CustomerStatus(String userid, int insuranceAmount, int depositeAmount, int pointAmount, String personalBoxAddress){
 		this.userid = userid;
 		this.insuranceAmount = insuranceAmount;
 		this.depositeAmount = depositeAmount;
 		this.pointAmount = pointAmount;
+		this.setPersonalBoxAddress(personalBoxAddress);
 	}
 	
 	public CustomerStatus() {}
@@ -53,4 +55,12 @@ public class CustomerStatus {
 	public void setPointAmount(int pointAmount) {
 		this.pointAmount = pointAmount;
 	}
+
+    public String getPersonalBoxAddress() {
+        return personalBoxAddress;
+    }
+
+    public void setPersonalBoxAddress(String personalBoxAddress) {
+        this.personalBoxAddress = personalBoxAddress;
+    }
 }

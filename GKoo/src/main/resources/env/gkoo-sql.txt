@@ -244,3 +244,19 @@ SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid='
 
 ALTER TABLE buying_service
 	ADD COLUMN product_list_total_price numeric;
+	
+create table configuration (
+    object_id serial primary key,
+    last_personal_address integer
+);
+
+INSERT INTO configuration (last_personal_address) VALUES (100010);
+
+ALTER TABLE configuration
+  RENAME COLUMN last_personal_address TO last_personalBoxAddress;
+  
+ALTER TABLE customer
+ADD COLUMN personal_box_address VARCHAR(10);
+
+UPDATE customer SET personal_box_address = 'GK100010 ' WHERE  where userid = 'm';
+
