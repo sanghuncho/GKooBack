@@ -1,5 +1,7 @@
 package com.gkoo.data;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author sanghuncho
@@ -7,6 +9,7 @@ package com.gkoo.data;
  * @since  08.11.2019
  *
  */
+@Component
 public class CustomerStatus {
 	private String userid;
 	private int insuranceAmount;

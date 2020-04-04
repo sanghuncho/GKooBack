@@ -27,6 +27,33 @@ public class MypageDB {
     
     private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
+    private static final String GET_PERSONAL_BOX_ADDRESS = "SELECT personal_box_address FROM CUSTOMER WHERE userid = ?";
+    
+    public static String getPersonalBoxAddress(String userid) {
+        String personalBoxAddress = "";
+        ResultSet resultSet = null;
+        ConnectionDB.connectSQL();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(GET_PERSONAL_BOX_ADDRESS);){
+            psmt.setString(1, userid);
+            resultSet = psmt.executeQuery();
+            personalBoxAddress = writePersonalBoxAddress(resultSet);
+        } catch (SQLException e) {
+            String error = "Error fetching personal box address";
+            LOGGER.error(error, e);
+            throw new MypageException(error, e);
+        }
+        return personalBoxAddress;
+    }
+    
+    private static String writePersonalBoxAddress(ResultSet rs) throws SQLException {
+        String personalBoxAddress = "";
+        while (rs.next()) {
+            personalBoxAddress = rs.getString("personal_box_address");
+        }
+        return personalBoxAddress;
+    }
+    
     public static List<OrderInformation> getOrderData(String userid) {
         List<OrderInformation> orderInformationList = new ArrayList<>();
         ResultSet resultSet = null;
