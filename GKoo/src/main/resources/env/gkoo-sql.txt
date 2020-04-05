@@ -2,6 +2,8 @@
 ========= Queries ============ 
 ==============================
 
+
+
 --Normal Query
 select * from notice;
 select notice_content from notice where notice_nr = ;
@@ -260,3 +262,6 @@ ADD COLUMN personal_box_address VARCHAR(10);
 
 UPDATE customer SET personal_box_address = 'GK100010 ' WHERE  where userid = 'm';
 
+====================================================== 
+========= Dont forget the Queries in PROD ============ 
+====================================================== 

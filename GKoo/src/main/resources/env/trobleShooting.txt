@@ -9,4 +9,6 @@ Keycloak "No Access Control Allow Origin
     go to Roles -> add user role
     go to users ->Role Mappings -> Assigned Roles
     
-2. check accessToken is well passed to children 
+2. check accessToken is well passed to children
+
+Modifying in DB must in Prod also synchronozed

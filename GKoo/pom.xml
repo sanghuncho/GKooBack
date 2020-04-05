@@ -74,10 +74,7 @@
          </exclusions>
 	    <version>6.0.1</version>
 	</dependency>
-	
-	
-	
-	
+
 <!-- Logging -->
 	<dependency>
 	    <groupId>org.apache.logging.log4j</groupId>

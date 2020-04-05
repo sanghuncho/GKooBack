@@ -1,4 +1,0 @@
-1.backup
-	gkoo -> format[custom], filename -> format sql
-2.restore
-  databases -> create databases [gkoo]  

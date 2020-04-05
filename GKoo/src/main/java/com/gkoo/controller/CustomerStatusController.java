@@ -36,12 +36,15 @@ public class CustomerStatusController {
     }
 
     @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    //@RequestMapping(value = "/customerstatus/{userid}", method = RequestMethod.POST, produces = "application/json")
     @RequestMapping("/customerstatus/{userid}")
-	public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-        String lastname= data[0].get("lastname").toString();
-        String firstname= data[1].get("firstname").toString();
-        customerstatusService.checkUserid(userid, lastname, firstname);
-        return customerstatusService.getCustomerStatus(userid);
+    public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+//        String lastname= data[0].get("lastname").toString();
+//        String firstname= data[1].get("firstname").toString();
+//        customerstatusService.checkUserid(userid, lastname, firstname);
+        //return customerstatusService.getCustomerStatus(userid);
+        CustomerStatus customer = new CustomerStatus("m", 100, 100, 100, "GK10");
+        return customer;
 	}
 	
 	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})

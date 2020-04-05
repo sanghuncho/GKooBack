@@ -1,7 +1,7 @@
 ## backend
 ## server.port = 8889
 
-################ keycloak tomcat deploy
+################ Deploying the keycloak in tomcat 
 ## in war file
 ## [META-INF]
 ## context.xml
@@ -9,6 +9,13 @@
 ## [WEB-INF]
 ## keycloak.json
 ## web.xml
+################
+
+################ Converting login-page as korean language
+## themes/base/login/messages
+## messages_en.properties
+## adding # encoding: utf-8
+## coverting as korean
 ################
 
 keycloak.auth-server-url=http://localhost:8080/auth

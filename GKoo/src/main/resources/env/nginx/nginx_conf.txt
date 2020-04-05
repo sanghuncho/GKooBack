@@ -8,11 +8,9 @@ worker_processes  1;
 
 #pid        logs/nginx.pid;
 
-
 events {
     worker_connections  1024;
 }
-
 
 http {
     include       mime.types;
@@ -38,9 +36,6 @@ http {
 					 gkoo.co.kr
 					 180.70.94.132;
 		
-		#listen        8070;
-        #server_name   180.70.94.132;
-		
         #charset koi8-r;
 
         #access_log  logs/host.access.log  main;
@@ -48,9 +43,7 @@ http {
         location / {
             root   html;
             index  index.html index.htm;
-			try_files $uri $uri/ /index.html;
-			
-
+			try_files $uri $uri/ /index.html;		
         }
 		
 		#location /auth {
@@ -126,8 +119,6 @@ http {
         ssl_prefer_server_ciphers  on;
 
         location / {
-			
-			
             root   html;
             index  index.html index.htm;
 			try_files $uri $uri/ /index.html;
@@ -173,5 +164,4 @@ http {
 			#proxy_pass  http://180.70.94.132:8889;			
         }
     }
-
 }

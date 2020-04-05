@@ -2,8 +2,8 @@ package serviceBase;
 
 public class ServicePath {
     
-	public static final String HOST_ADDRESS_DEV = "http://localhost:3000";
-	public static final String HOST_ADDRESS_PROD = "https://gkoo.co.kr";
+    public static final String HOST_ADDRESS_DEV = "http://localhost:3000";
+    public static final String HOST_ADDRESS_PROD = "https://gkoo.co.kr";
 		
 	public static final String BUYING_SERVICE_DEV                = HOST_ADDRESS_DEV + "/buyingservice";
 	public static final String SHIPPING_SERVICE_DEV              = HOST_ADDRESS_DEV + "/requestshipping";
