@@ -34,19 +34,30 @@ public class CustomerStatusController {
     public CustomerStatusController(CustomerStatusService customerstatusService){
         this.customerstatusService = customerstatusService;
     }
+    
+    //@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @CrossOrigin(origins = "http://localhost:3000/mypage")
+    @RequestMapping(value = "/registerinitialcustomer/{userid}", method = RequestMethod.POST)
+    public ResponseEntity<?> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        String lastname= data[0].get("lastname").toString();
+        String firstname= data[1].get("firstname").toString();
+        return customerstatusService.checkUserid(userid, lastname, firstname);
+    }
 
-    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
-    //@RequestMapping(value = "/customerstatus/{userid}", method = RequestMethod.POST, produces = "application/json")
+    //@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    //@RequestMapping(value = "/customerstatus/{userid}", method = RequestMethod.POST)
+    @CrossOrigin(origins = "http://localhost:3000/mypage")
     @RequestMapping("/customerstatus/{userid}")
-    public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-//        String lastname= data[0].get("lastname").toString();
-//        String firstname= data[1].get("firstname").toString();
-//        customerstatusService.checkUserid(userid, lastname, firstname);
-        //return customerstatusService.getCustomerStatus(userid);
-        CustomerStatus customer = new CustomerStatus("m", 100, 100, 100, "GK10");
-        return customer;
+    //public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+    public CustomerStatus requestCustomerStatus(HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        //String lastname= data[0].get("lastname").toString();
+        //String firstname= data[1].get("firstname").toString();
+        //customerstatusService.checkUserid(userid, lastname, firstname);
+        return customerstatusService.getCustomerStatus(userid);
+//        CustomerStatus customer = new CustomerStatus("m", 100, 100, 100, "GK10");
+//        return customer;
 	}
-	
+    
 	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
     @RequestMapping("/fetchuserbaseinfo/{userid}")
     public UserBaseInfo requestUserBaseInfo(HttpServletRequest request, @PathVariable String userid) throws SQLException {

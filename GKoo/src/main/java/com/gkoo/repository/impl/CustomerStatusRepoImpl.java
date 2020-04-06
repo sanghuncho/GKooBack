@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +20,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public void checkUserid(String userid, String lastname, String firstname) {
+    public ResponseEntity<?> checkUserid(String userid, String lastname, String firstname) {
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {
@@ -34,6 +35,9 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
             CustomerStatusDB.registerInitialCustomer(userid, fullnameKor, personalBoxAddressStr);
             CustomerStatusDB.updatePersonaBoxAddress(personalBoxAddress);
         }
+        
+        String responseMessage = "userid is checked:" + userid;
+        return new ResponseEntity<String>(responseMessage, HttpStatus.ACCEPTED);
     }
     
     @Override
