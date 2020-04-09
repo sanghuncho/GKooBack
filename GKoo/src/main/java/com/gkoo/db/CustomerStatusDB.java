@@ -185,7 +185,7 @@ public class CustomerStatusDB {
             psmt.executeUpdate();
         } catch (SQLException ex) {
             String error = "Error updating userBaseInfo";
-            LOGGER.error(error, ex);
+            LOGGER.error(error, data, ex);
             throw new CustomerStatusException(error, ex);
         } 
         String responseMessage = "userBaseInfoData is updateded for userid:" + userid;

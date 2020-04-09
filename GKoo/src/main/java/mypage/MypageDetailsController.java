@@ -44,7 +44,6 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
 	@RequestMapping("/recipientinfo/{orderid}/{userid}")
 	public RecipientData requestRecipientInfo(HttpServletRequest request, @PathVariable String orderid, @PathVariable String userid) throws SQLException  {
-        //String userid = SecurityConfig.getUserid(request);      
 		/*ToDo : low coupling - Spring injection, interface, injection */
 		return detailsImp.getRecipientInfo(userid, orderid);
 	}
@@ -52,7 +51,6 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
 	@RequestMapping("/productscommoninfo/{orderid}/{userid}")
 	public ProductsCommonInformation requestProductsCommonInfo(HttpServletRequest request, @PathVariable String orderid, @PathVariable String userid) throws SQLException  {
-		//String userid = SecurityConfig.getUserid(request);		
 		/*ToDo : low coupling - Spring injection, interface, injection */
 		return detailsImp.getProductsCommonInfo(userid, orderid);
 	}
@@ -66,17 +64,14 @@ public class MypageDetailsController {
 	}
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
-    @RequestMapping("/mypageDetailData/{orderid}/{userid}")
-    public MypageDetailData requestMypageDetailData(HttpServletRequest request, @PathVariable String orderid, @PathVariable String userid) throws SQLException  {
-        //String userid = AuthentificationService.getAuthenficatedMemberID(request);        
+    @RequestMapping("/mypageDetailData/{userid}/{orderid}")
+    public MypageDetailData requestMypageDetailData(HttpServletRequest request, @PathVariable String userid, @PathVariable String orderid) throws SQLException  {
         return detailsImp.getMypageDetailData(userid, orderid);
     }
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
 	@RequestMapping(value = "/updatePaymentOwnernameShippingService/{userid}", method = RequestMethod.POST)
 	public ProductsCommonInformation willPayDeliveryFeeUpdate(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-		//MypageDetailsImpl detailsImp = new MypageDetailsImpl();
-	    //String userid = SecurityConfig.getUserid(request);
         String orderid = data[0].get("orderid").toString();
         String paymentOwnername = data[1].get("paymentOwnername").toString();
         String paymentArtStr = data[2].get("paymentArt").toString();
@@ -87,8 +82,6 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
     @RequestMapping(value = "/updaterecipientdata/{userid}", method = RequestMethod.POST)
     public ResponseEntity<?> updateRecipientData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
-        //MypageDetailsImpl detailsImp = new MypageDetailsImpl();
-        //String userid = SecurityConfig.getUserid(request);
         //RecipientData recipientData = detailsImp.createRecipientData(memberId, data);
         /*ToDo : low coupling - Spring injection, interface, injection */
         return detailsImp.updateRecipientData(userid, data);
@@ -97,8 +90,6 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
     @RequestMapping(value = "/updateDataEditorProductsList/{userid}", method = RequestMethod.POST)
     public ResponseEntity<?> updateDataEditorProductsList(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException, JsonParseException, JsonMappingException, IOException  {
-	    //MypageDetailsImpl detailsImp = new MypageDetailsImpl();
-        //String userid = SecurityConfig.getUserid(request);        //RecipientData recipientData = detailsImp.createRecipientData(memberId, data);
         /*ToDo : low coupling - Spring injection, interface, injection */
         return detailsImp.updateDataEditorProductsList(userid, data);
     }
@@ -106,7 +97,6 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
     @RequestMapping(value = "/deleteShipingServiceData/{userid}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteShipingServiceData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException, JsonParseException, JsonMappingException, IOException  {
-        //String memberId = AuthentificationService.getAuthenficatedMemberID(request);
         return detailsImp.deleteShipingServiceData(userid, data);
     }
 	
@@ -116,8 +106,7 @@ public class MypageDetailsController {
     /////////////////////
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_DEV, ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_PROD})
 	@RequestMapping("/mypageBuyingServiceDetailData/{orderid}/{userid}")
-    public BuyingServiceDetailData requestMypageBuyingServiceDetailData(HttpServletRequest request, @PathVariable String orderid, @PathVariable String userid) throws SQLException  {
-        //String userid = AuthentificationService.getAuthenficatedMemberID(request);        
+    public BuyingServiceDetailData requestMypageBuyingServiceDetailData(HttpServletRequest request, @PathVariable String userid, @PathVariable String orderid) throws SQLException  {
         return detailsImp.getMypageBuyingServiceDetailData(userid, orderid);
     }
 	
@@ -125,14 +114,12 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_DEV, ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_PROD})
 	@RequestMapping(value = "/updateRecipientdataBuyingService/{orderid}/{userid}", method = RequestMethod.POST)
     public ResponseEntity<?> updateRecipientdataBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
-        //String userid = SecurityConfig.getUserid(request);
         return detailsImp.updateRecipientdataBuyingService(userid, data);
     }
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_DEV, ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_PROD})
 	@RequestMapping(value = "/getRecipientDataBuyingService/{orderid}/{userid}")
     public RecipientData getRecipientDataBuyingService(HttpServletRequest request, @PathVariable String orderid, @PathVariable String userid) throws SQLException  {
-        //String userid = SecurityConfig.getUserid(request);
         return detailsImp.getRecipientDataBuyingService(userid, orderid);
     }
 }

@@ -20,7 +20,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public ResponseEntity<?> checkUserid(String userid, String lastname, String firstname) {
+    public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {
@@ -57,7 +57,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
         try {
             userBaseInfoData = mapper.readValue(data[0].get("userBaseInfoData").toString(), UserBaseInfo.class);
         } catch (IOException ex) {
-            String error = "Error mapping userBaseInfo";
+            String error = "Error mapping userBaseInfo:" + userid;
             LOGGER.error(error, ex);
             throw new CustomerStatusException(error, ex);
         }

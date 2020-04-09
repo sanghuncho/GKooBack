@@ -37,12 +37,6 @@
 	   <scope>provided</scope>
 	</dependency>
 	
-    <dependency>
-	    <groupId>org.springframework.security</groupId>
-	    <artifactId>spring-security-core</artifactId>
-	    <version>5.0.0.RELEASE</version>
- 	</dependency>
- 	
  	<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
@@ -55,7 +49,14 @@
     </exclusions>
     </dependency>
     
-    <!-- spring integration test for security-->
+    <!-- spring integration test for security -->
+    
+    <dependency>
+	    <groupId>org.springframework.security</groupId>
+	    <artifactId>spring-security-core</artifactId>
+	    <version>5.0.0.RELEASE</version>
+ 	</dependency>
+    
     <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-test</artifactId>

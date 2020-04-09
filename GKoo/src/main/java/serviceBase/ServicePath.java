@@ -25,5 +25,5 @@ public class ServicePath {
     public static final String DETAILS_MYPAGE_BUYINGSERVICE_PROD = HOST_ADDRESS_PROD + "/detailsbuyingService";
     public static final String FAVORITE_ADDRESS_MANAGER_PROD     = HOST_ADDRESS_PROD + "/favoriteAddressManager";
     public static final String MANAGEMENT_PROD                   = HOST_ADDRESS_PROD + "/management";
-    public static final String MYPAGE_SHIPPING_ADDRESS_PROD      = HOST_ADDRESS_PROD  + "/mypageShippingAddressPane";
+    public static final String MYPAGE_SHIPPING_ADDRESS_PROD      = HOST_ADDRESS_PROD + "/mypageShippingAddressPane";
 }
