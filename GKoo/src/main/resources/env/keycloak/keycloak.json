@@ -5,7 +5,7 @@
   "public-client":true,
   "enable-cors" : true,
   "cors-max-age" : 1000,
-  "cors-allowed-methods" : "POST, PUT, DELETE, GET",
+  "cors-allowed-methods" : "POST, PUT, DELETE, GET, OPTIONS",
   "cors-exposed-headers" : "*",
   "bearer-only" : false
 }

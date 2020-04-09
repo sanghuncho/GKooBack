@@ -38,7 +38,8 @@ public class CustomerStatusController {
     }
     
     //@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
-    @CrossOrigin(origins = "http://localhost:3000")
+    //@CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     //@RequestMapping(value = "/registerinitialcustomer/{userid}", method = RequestMethod.POST)
     @RequestMapping(value = "/registerinitialcustomer", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     //public ResponseEntity<?> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
@@ -55,7 +56,8 @@ public class CustomerStatusController {
     }
 
     //@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
-    @CrossOrigin(origins = "http://localhost:3000")
+    //@CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     //@RequestMapping(value = "/customerstatus/{userid}", method = RequestMethod.POST)
     //@CrossOrigin(origins = "http://localhost:3000/mypage")
     @RequestMapping("/customerstatus/{userid}")
