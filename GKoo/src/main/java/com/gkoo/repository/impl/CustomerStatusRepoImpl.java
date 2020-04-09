@@ -20,7 +20,7 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public ResponseEntity<?> checkUserid(String userid, String lastname, String firstname) {
+    public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {
