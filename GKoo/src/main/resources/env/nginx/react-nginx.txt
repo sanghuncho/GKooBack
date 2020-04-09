@@ -17,7 +17,7 @@ server {
 
 ### nginx Windows Service
 nssm download
-go win64 -> nssm install nginx[nginx.exe]
+go in progemm /nssm-2.24/win64/win64 cmd run -> nssm install nginx[nginx.exe]
 
 
 pid4 shutdown

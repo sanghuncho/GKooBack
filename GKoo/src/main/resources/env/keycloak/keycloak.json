@@ -6,5 +6,6 @@
   "enable-cors" : true,
   "cors-max-age" : 1000,
   "cors-allowed-methods" : "POST, PUT, DELETE, GET",
+  "cors-exposed-headers" : "*",
   "bearer-only" : false
 }

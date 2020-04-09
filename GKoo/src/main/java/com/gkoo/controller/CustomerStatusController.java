@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,17 +38,26 @@ public class CustomerStatusController {
     }
     
     //@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
-    @CrossOrigin(origins = "http://localhost:3000/mypage")
-    @RequestMapping(value = "/registerinitialcustomer/{userid}", method = RequestMethod.POST)
-    public ResponseEntity<?> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-        String lastname= data[0].get("lastname").toString();
-        String firstname= data[1].get("firstname").toString();
-        return customerstatusService.checkUserid(userid, lastname, firstname);
+    @CrossOrigin(origins = "http://localhost:3000")
+    //@RequestMapping(value = "/registerinitialcustomer/{userid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/registerinitialcustomer", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+    //public ResponseEntity<?> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+    public CustomerStatus registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException {
+//        String lastname= data[0].get("lastname").toString();
+//        String firstname= data[1].get("firstname").toString();
+//        return customerstatusService.checkUserid(userid, lastname, firstname);
+        String message = "test";
+        ResponseEntity<String> response = new ResponseEntity<String>(message, HttpStatus.ACCEPTED);
+        //response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        CustomerStatus customer = new CustomerStatus("m", 100, 100, 100, "GK10");
+        return customer;
+        
     }
 
     //@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+    @CrossOrigin(origins = "http://localhost:3000")
     //@RequestMapping(value = "/customerstatus/{userid}", method = RequestMethod.POST)
-    @CrossOrigin(origins = "http://localhost:3000/mypage")
+    //@CrossOrigin(origins = "http://localhost:3000/mypage")
     @RequestMapping("/customerstatus/{userid}")
     //public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
     public CustomerStatus requestCustomerStatus(HttpServletRequest request, @PathVariable String userid) throws SQLException {
