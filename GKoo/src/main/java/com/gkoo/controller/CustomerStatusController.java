@@ -50,7 +50,7 @@ public class CustomerStatusController {
     public CustomerStatus requestCustomerStatus(HttpServletRequest request, @PathVariable String userid) throws SQLException {
         return customerstatusService.getCustomerStatus(userid);
 	}
-    
+
 	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
     @RequestMapping("/fetchuserbaseinfo/{userid}")
     public UserBaseInfo requestUserBaseInfo(HttpServletRequest request, @PathVariable String userid) throws SQLException {
