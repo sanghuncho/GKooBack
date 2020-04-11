@@ -64,7 +64,7 @@ public class MypageDetailsController {
 	}
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
-    @RequestMapping("/mypageDetailData/{userid}/{orderid}")
+    @RequestMapping("/mypageDetailData/{orderid}/{userid}")
     public MypageDetailData requestMypageDetailData(HttpServletRequest request, @PathVariable String userid, @PathVariable String orderid) throws SQLException  {
         return detailsImp.getMypageDetailData(userid, orderid);
     }

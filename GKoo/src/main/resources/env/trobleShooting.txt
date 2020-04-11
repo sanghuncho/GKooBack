@@ -10,5 +10,7 @@ Keycloak "No Access Control Allow Origin
     go to users ->Role Mappings -> Assigned Roles
     
 2. check accessToken is well passed to children
+3. copy keycloak.json and context.xml
+4. check address in keycloak whether local or www.gkoo
 
 Modifying in DB must in Prod also synchronozed

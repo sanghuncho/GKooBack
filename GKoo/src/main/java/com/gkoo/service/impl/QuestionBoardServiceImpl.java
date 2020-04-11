@@ -47,7 +47,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             questionData.setQuestionDate(questionDate);
             questionData.setUserid(userid);
         } catch (IOException ex) {
-            String error = "Error mapping questionData: "+data+"/ userid: "+userid;
+            String error = "Error mapping questionData: "+ data +"/ userid: " + userid;
             LOGGER.error(error, ex);
         }
         return writeQuestionData(questionData, userid);
@@ -64,7 +64,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             psmt.setString(5, questionData.getUserid());
             psmt.executeUpdate();
         } catch (SQLException e) {
-            String error = "Error creating questionData: " + questionData+"/ userid: "+userid;
+            String error = "Error creating questionData: " + questionData + "/ userid: " + userid;
             LOGGER.error(error, e);
         }
         HttpHeaders headers = new HttpHeaders();

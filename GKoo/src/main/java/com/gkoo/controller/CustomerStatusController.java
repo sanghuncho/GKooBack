@@ -60,7 +60,7 @@ public class CustomerStatusController {
 	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
     @RequestMapping(value = "/updateuserbaseinfo/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> updateBaseInfo(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-        LOGGER.info("개인정보수정/updateuserbaseinfo");
+        LOGGER.info("개인정보수정:updateuserbaseinfo");
         return customerstatusService.updateBaseInfo(data, userid);
     }
 }
