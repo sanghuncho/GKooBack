@@ -18,6 +18,39 @@
 ## coverting as korean
 ################
 
+################ delete other category(session, applications. totp) in user account 
+## themes/base/account
+## template.ftl
+## container 
+##  <#-- NOT ACTIVE FOR GKoo
+##		<li class="<#if active=='totp'>active</#if>"><a href="${url.totpUrl}">${msg("authenticator")}</a></li>
+##		<#if features.identityFederation><li class="<#if active=='social'>active</#if>"><a href="${url.socialUrl}">${msg("federatedIdentity")}</a></li></#if>
+##		<li class="<#if active=='sessions'>active</#if>"><a href="${url.sessionsUrl}">${msg("sessions")}</a></li>
+##		<li class="<#if active=='applications'>active</#if>"><a href="${url.applicationsUrl}">${msg("applications")}</a></li>
+##  -->
+
+## keycloak\themes\keycloak\account\resources\img
+## logo.png
+
+## back to application 
+## keycloak\themes\base\login
+## ${client.baseUrl}, ${pageRedirectUri} => 
+## info.ftl
+## 	<#if pageRedirectUri??>
+## 		<p><a href="http://localhost:3000/">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
+##  <#elseif actionUri??>
+##  	<p><a href="${actionUri}">${kcSanitize(msg("proceedWithAction"))?no_esc}</a></p>
+##  	<#elseif client.baseUrl??>
+##  	<p><a href="http://localhost:3000/">${kcSanitize(msg("backToApplication"))?no_esc}</a></p>
+##  </#if>
+##
+
+## back to GKoo
+## keycloak\themes\base\account
+## ${url.logoutUrl} => <li><a href="http://localhost:3000/mypage">${msg("doSignOut")}</a></li>
+
+################
+
 keycloak.auth-server-url=http://localhost:8080/auth
 keycloak.realm=gkoo
 keycloak.resource=version_0_1_0
