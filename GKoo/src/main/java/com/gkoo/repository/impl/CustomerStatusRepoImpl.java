@@ -20,24 +20,26 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
+    //public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
+    public void checkUserid(String userid, String lastname, String firstname, String email) {
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
         try {
             existUserid = CustomerStatusDB.existUserid(userid);
         } catch (SQLException e) {
-            LOGGER.error("CustomerStatusRepoImpl-checkUserid:" + userid, e);
+            String error = "Error checking existUserid:" + userid + "/" + lastname + "/" + firstname + "/" + email;
+            LOGGER.error(error, e);
         }
         if (!existUserid) {
             int lastPersonalBoxAddress = CustomerStatusDB.getPersonaBoxAddress();
             int personalBoxAddress = lastPersonalBoxAddress + 1;
             String personalBoxAddressStr = "GK" + personalBoxAddress;
-            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor, personalBoxAddressStr);
+            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor, email, personalBoxAddressStr);
             CustomerStatusDB.updatePersonaBoxAddress(personalBoxAddress);
         }
         
-        String responseMessage = "userid is checked:" + userid;
-        return new ResponseEntity<String>(responseMessage, HttpStatus.ACCEPTED);
+//        String responseMessage = "userid is checked:" + userid;
+//        return new ResponseEntity<String>(responseMessage, HttpStatus.ACCEPTED);
     }
     
     @Override

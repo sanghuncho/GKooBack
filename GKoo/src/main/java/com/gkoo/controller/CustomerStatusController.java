@@ -35,23 +35,33 @@ public class CustomerStatusController {
         this.customerstatusService = customerstatusService;
     }
     
-    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
-    @RequestMapping(value = "/registerinitialcustomer/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
-    public ResponseEntity<String> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-        String lastname= data[0].get("lastname").toString();
-        String firstname= data[1].get("firstname").toString();
-        //later test : AccessToken accessToken = SecurityConfig.getAccessToken(request);
-        //String userid = SecurityConfig.getUserid(request);
-        return customerstatusService.checkUserid(userid, lastname, firstname);
+//    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+//    @RequestMapping(value = "/registerinitialcustomer/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+//    public ResponseEntity<String> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+//        String lastname= data[0].get("lastname").toString();
+//        String firstname= data[1].get("firstname").toString();
+//        //later test : AccessToken accessToken = SecurityConfig.getAccessToken(request);
+//        //String userid = SecurityConfig.getUserid(request);
+//        return customerstatusService.checkUserid(userid, lastname, firstname);
+//    }
+
+//    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+//    @RequestMapping("/customerstatus/{userid}")
+//    public CustomerStatus requestCustomerStatus(HttpServletRequest request, @PathVariable String userid) throws SQLException {
+//        return customerstatusService.getCustomerStatus(userid);
+//	}
+    
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping(value = "/customerstatus/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+    public CustomerStatus requestCustomerStatus(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        String lastname = data[0].get("lastname").toString();
+        String firstname = data[1].get("firstname").toString();
+        String email = data[2].get("email").toString();
+        customerstatusService.checkUserid(userid, lastname, firstname, email);
+        return customerstatusService.getCustomerStatus(userid);
     }
 
-    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
-    @RequestMapping("/customerstatus/{userid}")
-    public CustomerStatus requestCustomerStatus(HttpServletRequest request, @PathVariable String userid) throws SQLException {
-        return customerstatusService.getCustomerStatus(userid);
-	}
-
-	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_PERSONAL_DEV, ServicePath.MYPAGE_PERSONAL_PROD})
     @RequestMapping("/fetchuserbaseinfo/{userid}")
     public UserBaseInfo requestUserBaseInfo(HttpServletRequest request, @PathVariable String userid) throws SQLException {
         return customerstatusService.getUserBaseInfo(userid);

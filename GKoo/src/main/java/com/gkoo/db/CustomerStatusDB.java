@@ -22,8 +22,8 @@ public class CustomerStatusDB {
     private static final String NUMBER_USERID = "select count(userid) from customer where userid = ?";
     private static final String CREATE_CUSTOMER_STATUS = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
             + "VALUES (?, 0, 0, ?)";
-    private static final String CREATE_CUSTOMER = "INSERT INTO customer(userid, name_kor, personal_box_address)"
-            + "VALUES (?, ?, ?)";
+    private static final String CREATE_CUSTOMER = "INSERT INTO customer(userid, name_kor, email, personal_box_address)"
+            + "VALUES (?, ?, ?, ?)";
     //private static final String FETCH_CUSTOMERSTATUS = "select * from customerstatus where gkoo_id = ?";
     
     private static final String FETCH_CUSTOMERSTATUS = "SELECT status.gkoo_id, status.insuranceamount, status.depositeamount, status.pointamount, customer.personal_box_address "
@@ -79,13 +79,13 @@ public class CustomerStatusDB {
             psmt.setInt(1, lastPersonalBoxAddress);
             psmt.execute();
         } catch (SQLException e) {
-            String error = "Error updating the personal box Address";
+            String error = "Error updating the personal box Address: " + lastPersonalBoxAddress;
             LOGGER.error(error, e);
             throw new CustomerStatusException(error, e);
         }
     }
     
-    public static void registerInitialCustomer(String userid, String fullnameKor, String personalBoxAddressStr) {
+    public static void registerInitialCustomer(String userid, String fullnameKor, String email, String personalBoxAddressStr) {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt_customerstatus = conn.prepareStatement(CREATE_CUSTOMER_STATUS);
@@ -96,10 +96,11 @@ public class CustomerStatusDB {
             
             psmt_customer.setString(1, userid);
             psmt_customer.setString(2, fullnameKor);
-            psmt_customer.setString(3, personalBoxAddressStr);
+            psmt_customer.setString(3, email);
+            psmt_customer.setString(4, personalBoxAddressStr);
             psmt_customer.execute();
         } catch (SQLException e) {
-            String error = "Error creating initial customerstatus and customer";
+            String error = "Error creating initial customerstatus and customer: " + userid + "/" + fullnameKor + "/" + personalBoxAddressStr;
             LOGGER.error(error, e);
             throw new CustomerStatusException(error, e);
         }

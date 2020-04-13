@@ -15,6 +15,7 @@ public class ServicePath {
 	public static final String FAVORITE_ADDRESS_MANAGER_DEV      = HOST_ADDRESS_DEV + "/favoriteAddressManager";
 	public static final String MANAGEMENT_DEV	                 = HOST_ADDRESS_DEV + "/management";
 	public static final String MYPAGE_SHIPPING_ADDRESS_DEV       = HOST_ADDRESS_DEV + "/mypageShippingAddressPane";
+	public static final String MYPAGE_PERSONAL_DEV               = HOST_ADDRESS_DEV + "/mypagePersonal";
 	
 	public static final String BUYING_SERVICE_PROD               = HOST_ADDRESS_PROD + "/buyingservice";
     public static final String SHIPPING_SERVICE_PROD             = HOST_ADDRESS_PROD + "/requestshipping";
@@ -26,4 +27,5 @@ public class ServicePath {
     public static final String FAVORITE_ADDRESS_MANAGER_PROD     = HOST_ADDRESS_PROD + "/favoriteAddressManager";
     public static final String MANAGEMENT_PROD                   = HOST_ADDRESS_PROD + "/management";
     public static final String MYPAGE_SHIPPING_ADDRESS_PROD      = HOST_ADDRESS_PROD + "/mypageShippingAddressPane";
+    public static final String MYPAGE_PERSONAL_PROD              = HOST_ADDRESS_PROD + "/mypagePersonal";
 }

@@ -19,10 +19,14 @@ public class CustomerStatusServiceImpl implements CustomerStatusService {
         this.customerStatusRepository = customerStatusRepository;
     }
     
-    public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
-        return this.customerStatusRepository.checkUserid(userid, lastname, firstname);
-    }
+//    public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
+//        return this.customerStatusRepository.checkUserid(userid, lastname, firstname);
+//    }
 
+    public void checkUserid(String userid, String lastname, String firstname, String email) {
+        this.customerStatusRepository.checkUserid(userid, lastname, firstname, email);
+    }
+    
     @Override
     public CustomerStatus getCustomerStatus(String userid) {
         return customerStatusRepository.getCustomerStatus(userid);
