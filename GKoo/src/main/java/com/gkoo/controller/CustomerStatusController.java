@@ -35,21 +35,17 @@ public class CustomerStatusController {
         this.customerstatusService = customerstatusService;
     }
     
-//    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
-//    @RequestMapping(value = "/registerinitialcustomer/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
-//    public ResponseEntity<String> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-//        String lastname= data[0].get("lastname").toString();
-//        String firstname= data[1].get("firstname").toString();
-//        //later test : AccessToken accessToken = SecurityConfig.getAccessToken(request);
-//        //String userid = SecurityConfig.getUserid(request);
-//        return customerstatusService.checkUserid(userid, lastname, firstname);
-//    }
-
-//    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
-//    @RequestMapping("/customerstatus/{userid}")
-//    public CustomerStatus requestCustomerStatus(HttpServletRequest request, @PathVariable String userid) throws SQLException {
-//        return customerstatusService.getCustomerStatus(userid);
-//	}
+    @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD,
+                                ServicePath.BUYING_SERVICE_REGIST_DEV, ServicePath.BUYING_SERVICE_REGIST_PROD})
+    @RequestMapping(value = "/register_customer/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+    public void registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        String lastname= data[0].get("lastname").toString();
+        String firstname= data[1].get("firstname").toString();
+        String email = data[2].get("email").toString();
+        //later test : AccessToken accessToken = SecurityConfig.getAccessToken(request);
+        //String userid = SecurityConfig.getUserid(request);
+        customerstatusService.checkUserid(userid, lastname, firstname, email);
+    }
     
     @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
     @RequestMapping(value = "/customerstatus/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
@@ -67,7 +63,7 @@ public class CustomerStatusController {
         return customerstatusService.getUserBaseInfo(userid);
     }
 	
-	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD})
+	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_PERSONAL_DEV, ServicePath.MYPAGE_PERSONAL_PROD})
     @RequestMapping(value = "/updateuserbaseinfo/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> updateBaseInfo(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
         LOGGER.info("개인정보수정:updateuserbaseinfo");

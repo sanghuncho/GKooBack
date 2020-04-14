@@ -47,7 +47,7 @@
 
 ## back to GKoo
 ## keycloak\themes\base\account
-## ${url.logoutUrl} => <li><a href="http://localhost:3000/mypage">${msg("doSignOut")}</a></li>
+## ${url.logoutUrl} => <li><a href="http://localhost:3000/mypagePersonal">${msg("doSignOut")}</a></li>
 
 ################
 

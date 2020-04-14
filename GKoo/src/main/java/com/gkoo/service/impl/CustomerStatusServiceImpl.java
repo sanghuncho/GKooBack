@@ -1,7 +1,6 @@
 package com.gkoo.service.impl;
 
 import java.util.HashMap;
-import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,10 +17,6 @@ public class CustomerStatusServiceImpl implements CustomerStatusService {
     public CustomerStatusServiceImpl(CustomerStatusRepository customerStatusRepository) {
         this.customerStatusRepository = customerStatusRepository;
     }
-    
-//    public ResponseEntity<String> checkUserid(String userid, String lastname, String firstname) {
-//        return this.customerStatusRepository.checkUserid(userid, lastname, firstname);
-//    }
 
     public void checkUserid(String userid, String lastname, String firstname, String email) {
         this.customerStatusRepository.checkUserid(userid, lastname, firstname, email);
