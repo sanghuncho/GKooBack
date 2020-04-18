@@ -76,26 +76,6 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 		return recipient;
 	}
 	
-	@Override
-    public RecipientData getRecipientBuyingService(String userid, String orderid) {
-        ResultSet resultSet = null;
-        ConnectionDB.connectSQL();
-        //SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid='20200214055847' and  bs.object_id=bsr.fk_buying_service
-        String query = "SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid = ? and bs.object_id = bsr.fk_buying_service";
-        RecipientData recipient = new RecipientData();
-        try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt = conn.prepareStatement(query);){
-            //psmt.setString(1, userid);
-            psmt.setString(1, orderid);
-            resultSet = psmt.executeQuery();
-            recipient = writeRecipientInformation(resultSet, recipient);
-        } catch (SQLException ex) {
-            String error = "Error fetching the recipient for buying service";
-            LOGGER.error(error, ex);
-        }       
-        return recipient;
-    }
-	
 //	payment
 //	1 결제대기 - 결제전
 //	2 결제요청 - 무통장입금전
@@ -363,7 +343,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         String orderid = data[0].get("orderid").toString();
         return shippingServiceRepository.deleteShipingServiceData(userid, orderid);
     }
-
+	
     @Override
     public MypageDetailData getMypageDetailData(String userid, String orderid) {
         RecipientData recipientData = getRecipientInfo(userid, orderid);
@@ -371,6 +351,9 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         return new MypageDetailData(recipientData, productsCommonInformation);
     }
 
+    /////////////////////
+    /// BuyingService ///
+    /////////////////////
     @Override
     public BuyingServiceDetailData getMypageBuyingServiceDetailData(String userid, String orderid) {
         RecipientData recipientData = getRecipientBuyingService(userid, orderid);
@@ -382,8 +365,23 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         return new BuyingServiceDetailData(recipientData, productPayment, deliveryPayment, deliveryKoreaData, productsInfo, buyingServiceCommonData);
     }
     
-    public RecipientData getRecipientDataBuyingService(String userid, String orderid) {
-        return getRecipientBuyingService(userid, orderid);
+    @Override
+    public RecipientData getRecipientBuyingService(String userid, String orderid) {
+        ResultSet resultSet = null;
+        ConnectionDB.connectSQL();
+        //SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid='20200214055847' and  bs.object_id=bsr.fk_buying_service
+        String query = "SELECT * FROM BUYING_SERVICE bs, BUYING_SERVICE_RECIPIENT bsr WHERE bs.orderid = ? and bs.object_id = bsr.fk_buying_service";
+        RecipientData recipient = new RecipientData();
+        try (Connection conn = ConnectionDB.getConnectInstance();
+                PreparedStatement psmt = conn.prepareStatement(query);){
+            psmt.setString(1, orderid);
+            resultSet = psmt.executeQuery();
+            recipient = writeRecipientInformation(resultSet, recipient);
+        } catch (SQLException ex) {
+            String error = "Error fetching the recipient for buying service";
+            LOGGER.error(error, ex);
+        }       
+        return recipient;
     }
     
     private DeliveryKoreaData getDeliveryKoreaDataBuyingServiceByOrderid(String orderid) {
@@ -537,8 +535,6 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         } 
         return productsInfo.getProductsList();
     }
-    
-    
 
     @Override
     public BuyingServiceCommonData getBuyingServiceCommonData(String orderid) {

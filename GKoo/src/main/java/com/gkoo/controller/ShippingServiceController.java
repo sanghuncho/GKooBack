@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,10 @@ import com.gkoo.service.AddressManagerService;
 import com.gkoo.service.ShippingService;
 import serviceBase.ServicePath;
 
+/**
+ * @author sanghuncho
+ *
+ */
 @RestController
 public class ShippingServiceController {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -35,30 +40,26 @@ public class ShippingServiceController {
     }
     
     @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
-    @RequestMapping(value = "/createshippingservice", method = RequestMethod.POST)
-    public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
-        String userid = SecurityConfig.getUserid(request);      
+    @RequestMapping(value = "/createshippingservice/{userid}",  method = {RequestMethod.POST, RequestMethod.OPTIONS})
+    public ResponseEntity<?> requestShippingservice(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) {        
         return shippingService.requestShippingservice(data, userid);
     }
     
     @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
-    @RequestMapping("/fetchcustomerbaseinfo")
-    public UserBaseInfo requestCustomerBaseInfo(HttpServletRequest request) throws SQLException {
-        String userid = SecurityConfig.getUserid(request);
+    @RequestMapping("/fetchcustomerbaseinfo/{userid}")
+    public UserBaseInfo requestCustomerBaseInfo(HttpServletRequest request, @PathVariable String userid) throws SQLException {
         return shippingService.getUserBaseInfo(userid);
     }
     
     @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
-    @RequestMapping(value = "/registerFavoriteAddress",method = RequestMethod.POST)
-    public ResponseEntity<?> registerFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {
-        String userid = SecurityConfig.getUserid(request);
+    @RequestMapping(value = "/registerFavoriteAddress/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+    public ResponseEntity<?> registerFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) {
         return shippingService.registerFavoriteAddress(data, userid);
     }
     
     @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD})
-    @RequestMapping(value = "/retrieveFavoriteAddressList")
-    public List<FavoriteAddress> retriveFavoriteAddressList(HttpServletRequest request) {
-        String userid = SecurityConfig.getUserid(request);
+    @RequestMapping(value = "/retrieveFavoriteAddressList/{userid}")
+    public List<FavoriteAddress> retriveFavoriteAddressList(HttpServletRequest request, @PathVariable String userid) {
         return AddressManagerDB.getFavoriteAddressList(userid);
     }
 }

@@ -20,6 +20,9 @@ import payment.PaymentData;
  *
  */
 public interface MypageDetailsDAO {
+    /////////////////////
+    /// ShippingService ///
+    /////////////////////
 	public OrderingPersonInformation getOrderingpersonInfo(String fullname);
 	public RecipientData getRecipientInfo(String username, String number);
 	public List<Product> getProductsInfo(String username, String number);
@@ -39,5 +42,4 @@ public interface MypageDetailsDAO {
 	public PaymentData getPaymentDeliveryBuyingServiceByOrderid(String orderid);
 	public List<Product> getProductDataBuyingService(String userid, String orderid);
 	public BuyingServiceCommonData getBuyingServiceCommonData(String orderid);
-	public RecipientData getRecipientDataBuyingService(String userid, String orderid);
 }

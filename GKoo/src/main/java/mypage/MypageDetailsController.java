@@ -70,7 +70,7 @@ public class MypageDetailsController {
     }
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
-	@RequestMapping(value = "/updatePaymentOwnernameShippingService/{userid}", method = RequestMethod.POST)
+	@RequestMapping(value = "/updatePaymentOwnernameShippingService/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
 	public ProductsCommonInformation willPayDeliveryFeeUpdate(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
         String orderid = data[0].get("orderid").toString();
         String paymentOwnername = data[1].get("paymentOwnername").toString();
@@ -80,7 +80,7 @@ public class MypageDetailsController {
 	}
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
-    @RequestMapping(value = "/updaterecipientdata/{userid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/updaterecipientdata/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> updateRecipientData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
         //RecipientData recipientData = detailsImp.createRecipientData(memberId, data);
         /*ToDo : low coupling - Spring injection, interface, injection */
@@ -88,22 +88,23 @@ public class MypageDetailsController {
     }
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
-    @RequestMapping(value = "/updateDataEditorProductsList/{userid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateDataEditorProductsList/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> updateDataEditorProductsList(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException, JsonParseException, JsonMappingException, IOException  {
         /*ToDo : low coupling - Spring injection, interface, injection */
         return detailsImp.updateDataEditorProductsList(userid, data);
     }
 	
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_DEV, ServicePath.DETAILS_MYPAGE_PROD})
-    @RequestMapping(value = "/deleteShipingServiceData/{userid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteShipingServiceData/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> deleteShipingServiceData(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException, JsonParseException, JsonMappingException, IOException  {
         return detailsImp.deleteShipingServiceData(userid, data);
     }
 	
     /////////////////////
-	/// MyPage        ///
+	/// MyPageDetail  ///
     /// BuyingService ///
     /////////////////////
+	//implement in the MypageDetailBuyingService!
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_DEV, ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_PROD})
 	@RequestMapping("/mypageBuyingServiceDetailData/{orderid}/{userid}")
     public BuyingServiceDetailData requestMypageBuyingServiceDetailData(HttpServletRequest request, @PathVariable String userid, @PathVariable String orderid) throws SQLException  {
@@ -120,6 +121,6 @@ public class MypageDetailsController {
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_DEV, ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_PROD})
 	@RequestMapping(value = "/getRecipientDataBuyingService/{orderid}/{userid}")
     public RecipientData getRecipientDataBuyingService(HttpServletRequest request, @PathVariable String orderid, @PathVariable String userid) throws SQLException  {
-        return detailsImp.getRecipientDataBuyingService(userid, orderid);
+        return detailsImp.getRecipientBuyingService(userid, orderid);
     }
 }
