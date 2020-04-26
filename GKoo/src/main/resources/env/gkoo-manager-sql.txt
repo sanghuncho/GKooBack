@@ -28,19 +28,15 @@ UPDATE orderstate SET ship_state = 2
 WHERE orderid = ' ';
 
 상품 도착, 배송비 책정후
-UPDATE orderstate SET ship_state = 3, 
-box_actual_weight = , box_volume_weight = , ship_price =  WHERE orderid = '';
+1) UPDATE orderstate SET ship_state = 3, box_actual_weight = , box_volume_weight = , ship_price =  WHERE orderid = '';
 
-UPDATE payment SET payment_state = 1 
-WHERE orderid = '';
+2) UPDATE payment SET payment_state = 1 WHERE orderid = '';
 
 
 배송비 입금확인후
-UPDATE orderstate SET ship_state = 4  
-WHERE orderid = '';
+1) UPDATE orderstate SET ship_state = 4 WHERE orderid = '';
 
-UPDATE payment SET payment_state = 3, 
-payment_date = '2020.01.02', payment_deposit = ? WHERE orderid = '';
+2) UPDATE payment SET payment_state = 3, payment_date = '2020.01.02', payment_deposit = ? WHERE orderid = '';
 
 ship_state = 3 이후에는 물품수정금지
 ship_state = 4 수취인 수정금지

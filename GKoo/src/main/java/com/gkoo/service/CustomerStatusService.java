@@ -15,7 +15,7 @@ import com.gkoo.data.UserBaseInfo;
  */
 public interface CustomerStatusService {
     public CustomerStatus getCustomerStatus(String userid);
-    public void checkUserid(String userid, String lastname, String firstname, String email);
+    public ResponseEntity<?> checkUserid(String userid, String lastname, String firstname, String email);
     public UserBaseInfo getUserBaseInfo(String userid);
     public ResponseEntity<?> updateBaseInfo(HashMap<String, Object>[] data, String userid);
 }

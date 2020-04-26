@@ -38,7 +38,7 @@ public class CustomerStatusController {
     @CrossOrigin(origins = {ServicePath.SHIPPING_SERVICE_DEV, ServicePath.SHIPPING_SERVICE_PROD,
                                 ServicePath.BUYING_SERVICE_REGIST_DEV, ServicePath.BUYING_SERVICE_REGIST_PROD})
     @RequestMapping(value = "/register_customer/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
-    public void registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
+    public ResponseEntity<?> registerInitialCustomer(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
         String lastname= data[0].get("lastname").toString();
         String firstname= data[1].get("firstname").toString();
         String email = data[2].get("email").toString();

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,22 +20,26 @@ public class CustomerStatusRepoImpl implements CustomerStatusRepository {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public void checkUserid(String userid, String lastname, String firstname, String email) {
+    public ResponseEntity<?> checkUserid(String userid, String lastname, String firstname, String email) {
         String fullnameKor = lastname.concat(firstname);
         Boolean existUserid = null;
+        
         try {
             existUserid = CustomerStatusDB.existUserid(userid);
         } catch (SQLException e) {
             String error = "Error checking existUserid:" + userid + "/" + lastname + "/" + firstname + "/" + email;
             LOGGER.error(error, e);
         }
+        
         if (!existUserid) {
             int lastPersonalBoxAddress = CustomerStatusDB.getPersonaBoxAddress();
             int personalBoxAddress = lastPersonalBoxAddress + 1;
             String personalBoxAddressStr = "GK" + personalBoxAddress;
-            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor, email, personalBoxAddressStr);
-            CustomerStatusDB.updatePersonaBoxAddress(personalBoxAddress);
+            CustomerStatusDB.registerInitialCustomer(userid, fullnameKor, email, personalBoxAddressStr, personalBoxAddress);
         }
+        
+        String responseMessage = "the userid and personalBox are checked:" + userid;
+        return new ResponseEntity<String>(responseMessage, HttpStatus.ACCEPTED);
     }
     
     @Override

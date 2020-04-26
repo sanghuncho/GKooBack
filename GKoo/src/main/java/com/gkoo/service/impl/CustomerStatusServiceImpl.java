@@ -18,7 +18,7 @@ public class CustomerStatusServiceImpl implements CustomerStatusService {
         this.customerStatusRepository = customerStatusRepository;
     }
 
-    public void checkUserid(String userid, String lastname, String firstname, String email) {
+    public ResponseEntity<?> checkUserid(String userid, String lastname, String firstname, String email) {
         this.customerStatusRepository.checkUserid(userid, lastname, firstname, email);
     }
     

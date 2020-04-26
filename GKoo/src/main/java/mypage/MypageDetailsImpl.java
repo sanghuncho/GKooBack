@@ -139,16 +139,16 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	}
 	
 	@Override
-	public List<Product> getProductsInfo(String username, String number) {
+	public List<Product> getProductsInfo(String userid, String orderid) {
 		ResultSet resultSet = null;
 		ConnectionDB.connectSQL();
 		String query = "SELECT memberid, orderid, pd_categorytitle"
-				+ ", pd_itemtitle, pd_itemname, pd_brandname, pd_amount, pd_price, pd_totalprice  FROM PRODUCT WHERE memberid=? AND orderid=?";
+				+ ", pd_itemtitle, pd_itemname, pd_brandname, pd_amount, pd_price, pd_totalprice FROM PRODUCT WHERE memberid=? AND orderid=?";
 		ProductsInformation productsInfo = new ProductsInformation();
 		try (Connection conn = ConnectionDB.getConnectInstance();
 				PreparedStatement psmt = conn.prepareStatement(query);){
-			psmt.setString(1, username);
-			psmt.setString(2, number);
+			psmt.setString(1, userid);
+			psmt.setString(2, orderid);
 			resultSet = psmt.executeQuery();
 			productsInfo = writeProductsInformation(resultSet, productsInfo);
 		} catch (SQLException e) {

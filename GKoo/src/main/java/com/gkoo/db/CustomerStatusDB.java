@@ -72,24 +72,12 @@ public class CustomerStatusDB {
         return personalBoxNumber;
     }
     
-    public static void updatePersonaBoxAddress(int lastPersonalBoxAddress) {
-        ConnectionDB.connectSQL();
-        try (Connection conn = ConnectionDB.getConnectInstance();
-                PreparedStatement psmt = conn.prepareStatement(UPDATE_PERSONAL_BOX_ADDRESS);){
-            psmt.setInt(1, lastPersonalBoxAddress);
-            psmt.execute();
-        } catch (SQLException e) {
-            String error = "Error updating the personal box Address: " + lastPersonalBoxAddress;
-            LOGGER.error(error, e);
-            throw new CustomerStatusException(error, e);
-        }
-    }
-    
-    public static void registerInitialCustomer(String userid, String fullnameKor, String email, String personalBoxAddressStr) {
+    public static void registerInitialCustomer(String userid, String fullnameKor, String email, String personalBoxAddressStr, int lastPersonalBoxAddress) {
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
                 PreparedStatement psmt_customerstatus = conn.prepareStatement(CREATE_CUSTOMER_STATUS);
-                PreparedStatement psmt_customer = conn.prepareStatement(CREATE_CUSTOMER);){
+                PreparedStatement psmt_customer = conn.prepareStatement(CREATE_CUSTOMER);
+                PreparedStatement psmt_update_personal_boxaddress = conn.prepareStatement(UPDATE_PERSONAL_BOX_ADDRESS);){
             psmt_customerstatus.setString(1, userid);
             psmt_customerstatus.setInt(2, INITIAL_POINT);
             psmt_customerstatus.execute();
@@ -99,8 +87,17 @@ public class CustomerStatusDB {
             psmt_customer.setString(3, email);
             psmt_customer.setString(4, personalBoxAddressStr);
             psmt_customer.execute();
+            
+            try {
+                psmt_update_personal_boxaddress.setInt(1, lastPersonalBoxAddress);
+                psmt_update_personal_boxaddress.execute();
+            } catch (SQLException e) {
+                String error = "Error updating the personal box Address: " + lastPersonalBoxAddress;
+                LOGGER.error(error, e);
+                throw new CustomerStatusException(error, e);
+            }
         } catch (SQLException e) {
-            String error = "Error creating initial customerstatus and customer: " + userid + "/" + fullnameKor + "/" + personalBoxAddressStr;
+            String error = "Error creating initial customerstatus, customer: " + userid + "/" + fullnameKor + "/" + personalBoxAddressStr;
             LOGGER.error(error, e);
             throw new CustomerStatusException(error, e);
         }

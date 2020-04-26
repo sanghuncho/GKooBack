@@ -23,7 +23,7 @@ public class MypageDB {
     private static final Logger LOGGER = LogManager.getLogger();
     
     private static final String FETTCH_ORDER_DATA = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_kor, os.trackingnr_world, os.order_date, rp.name_kor "
-            + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=?";
+            + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=? ORDER BY orderid DESC";
     
     private static final String UPDATE_TRACKNG_NUMBER = "UPDATE orderstate SET trackingnr_world = ?, tracking_company_world = ? where userid = ? and orderid = ?";
 
@@ -114,7 +114,7 @@ public class MypageDB {
         ResultSet resultSet = null;
         ConnectionDB.connectSQL();
         String query = "SELECT os.orderid, os.ship_price, os.ship_state, os.trackingnr_world, os.tracking_company_world, rp.name_kor "
-                + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=? AND (os.ship_state=1 or os.ship_state=2)";
+                + " FROM ORDERSTATE os, RECIPIENT rp WHERE rp.orderid=os.orderid AND os.userid=? AND (os.ship_state=1 or os.ship_state=2) ORDER BY orderid DESC";
                 
         List<WarehouseInformation> warehouseInformationList = new ArrayList<>();
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -173,7 +173,7 @@ public class MypageDB {
     
     public static List<PaymentData> getPaymentData(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_PAYMENTDATA = "SELECT * FROM PAYMENT WHERE (payment_state = 1 or payment_state = 2 or payment_state = 3) AND userid=?";
+        final String GET_PAYMENTDATA = "SELECT * FROM PAYMENT WHERE (payment_state = 1 or payment_state = 2 or payment_state = 3) AND userid=? ORDER BY orderid DESC";
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -212,7 +212,7 @@ public class MypageDB {
     
     public static List<DeliveryKoreaData> getDeliveryKoreaData(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_DELIVERYKOREADATA = "SELECT * FROM ORDERSTATE WHERE ship_state > 4 AND userid=?";
+        final String GET_DELIVERYKOREADATA = "SELECT * FROM ORDERSTATE WHERE ship_state > 4 AND userid=? ORDER BY orderid DESC";
         ResultSet resultSet = null;
         List<DeliveryKoreaData> deliveryKoreaDataList = new ArrayList<>();
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -253,9 +253,9 @@ public class MypageDB {
     /// BuyingService ///
     /////////////////////
     private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT bs.object_id, bs.orderid, bs.buying_price, bs.ship_price, "
-            + "bs.buying_service_state, bs.order_date FROM BUYING_SERVICE bs WHERE bs.userid=?";
+            + "bs.buying_service_state, bs.order_date FROM BUYING_SERVICE bs WHERE bs.userid=? ORDER BY bs.orderid DESC";
     
-    private static final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ?";
+    private static final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ? ";
 
     public static List<BuyingOrderData> getOrderDataBuyingService(String userid) {
         List<BuyingOrderData> buyingOrderDataList = new ArrayList<>();
@@ -320,7 +320,7 @@ public class MypageDB {
         ConnectionDB.connectSQL();
         final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.buying_deposit_ownername, bsp.payment_art,"
                 + "bs.orderid, bs.buying_price FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? and bs.object_id=bsp.fk_buying_service "
-                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2 or bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5)";
+                + "and (bsp.buying_service_payment_state = 1 or bsp.buying_service_payment_state = 2 or bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5) ORDER BY bs.orderid DESC";
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -390,7 +390,7 @@ public class MypageDB {
     public static List<PaymentData> getPaymentDeliveryBuyingService(String userid) {
         ConnectionDB.connectSQL();
         final String GET_PAYMENTDATA = "SELECT bsp.object_id, bsp.buying_service_payment_state, bsp.shipping_deposit_ownername, bsp.payment_art_shipping_price, bs.orderid, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight FROM BUYING_SERVICE_PAYMENT bsp, BUYING_SERVICE bs WHERE bs.userid=? "
-                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5)";
+                + "and bs.object_id=bsp.fk_buying_service and (bsp.buying_service_payment_state = 3 or bsp.buying_service_payment_state = 4 or bsp.buying_service_payment_state = 5) ORDER BY bs.orderid DESC";
         
         ResultSet resultSet = null;
         List<PaymentData> paymentDataList = null;
@@ -408,7 +408,7 @@ public class MypageDB {
     
     public static List<DeliveryKoreaData> getDeliveryKoreaDataBuyingService(String userid) {
         ConnectionDB.connectSQL();
-        final String GET_DELIVERYKOREADATA = "SELECT * FROM BUYING_SERVICE WHERE buying_service_state > 4 AND userid=?";
+        final String GET_DELIVERYKOREADATA = "SELECT * FROM BUYING_SERVICE WHERE buying_service_state > 4 AND userid=? ORDER BY orderid DESC";
         ResultSet resultSet = null;
         List<DeliveryKoreaData> deliveryKoreaDataList = new ArrayList<>();
         try (Connection conn = ConnectionDB.getConnectInstance();

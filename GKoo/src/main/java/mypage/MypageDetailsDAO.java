@@ -25,7 +25,7 @@ public interface MypageDetailsDAO {
     /////////////////////
 	public OrderingPersonInformation getOrderingpersonInfo(String fullname);
 	public RecipientData getRecipientInfo(String username, String number);
-	public List<Product> getProductsInfo(String username, String number);
+	public List<Product> getProductsInfo(String userid, String orderid);
 	public ProductsCommonInformation getProductsCommonInfo(String username, String number);
 	public MypageDetailData getMypageDetailData(String userid, String orderid);
 	public void willPayDeliveryFee(String username, String orderNumber, String paymentOwnername, int paymentArt);

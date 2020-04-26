@@ -153,7 +153,7 @@ client_admin-cli=Admin CLI
 client_realm-management=Realm Management
 client_broker=Broker
 
-invalidUserMessage=Invalid username or password.
+invalidUserMessage=아이디 또는 패스워드가 일치하지 않습니다.
 invalidEmailMessage=Invalid email address.
 accountDisabledMessage=Account is disabled, contact admin.
 accountTemporarilyDisabledMessage=Account is temporarily disabled, contact admin or try again later.
