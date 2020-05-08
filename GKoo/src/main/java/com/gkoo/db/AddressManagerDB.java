@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.exception.MypageException;
 import databaseUtil.ConnectionDB;
+import util.LogMessenger;
 
 public class AddressManagerDB {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -72,10 +73,10 @@ public class AddressManagerDB {
             psmt.setString(7, favoriteAddress.getZipCode());
             psmt.setString(8, favoriteAddress.getAddress());
             psmt.executeUpdate();
-        } catch (SQLException e) {
-            String error = "Error creating favorite address";
-            LOGGER.error(error, e);
-            throw new MypageException(error, e);
+        } catch (SQLException ex) {
+            String error_message = LogMessenger.getMessage("Creating favorite address is failed", userid);
+            LOGGER.error(error_message, ex);
+            throw new MypageException(error_message, ex);
         }
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
@@ -111,10 +112,15 @@ public class AddressManagerDB {
             psmt.setString(2, userid);
             psmt.executeUpdate();
         } catch (SQLException e) {
-            String error = "Error updating favorite address";
-            LOGGER.error(error, e);
-            throw new MypageException(error, e);
+            String error_message = LogMessenger.getMessage("Deleting of favorite address is failed", "favorite_address_id", 
+                    Integer.toString(favoriteAddress_id), "userid", userid); 
+            LOGGER.error(error_message, e);
+            throw new MypageException(error_message, e);
         }
+
+        String message = LogMessenger.getMessage("favorite address is deleted", "favorite_address_id", 
+                Integer.toString(favoriteAddress_id), "userid", userid); 
+        LOGGER.info(message);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }

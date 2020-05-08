@@ -44,7 +44,6 @@ public class AddressManagerContorller {
     @CrossOrigin(origins = {ServicePath.FAVORITE_ADDRESS_MANAGER_DEV, ServicePath.FAVORITE_ADDRESS_MANAGER_PROD})
     @RequestMapping(value = "/createFavoriteAddress/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> createFavoriteAddress(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException {
-        LOGGER.info("createFavoriteAddress");
         return  addressManagerService.createFavoriteAddress(data, userid);
     }
     

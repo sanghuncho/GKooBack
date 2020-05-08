@@ -44,7 +44,7 @@ public class CustomerStatusController {
         String email = data[2].get("email").toString();
         //later test : AccessToken accessToken = SecurityConfig.getAccessToken(request);
         //String userid = SecurityConfig.getUserid(request);
-        customerstatusService.checkUserid(userid, lastname, firstname, email);
+        return customerstatusService.checkUserid(userid, lastname, firstname, email);
     }
     
     @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})

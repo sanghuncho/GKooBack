@@ -257,7 +257,6 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             psmt_list.add(psmt_payment);
             psmt_list.add(psmt_orderstate);
             psmt_list.add(psmt_recipient);
-            //psmt_list.add(psmt_products);
             for(PreparedStatement psmt : psmt_list) {
                 psmt.setString(1, userid);
                 psmt.setString(2, orderid);
@@ -267,9 +266,9 @@ public class ShippingServiceRepoImpl implements ShippingServiceRepository {
             psmt_products.executeUpdate();
             
         } catch (SQLException ex) {
-            LOGGER.error("ShipingServiceData har error." + "id: "+ userid + "odernumber: " + orderid, ex);
+            LOGGER.error("Deleting of ShipingServiceData has error [" + "id: "+ userid + "/ orderid: " + orderid + "]", ex);
         }
-        LOGGER.info("ShipingServiceData is deleted." + "id: "+ userid + "odernumber: " + orderid);
+        LOGGER.info("ShipingServiceData is deleted [" + "id: "+ userid + "/ orderid: " + orderid + "]");
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<String>(headers, HttpStatus.ACCEPTED);
     }
