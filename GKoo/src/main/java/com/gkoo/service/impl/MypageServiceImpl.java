@@ -77,7 +77,7 @@ public class MypageServiceImpl implements MypageService {
     }
     
     @Override
-    public ResponseEntity<?> updatePaymentDeliveryBuyingService(HashMap<String, Object>[] data, String userid) {
+    public ResponseEntity<?> updatePaymentDeliveryBuyingService(HashMap<String, Object>[] data) {
         int objectid = Integer.parseInt(data[0].get("paymentid").toString());
         String paymentOwnername = data[1].get("paymentOwnername").toString();
         int paymentArt = Integer.parseInt(data[2].get("paymentArt").toString());

@@ -49,5 +49,127 @@ UPDATE orderstate SET ship_state = 5, trackingnr_kor = '' WHERE orderid = '';
 ========== buying service =============
 =======================================
 
+========  buying service state ========
+
+	//구매대행  신청함
+    
+    //구매대행 결제대기    
+    PRODUCT_PAYMENT_READY(1),
+    
+    //구매대행 결제완료
+    PRODUCT_PAYMENT_COMPLETION(2),
+    
+    //배송비 및 추가서비스 결제요청
+    DELIVERY_PAYMENT_READY(3),
+    
+    //배송비 및 추가서비스 결제완료
+    DELIVERY_PAYMENT_COMPLETION(4),
+    
+    //해외배송중
+    DELIVERY_WORLD(5),
+    
+    //통관진행
+    IMPORT_CENTER(6),
+    
+    //국내배송
+    DELIVERY_KOREA(7),
+    
+    //배송완료
+    DELIVERY_FINISHED(8);
+
+==== buying service payment state =====
+  
+    //구매대행 결제대기    
+    PRODUCT_PAYMENT_READY(1),
+    
+    //구매대행 결제완료(관리자결제확인함)
+    PRODUCT_PAYMENT_COMPLETION(2),
+    
+    //배송비 및 추가 결제요청
+    DELIVERY_PAYMENT_READY(3),
+    
+    //배송비 및 추가  결제완료
+    DELIVERY_PAYMENT_COMPLETION(4),
+    
+    //전체 결제완료 , 해외배송중이면 전제결제로 변경
+    BUYING_SERVICE_PAYMENT_COMPLETION(5);
+    
+
+
+구매대행 결제 신청 (결제수단, 입금자명 기입)
+
+	결제신청한 회원보여주기 ->
+		SELECT bs.object_id, userid, orderid, buying_price, order_date, buying_deposit_ownername, payment_art 
+		FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.buying_service_state=1;
+
+구매대행 결제 완료(입금확인됨)
+
+	입금내역 저장
+	UPDATE buying_service SET buying_service_state = 2 
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
+	
+	UPDATE buying_service_payment SET buying_service_payment_state = 2, 
+		buying_deposit_payment = [입금금액] , 
+		buying_payment_date = ['2020-99-99'] 
+		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
+	
+	확인  [buying_service_state = 2(구매대행 결제완료) and buying_service_payment_state = 2(구매대행 결제완료/관리자결제 확인)]
+	SELECT bs.object_id, userid, orderid, buying_price, order_date, buying_deposit_ownername, payment_art, buying_deposit_payment, buying_payment_date 
+		FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.object_id = [BUYING_SERVICE_OBJ_ID];
+	or
+	
+	SELECT bs.object_id, userid, orderid, buying_price, order_date, buying_deposit_ownername, payment_art, buying_deposit_payment, buying_payment_date 
+		FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.orderid = [ORDER_ID_STRING];
+		
+구매대행 진행함(ToDo: 물품 구매한후 관라자모드에 저장)
+	ToDo: 관리자 모드에 송장번호 저장, 구매날짜 저장, 특이사항
+
+구매대행 물품 배송업체 도착후 배송비 견적나옴
+
+구매대행 배송비 결제 준비
+	
+	배송비 및 부피무게 저장
+	UPDATE buying_service SET ship_price = [배송비],
+		box_actual_weight = [실제무게], 
+		box_volume_weight = [부피무게], 
+		buying_service_state = 3 
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
+	UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
+	
+	
+	배송비 및 부피무게 저장확인 [buying_service_state =3(배송비 및 추가서비스 결제요청) and buying_service_payment_state = 3(배송비 및 추가 결제요청)]
+	SELECT bs.object_id, bs.userid, bs.orderid, bs.buying_price, bs.order_date, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight, bs.buying_service_state,
+		bsp.buying_service_payment_state FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.object_id = [BUYING_SERVICE_OBJ_ID];	
+	
+구매대행 배송비 결제 확인/관리자
+	배송비 입금신청 사용자 보여주기
+	SELECT bs.object_id, userid, orderid, ship_price, shipping_deposit_payment, shipping_deposit_ownername, payment_art_shipping_price,
+	buying_price, buying_deposit_payment, buying_deposit_ownername, payment_art, order_date 
+		FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.buying_service_state=3;
+		
+	배송비 입금자 및 입금액 저장
+	UPDATE buying_service SET buying_service_state = 4 
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
+	
+	UPDATE buying_service_payment SET buying_service_payment_state = 4, 
+		shipping_deposit_payment = [입금금액], 
+		shipping_payment_date = ['2020-99-99']
+		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
+		
+	배송비 입금자 및 입금액 저장 확인
+	SELECT bs.object_id, userid, orderid, ship_price, shipping_deposit_payment, shipping_deposit_ownername,shipping_payment_date, payment_art_shipping_price,
+	buying_price, buying_deposit_payment, buying_deposit_ownername, payment_art, order_date 
+		FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.buying_service_state=4;
+
+구매대행 물품 배송정보 배송회사로 보내기
+	select ...ToDo
+	
+배송 송장번호 수령
+	UPDATE buying_service SET buying_service_state = 5,
+		trackingnr_kor = ['TRACKING_NUMBER']
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
+	
+	UPDATE buying_service_payment SET buying_service_payment_state = 5, 
+		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
 
 

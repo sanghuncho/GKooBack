@@ -59,3 +59,14 @@ keycloak.cors = true
 
 keycloak.security-constraints[0].authRoles[0]= user
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
+
+################ SMTP EMail Reset password
+## Host : smtp.gmail.com
+## Port : 587
+## From Display Name : GKOO 지쿠 배송/구매대행
+## From : gkoosoft@gmail.com
+## Enable StartTLS : on
+## Enable Authentification : on
+## Username : gkoosoft@gmail.com
+## Password : 나는 부활이다 2011
+################

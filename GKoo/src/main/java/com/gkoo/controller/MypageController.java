@@ -82,15 +82,16 @@ public class MypageController {
     }
     
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
-    @RequestMapping("/paymentProductBuyingService/{userid}")
-    public List<PaymentData> requestPaymentProductBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
-        return mypageService.getPaymentProductBuyingService(userid);
-    }
-    
-    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
     @RequestMapping("/deliveryKoreaDataBuyingService/{userid}")
     public List<DeliveryKoreaData> requestDeliveryKoreaDataBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
         return mypageService.getDeliveryKoreaDataBuyingService(userid);
+    }
+    
+    //구매대행 물품 결제
+    @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping("/paymentProductBuyingService/{userid}")
+    public List<PaymentData> requestPaymentProductBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
+        return mypageService.getPaymentProductBuyingService(userid);
     }
     
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
@@ -99,10 +100,11 @@ public class MypageController {
         return mypageService.updatePaymentProductBuyingService(data, userid);
     }
     
+    //구매대행 배송비 결제
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
-    @RequestMapping(value = "/updatePaymentDeliveryBuyingService/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
-    public ResponseEntity<?> updatePaymentDeliveryBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
-        return mypageService.updatePaymentDeliveryBuyingService(data, userid);
+    @RequestMapping(value = "/updatePaymentDeliveryBuyingService", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+    public ResponseEntity<?> updatePaymentDeliveryBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) throws SQLException  {
+        return mypageService.updatePaymentDeliveryBuyingService(data);
     }
     
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})

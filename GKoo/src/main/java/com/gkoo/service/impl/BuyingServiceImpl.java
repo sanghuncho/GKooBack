@@ -132,7 +132,7 @@ public class BuyingServiceImpl implements BuyingService {
     
     public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, String userid){
         String orderid = OrderID.generateOrderID();
-        LOGGER.error("Creating BuyingService is started", orderid);
+        LOGGER.info("Creating BuyingService is started", orderid);
         LocalDate orderDate = TimeStamp.getRequestDate();
         ObjectMapper mapper = new ObjectMapper();
         BuyingProduct[] buyingProducts = null;

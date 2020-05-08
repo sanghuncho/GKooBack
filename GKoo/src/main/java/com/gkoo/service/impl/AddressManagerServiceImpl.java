@@ -3,6 +3,7 @@ package com.gkoo.service.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.gkoo.data.FavoriteAddress;
 import com.gkoo.exception.CustomerStatusException;
 import com.gkoo.repository.AddressManagerRepository;
 import com.gkoo.service.AddressManagerService;
+import util.LogMessenger;
 
 @Service
 public class AddressManagerServiceImpl implements AddressManagerService {
@@ -35,11 +37,12 @@ public class AddressManagerServiceImpl implements AddressManagerService {
         FavoriteAddress favoriteAddress = null;
         try {
             favoriteAddress = mapper.readValue(data[0].get("favoriteAddressData").toString(), FavoriteAddress.class);
+            Objects.requireNonNull(userid);
             favoriteAddress.setUserid(userid);
         } catch (IOException ex) {
-            String error = "Error mapping creating favoriteAddress";
-            LOGGER.error(error, ex);
-            throw new CustomerStatusException(error, ex);
+            String error_message = LogMessenger.getMessage("Error mapping creating favoriteAddress", userid);
+            LOGGER.error(error_message, ex);
+            throw new CustomerStatusException(error_message, ex);
         }
         return addressManagerRepository.createFavoriteAddress(favoriteAddress, userid);
     }

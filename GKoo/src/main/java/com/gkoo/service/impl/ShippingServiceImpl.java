@@ -21,6 +21,7 @@ import shippingService.DeliveryDataObject;
 import shippingService.ShippingProduct;
 import shippingService.ShippingServiceModel;
 import shippingService.ShippingServiceState;
+import util.LogMessenger;
 import util.OrderID;
 import util.TimeStamp;
 
@@ -39,14 +40,15 @@ public class ShippingServiceImpl implements ShippingService {
     @Override
     public ResponseEntity<?> requestShippingservice(HashMap<String, Object>[] data, String userid) {
         String timeStamp = TimeStamp.getCurrentTimeStampKorea();
-        String orderId = OrderID.generateOrderID();
+        String orderid = OrderID.generateOrderID();
         LocalDate orderDate = TimeStamp.getRequestDate();
-        LOGGER.info("배송대행 서비스 신청: "+ userid + "/배송대행 서비스주문번호: " + orderId);
+        String message = LogMessenger.getMessage("Shipping Service is requested", userid, orderid); 
+        LOGGER.info(message);
         
         ShippingServiceModel shippingModel = new ShippingServiceModel();
         shippingModel.setUserid(userid);
         shippingModel.setTimeStamp(timeStamp);
-        shippingModel.setOrderId(orderId);
+        shippingModel.setOrderId(orderid);
         shippingModel.setEasyship(data[0].get("easyship").toString());
         shippingModel.setOrderDate(orderDate);
         
@@ -55,14 +57,16 @@ public class ShippingServiceImpl implements ShippingService {
         try {
             deliveryDataObj = mapper.readValue(data[1].get("deliveryDataObject").toString(), DeliveryDataObject.class);
         } catch (IOException e) {
-            LOGGER.error("Mapping of deliveryDataObject is failed:" + userid + "/" + orderId, e);
+            String error_message = LogMessenger.getMessage("Mapping of deliveryDataObject is failed", userid, orderid); 
+            LOGGER.error(error_message, e);
         }
         
         ShippingProduct[] shippingProducts = null;
         try {
             shippingProducts = mapper.readValue(data[2].get("shippingProductList").toString(), ShippingProduct[].class);
         } catch (IOException e) {
-            LOGGER.error("Mapping of shippingProductList is failed:"+ userid + "/" + orderId, e);
+            String error_message = LogMessenger.getMessage("Mapping of shippingProductList is failed", userid, orderid); 
+            LOGGER.error(error_message, e);
         }
         
         shippingModel.setDeliveryData(deliveryDataObj);
