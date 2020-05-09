@@ -113,7 +113,7 @@ public class MypageDetailsController {
 	
 	//share react component @see updateRecipientData
 	@CrossOrigin(origins = {ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_DEV, ServicePath.DETAILS_MYPAGE_BUYINGSERVICE_PROD})
-	@RequestMapping(value = "/updateRecipientdataBuyingService/{orderid}/{userid}", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateRecipientdataBuyingService/{userid}", method = RequestMethod.POST)
     public ResponseEntity<?> updateRecipientdataBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
         return detailsImp.updateRecipientdataBuyingService(userid, data);
     }
