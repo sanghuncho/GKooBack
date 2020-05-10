@@ -1,4 +1,4 @@
 # encoding: utf-8
 passwordResetSubject=Reset password from GKoo Web
 passwordResetBody=지쿠 웹사이트의 비밀번호 변경이 신청되었습니다 {2} account''. 직접 비밀번호 변경을 신청하신게 맞으시면 아래 링크를 클릭하셔서 새로운 비밀번호를 입력해주세요.\n\n{0}\n\nThis link and code will expire within {3}.\n\n
-passwordResetBodyHtml=<p>지쿠 웹사이트의 비밀번호 변경이 신청되었습니다 {2} account''. 직접 비밀번호 변경을 신청하신게 맞으시면 아래 링크를 클릭하셔서 새로운 비밀번호를 입력해주세요.</p><p><a href="{0}">비밀번호 변경</a></p><p>링크주소와 비밀번호 변경은 5분동안만 유효합니다(This link will expire within {3})
+passwordResetBodyHtml=<p>지쿠 웹사이트(www.gkoo.co.kr)의 비밀번호 변경이 신청되었습니다. 직접 비밀번호 변경을 신청하신게 맞으시면 아래 링크를 클릭하셔서 새로운 비밀번호를 입력해주세요.</p><p><a href="{0}">비밀번호 변경</a></p><p>링크주소와 비밀번호 변경은 5분 동안만 유효합니다(This link will expire within {3})

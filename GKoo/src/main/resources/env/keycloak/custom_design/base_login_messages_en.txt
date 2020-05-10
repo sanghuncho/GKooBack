@@ -16,7 +16,7 @@ kerberosNotConfigured=Kerberos Not Configured
 kerberosNotConfiguredTitle=Kerberos Not Configured
 bypassKerberosDetail=Either you are not logged in via Kerberos or your browser is not set up for Kerberos login.  Please click continue to login in through other means
 kerberosNotSetUp=Kerberos is not set up.  You cannot login.
-registerTitle=Register
+registerTitle=회원가입
 loginTitle=Log in to {0}
 loginTitleHtml={0}
 impersonateTitle={0} Impersonate User
@@ -31,8 +31,8 @@ oauthGrantTitleHtml={0}
 errorTitle=We''re sorry...
 errorTitleHtml=We''re <strong>sorry</strong> ...
 emailVerifyTitle=Email verification
-emailForgotTitle=Forgot Your Password?
-updatePasswordTitle=Update password
+emailForgotTitle=비밀번호 찾기
+updatePasswordTitle=비밀번호 변경
 codeSuccessTitle=Success code
 codeErrorTitle=Error code\: {0}
 displayUnsupported=Requested display type unsupported
@@ -51,16 +51,16 @@ recaptchaNotConfigured=Recaptcha is required, but not configured
 consentDenied=Consent denied.
 
 noAccount=회원가입?
-username=Username
+username=아이디
 usernameOrEmail=아이디 또는 이메일
-firstName=First name
+firstName=이름
 givenName=Given name
 fullName=Full name
-lastName=Last name
+lastName=성
 familyName=Family name
 email=이메일
 password=비밀번호
-passwordConfirm=Confirm password
+passwordConfirm=비밀번호 확인
 passwordNew=새로운 비밀번호
 passwordNewConfirm=새로운 비밀번호 확인
 rememberMe=Remember me
@@ -117,7 +117,8 @@ emailLinkIdp5=to continue.
 
 backToLogin=&laquo; Back to Login
 
-emailInstruction=Enter your username or email address and we will send you instructions on how to create a new password.
+emailInstruction=아이디나 이메일 주소를 입력하시고 인증버튼을 누르시면 새로운 비밀본호 안내가 저장된 메일로 발송됩니다.
+
 
 copyCodeInstruction=Please copy this code and paste it into your application:
 
