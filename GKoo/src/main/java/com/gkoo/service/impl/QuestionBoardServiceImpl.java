@@ -2,7 +2,6 @@ package com.gkoo.service.impl;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +34,7 @@ import util.TimeStamp;
 public class QuestionBoardServiceImpl implements QuestionBoardService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String CREATE_QUESTION_DATA = "INSERT INTO QUESTION_ANSWER (question_title, question_content, question_date, answer_state, userid) VALUES (?, ?, ?, ?::answer_state, ?)";
-    private static final String FETCH_QUESTION_ANSWER_LIST = "SELECT * FROM QUESTION_ANSWER WHERE userid=?";
+    private static final String FETCH_QUESTION_ANSWER_LIST = "SELECT * FROM QUESTION_ANSWER WHERE userid=? ORDER BY qnaid DESC";
     
     @Override
     public ResponseEntity<?> createQuestion(HashMap<String, Object>[] data, String userid){
