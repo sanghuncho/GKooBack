@@ -15,7 +15,8 @@ events {
 http {
     include       mime.types;
     default_type  application/octet-stream;
-
+	server_names_hash_bucket_size 64;
+	
     #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
     #                  '$status $body_bytes_sent "$http_referer" '
     #                  '"$http_user_agent" "$http_x_forwarded_for"';
@@ -34,6 +35,8 @@ http {
         listen       80;
         server_name  www.gkoo.co.kr
 					 gkoo.co.kr
+					 #www.security.gkoo.co.kr
+					 #security.gkoo.co.kr
 					 180.70.94.132;
 		
         #charset koi8-r;
@@ -47,8 +50,7 @@ http {
         }
 		
 		# Redirect all traffic to SSL
-		rewrite ^ https://$server_name$request_uri? permanent;
-		
+		#rewrite ^ https://$server_name$request_uri? permanent;
 
         #error_page  404              /404.html;
 
@@ -81,15 +83,29 @@ http {
         #location ~ /\.ht {
         #    deny  all;
         #}
-    }
-	
+	}
 	
 	#keycloak
 	server {
+	
+		#listen       443 ssl;
+        #server_name  www.security.gkoo.co.kr
+		#			 security.gkoo.co.kr;
+
+        #ssl_certificate      C:\GKoo\Security_GKoo_SSL\unified.security.gkoo.pem;
+        #ssl_certificate_key  C:\GKoo\Security_GKoo_SSL\security.gkoo.co.kr_20200514D8W3.key.pem;
+
+        #ssl_session_cache    shared:SSL:1m;
+        #ssl_session_timeout  5m;
+		#ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+        #ssl_ciphers  HIGH:!aNULL:!MD5;
+        #ssl_prefer_server_ciphers  on;
+		
         listen       80;
-        server_name  www.auth.gkoo.co.kr
-					 auth.gkoo.co.kr
+        server_name  www.security.gkoo.co.kr
+					 security.gkoo.co.kr
 					 180.70.94.132;
+		
 		
         #charset koi8-r;
 
@@ -104,7 +120,9 @@ http {
 			proxy_set_header Upgrade $http_upgrade;
 			proxy_set_header Connection 'upgrade';
 			proxy_cache_bypass $http_upgrade;
-			proxy_pass          	http://localhost:8080;		
+			
+			proxy_pass          	http://localhost:8080;
+			#proxy_pass  			http://180.70.94.132:8080;			
         }
 		
 		# Redirect all traffic to SSL
@@ -143,8 +161,8 @@ http {
         #    deny  all;
         #}
     }
-
-
+	
+	
     # another virtual host using mix of IP-, name-, and port-based configuration
     #
     #server {
@@ -205,12 +223,14 @@ http {
 			proxy_set_header        Host $host;
 			proxy_set_header        X-Real-IP $remote_addr;
 			proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header content-type "application/json";
+			#proxy_set_header Origin "https://gkoo.co.kr";
 			
 			## production runs with localhost
-			#proxy_pass  http://localhost:8888;
+			proxy_pass  http://localhost:8888;
 			
 			## production runs with ip-address
-			proxy_pass  http://180.70.94.132:8888;
+			#proxy_pass  http://180.70.94.132:8888;
         }
 		
 		location /gkoo {
