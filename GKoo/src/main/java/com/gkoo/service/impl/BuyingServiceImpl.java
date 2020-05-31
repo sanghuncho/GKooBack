@@ -29,6 +29,7 @@ import com.gkoo.db.CustomerStatusDB;
 import com.gkoo.enums.BuyingServicePaymentState;
 import com.gkoo.enums.BuyingServiceState;
 import com.gkoo.service.BuyingService;
+import com.gkoo.service.commision.BuyingserviceCommision;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -65,16 +66,21 @@ public class BuyingServiceImpl implements BuyingService {
     @Autowired
     private RecipientData recipientData;
     
-    @Override
-    public EstimationService fastEstimationBuyingService(HashMap<String, Object>[] data, String userid) {
-        double productsValue = Double.parseDouble(data[0].get("productsValue").toString());
-        double deliveryValue = Double.parseDouble(data[1].get("deliveryValue").toString());
-        double currentEurToKRW = getCurrentEurToKrw();
-        double totalPrice = productsValue + deliveryValue;
-        EstimationService estimation = new EstimationService();
-        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice));        
-        return estimation;
-    }
+    
+    @Autowired
+    private BuyingserviceCommision buyingserviceCommision;
+    
+//    not used, otherwise gkooOpenApi serve it and it found out since 21.05.2020
+//    @Override
+//    public EstimationService fastEstimationBuyingService(HashMap<String, Object>[] data, String userid) {
+//        double productsValue = Double.parseDouble(data[0].get("productsValue").toString());
+//        double deliveryValue = Double.parseDouble(data[1].get("deliveryValue").toString());
+//        double currentEurToKRW = getCurrentEurToKrw();
+//        double totalPrice = productsValue + deliveryValue;
+//        EstimationService estimation = new EstimationService();
+//        estimation.setResultPrice(getEstimationBuyingService(currentEurToKRW, totalPrice));        
+//        return estimation;
+//    }
     
     @Override
     public EstimationService estimationBuyingService(HashMap<String, Object>[] data, String userid) {
@@ -114,20 +120,14 @@ public class BuyingServiceImpl implements BuyingService {
         return rates.get("KRW").getAsDouble();
     }
     
-    public int getEstimationBuyingService(double currentEurToKRW, double totalPrice) {
-        double feePercent = ConfigurationData.BUYING_SERVICE_FEE_PERCENT;
-        double result = (currentEurToKRW*totalPrice)*(1 + feePercent);
+    public int getEstimationBuyingService(double currentEurToKRW, double totalPriceEuro) {
 //        if (mergeBox) {
 //            double mergingBoxFee = ConfigurationData.MERGING_BOX_FEE;
 //            result = result + mergingBoxFee;
 //        }
-        return mathCeilDigit(2, result);
-    }
-    
-    private int mathCeilDigit(int digit, double price) {
-        int power = (int) Math.pow(10, digit);
-        int newPrice = (int) Math.ceil(price/power);
-        return (newPrice*power);
+        int result = buyingserviceCommision.getResult(currentEurToKRW, totalPriceEuro);
+        
+        return result;
     }
     
     public ResponseEntity<?> createBuyingService(@RequestBody HashMap<String, Object>[] data, String userid){

@@ -42,12 +42,13 @@ public class BuyingServiceController {
         this.configurationData = config;
     }
     
-    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
-    @RequestMapping(value = "/fastEstimationBuyingService", method = {RequestMethod.POST, RequestMethod.OPTIONS})
-    public EstimationService requestFastEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
-        String userid = SecurityConfig.getUserid(request);      
-        return buyingService.fastEstimationBuyingService(data, userid);
-    }
+//    not used, otherwise gkooOpenApi serve it and it found out since 21.05.2020
+//    @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
+//    @RequestMapping(value = "/fastEstimationBuyingService", method = {RequestMethod.POST, RequestMethod.OPTIONS})
+//    public EstimationService requestFastEstimationBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request) {        
+//        String userid = SecurityConfig.getUserid(request);      
+//        return buyingService.fastEstimationBuyingService(data, userid);
+//    }
     
     @CrossOrigin(origins = {ServicePath.BUYING_SERVICE_DEV, ServicePath.BUYING_SERVICE_PROD})
     @RequestMapping(value = "/estimationBuyingService/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
