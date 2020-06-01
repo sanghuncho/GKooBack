@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.EstimationService;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.RecipientData;

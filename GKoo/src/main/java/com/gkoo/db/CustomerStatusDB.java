@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.CustomerStatus;
 import com.gkoo.data.UserBaseInfo;
 import com.gkoo.exception.CustomerStatusException;

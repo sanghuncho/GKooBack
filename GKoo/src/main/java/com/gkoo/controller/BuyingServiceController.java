@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import com.gkoo.configuration.SecurityConfig;
-import com.gkoo.data.ConfigurationData;
 import com.gkoo.data.EstimationService;
 import com.gkoo.data.FavoriteAddress;
 import com.gkoo.data.UserBaseInfo;
@@ -34,12 +32,10 @@ import serviceBase.ServicePath;
 public class BuyingServiceController {
     private static final Logger LOGGER = LogManager.getLogger();
     private final BuyingService buyingService;
-    private final ConfigurationData configurationData;
     
     @Autowired
-    public BuyingServiceController(BuyingService buyingService, ConfigurationData config) {
+    public BuyingServiceController(BuyingService buyingService) {
         this.buyingService = buyingService;
-        this.configurationData = config;
     }
     
 //    not used, otherwise gkooOpenApi serve it and it found out since 21.05.2020
