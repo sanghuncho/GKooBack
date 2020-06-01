@@ -66,7 +66,6 @@ public class BuyingServiceImpl implements BuyingService {
     @Autowired
     private RecipientData recipientData;
     
-    
     @Autowired
     private BuyingserviceCommision buyingserviceCommision;
     
@@ -126,7 +125,6 @@ public class BuyingServiceImpl implements BuyingService {
 //            result = result + mergingBoxFee;
 //        }
         int result = buyingserviceCommision.getResult(currentEurToKRW, totalPriceEuro);
-        
         return result;
     }
     

@@ -1,7 +1,7 @@
 package com.gkoo.service.commision;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.gkoo.data.ConfigurationData;
 
 /**
  * 
@@ -17,10 +17,12 @@ import com.gkoo.data.ConfigurationData;
 @Component
 public class BuyingserviceCommision {
     //수수료 퍼센트
-    private double feePercent = ConfigurationData.BUYING_SERVICE_FEE_PERCENT;
+    @Value("${buyingservice_fee_percentage}")
+    private double feePercent;
     
-    //최저 수수료비용 
-    private double minimumCommision = ConfigurationData.BUYING_SERVICE_MINIMUM_COMMISION;
+    //최저 수수료비용
+    @Value("${buyingservice_minimum_commision}")
+    private double minimumCommision;
     
     //한화
     private double currentEurToKRW;
@@ -33,7 +35,7 @@ public class BuyingserviceCommision {
     
     public int getResult(double currentEurToKRW, double totalPriceEuro) {
         double result = 0;
-        if(isMinimumCommision()) {
+        if(isMinimumCommision(currentEurToKRW, totalPriceEuro)) {
             result = (currentEurToKRW*totalPriceEuro)*(1 + feePercent);
         } else {
             result = currentEurToKRW*totalPriceEuro + minimumCommision;
@@ -43,8 +45,8 @@ public class BuyingserviceCommision {
     }
     
     // 최저수수료 체크
-    private boolean isMinimumCommision() {
-        double commision = (currentEurToKRW*totalPriceEuro)*feePercent;
+    private boolean isMinimumCommision(double currentEurToKRW, double totalPriceEuro) {
+        double commision = (currentEurToKRW*totalPriceEuro)*(feePercent/100);
         if(commision >= minimumCommision) {
             return true;
         } else {
