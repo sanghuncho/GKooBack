@@ -36,7 +36,7 @@ public class BuyingserviceCommision {
     public int getResult(double currentEurToKRW, double totalPriceEuro) {
         double result = 0;
         if(isMinimumCommision(currentEurToKRW, totalPriceEuro)) {
-            result = (currentEurToKRW*totalPriceEuro)*(1 + feePercent);
+            result = (currentEurToKRW*totalPriceEuro)*(1 + feePercent/100);
         } else {
             result = currentEurToKRW*totalPriceEuro + minimumCommision;
         }
