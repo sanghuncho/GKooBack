@@ -1,9 +1,9 @@
 package com.gkoo.exception;
 
-public class MypageException extends RuntimeException {
+public class CustomerException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public MypageException(String message, Throwable cause) {
+    public CustomerException(String message, Throwable cause) {
         super(message, cause);
     }
 }

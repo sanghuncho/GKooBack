@@ -56,6 +56,13 @@ public class CustomerStatusController {
         customerstatusService.checkUserid(userid, lastname, firstname, email);
         return customerstatusService.getCustomerStatus(userid);
     }
+    
+    @CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
+    @RequestMapping(value = "/fetchCustomerStatusAdmin/{userid}")
+    public CustomerStatus requestCustomerStatusAdmin(HttpServletRequest request, @PathVariable String userid) throws SQLException {
+        LOGGER.trace("fetchCustomerStatusAdmin:" + userid);
+        return customerstatusService.getCustomerStatus(userid);
+    }
 
 	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_PERSONAL_DEV, ServicePath.MYPAGE_PERSONAL_PROD})
     @RequestMapping("/fetchuserbaseinfo/{userid}")

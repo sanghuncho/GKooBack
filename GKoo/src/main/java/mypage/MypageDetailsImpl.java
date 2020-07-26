@@ -20,10 +20,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gkoo.data.BuyingServiceCommonData;
 import com.gkoo.data.BuyingServiceDetailData;
+import com.gkoo.data.CustomerData;
 import com.gkoo.data.DeliveryKoreaData;
 import com.gkoo.data.RecipientData;
 import com.gkoo.data.buyingservice.BuyingProduct;
 import com.gkoo.data.buyingservice.BuyingServiceData;
+import com.gkoo.db.CustomerDB;
 import com.gkoo.repository.ShippingServiceRepository;
 import databaseUtil.ConnectionDB;
 import mypage.information.ProductsCommonInformation;
@@ -356,13 +358,15 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
     /////////////////////
     @Override
     public BuyingServiceDetailData getMypageBuyingServiceDetailData(String userid, String orderid) {
+        CustomerData customerData = CustomerDB.getCustomerData(userid);
         RecipientData recipientData = getRecipientBuyingService(userid, orderid);
         PaymentData productPayment =  getPaymentProductBuyingServiceByOrderid(orderid);
         PaymentData deliveryPayment = getPaymentDeliveryBuyingServiceByOrderid(orderid);
         DeliveryKoreaData deliveryKoreaData = getDeliveryKoreaDataBuyingServiceByOrderid(orderid);
         List<Product> productsInfo = getProductDataBuyingService(userid, orderid);
         BuyingServiceCommonData buyingServiceCommonData = getBuyingServiceCommonData(orderid);
-        return new BuyingServiceDetailData(recipientData, productPayment, deliveryPayment, deliveryKoreaData, productsInfo, buyingServiceCommonData);
+        return new BuyingServiceDetailData(recipientData, productPayment, deliveryPayment,
+                deliveryKoreaData, productsInfo, buyingServiceCommonData, customerData);
     }
     
     @Override

@@ -9,6 +9,7 @@ import payment.PaymentData;
  *
  */
 public class BuyingServiceDetailData {
+    private CustomerData customerData;
     private RecipientData recipientData;
     private int buyingServiceState;
     private PaymentData productPayment;
@@ -18,7 +19,8 @@ public class BuyingServiceDetailData {
     private BuyingServiceCommonData buyingServiceCommonData;
         
     public BuyingServiceDetailData(RecipientData recipientData, PaymentData productPayment, 
-                PaymentData deliveryPayment, DeliveryKoreaData deliveryKoreaData, List<Product> productsInfo, BuyingServiceCommonData buyingServiceCommonData) {
+                PaymentData deliveryPayment, DeliveryKoreaData deliveryKoreaData, List<Product> productsInfo,
+                BuyingServiceCommonData buyingServiceCommonData, CustomerData customerData) {
         this.recipientData = recipientData;
         this.productPayment = productPayment;
         this.buyingServiceState = productPayment.getBuyingServiceState();
@@ -26,6 +28,7 @@ public class BuyingServiceDetailData {
         this.deliveryKoreaData = deliveryKoreaData;
         this.productsInfo = productsInfo;
         this.buyingServiceCommonData = buyingServiceCommonData;
+        this.setCustomerData(customerData);
     }
 
     public RecipientData getRecipientData() {
@@ -66,5 +69,13 @@ public class BuyingServiceDetailData {
 
     public void setBuyingServiceCommonData(BuyingServiceCommonData buyingServiceCommonData) {
         this.buyingServiceCommonData = buyingServiceCommonData;
+    }
+
+    public CustomerData getCustomerData() {
+        return customerData;
+    }
+
+    public void setCustomerData(CustomerData customerData) {
+        this.customerData = customerData;
     }
 }

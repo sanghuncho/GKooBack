@@ -262,6 +262,29 @@ ADD COLUMN personal_box_address VARCHAR(10);
 
 UPDATE customer SET personal_box_address = 'GK100010 ' WHERE  where userid = 'm';
 
+create table payment_history_transfer (
+    object_id serial primary key,
+    payment_date date,
+    transfer_deposit_payment numeric,
+    buying_payment numeric,
+    shipping_payment numeric,
+    orderid character varying(50) NOT NULL,
+    pd_itemname VARCHAR(50)
+);
+
+create table payment_history_deposit (
+    object_id serial primary key,
+    payment_date date,
+    deposit_payment numeric,
+    being_deposit numeric,
+    actual_deposit_payment numeric,
+    buying_payment numeric,
+    shipping_payment numeric,
+    orderid character varying(50),
+    pd_itemname VARCHAR(50)
+);
+
 ====================================================== 
-========= Dont forget the Queries in PROD ============ 
+========= Dont forget the Queries in PROD ============
+========= Check the tables with PROD DB  ============= 
 ====================================================== 
