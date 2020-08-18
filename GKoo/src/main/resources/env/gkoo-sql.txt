@@ -264,6 +264,7 @@ UPDATE customer SET personal_box_address = 'GK100010 ' WHERE  where userid = 'm'
 
 create table payment_history_transfer (
     object_id serial primary key,
+    userid VARCHAR(50) NOT NULL,
     payment_date date,
     transfer_deposit_payment numeric,
     buying_payment numeric,
@@ -274,6 +275,7 @@ create table payment_history_transfer (
 
 create table payment_history_deposit (
     object_id serial primary key,
+    userid VARCHAR(50) NOT NULL,
     payment_date date,
     deposit_payment numeric,
     being_deposit numeric,
@@ -283,6 +285,10 @@ create table payment_history_deposit (
     orderid character varying(50),
     pd_itemname VARCHAR(50)
 );
+
+//test
+INSERT INTO payment_history_transfer (userid, payment_date, transfer_deposit_payment, buying_payment, shipping_payment, orderid, pd_itemname )
+	VALUES ('m', '2020-07-11', 35000, 35000, 0, '20200725144934', 'speaker');
 
 ====================================================== 
 ========= Dont forget the Queries in PROD ============

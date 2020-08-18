@@ -3,13 +3,13 @@ package com.gkoo.data;
 import java.util.Date;
 
 public class PaymentHistoryData {
-    protected int objectid;
-    protected Date paymentDate;
-    protected String orderid;
-    protected double depositPayment;
-    protected double buyingPayment;
-    protected double shippingPayment;
-    protected String itemname;
+    private int objectid;
+    private Date paymentDate;
+    private String orderid;
+    private double depositPayment;
+    private double buyingPayment;
+    private double shippingPayment;
+    private String itemname;
     
     //deposit
     private double beignDeposit;

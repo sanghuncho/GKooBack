@@ -1,8 +1,9 @@
 package com.gkoo.service;
 
+import java.util.List;
 import com.gkoo.data.PaymentHistoryData;
 
 public interface PaymentHistoryService {
-    PaymentHistoryData requestPaymentHistoryTransfer(String userid);
-    PaymentHistoryData requestPaymentHistoryDeposit(String userid);
+    List<PaymentHistoryData> requestPaymentHistoryTransfer(String userid);
+    List<PaymentHistoryData> requestPaymentHistoryDeposit(String userid);
 }
