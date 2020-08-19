@@ -10,6 +10,7 @@ public class BuyingOrderData {
     private double deliveryPayment;
     private int buyingServiceState;
     private Date orderDate;
+    private String mainImageUrl;
     
     public BuyingOrderData(){}
     
@@ -67,5 +68,13 @@ public class BuyingOrderData {
 
     public void setObjectid(int objectid) {
         this.objectid = objectid;
+    }
+
+    public String getMainImageUrl() {
+        return mainImageUrl;
+    }
+
+    public void setMainImageUrl(String mainImageUrl) {
+        this.mainImageUrl = mainImageUrl;
     }
 }

@@ -1,7 +1,6 @@
 package com.gkoo.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +16,7 @@ import databaseUtil.ConnectionDB;
 public class CustomerStatusDB {
     private static final Logger LOGGER = LogManager.getLogger();
     
-    private static final int INITIAL_POINT = 1000;
+    private static final int INITIAL_POINT = 0;
     private static final String NUMBER_USERID = "select count(userid) from customer where userid = ?";
     private static final String CREATE_CUSTOMER_STATUS = "INSERT INTO customerstatus(gkoo_id, insuranceamount, depositeamount, pointamount)"
             + "VALUES (?, 0, 0, ?)";

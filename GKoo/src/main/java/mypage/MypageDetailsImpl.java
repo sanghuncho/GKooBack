@@ -171,10 +171,30 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 			product.setAmount(rs.getInt("pd_amount"));
 			product.setPrice(rs.getDouble("pd_price"));
 			product.setTotalPrice(rs.getDouble("pd_totalprice"));
+			//product.setImageUrl(rs.getString("pd_image_url"));
+			
 			products.getProductsList().add(product);
 		}
 		return products;
 	}
+	
+	public ProductsInformation writeProductsInformationBuyingService(ResultSet rs, ProductsInformation products) throws SQLException {
+        while (rs.next()) {
+            /*refactoring divide table shopurl, tracking..*/
+            Product product = products.createProduct();
+            product.setCategoryTitle(rs.getString("pd_categorytitle"));
+            product.setItemTitle(rs.getString("pd_itemtitle"));
+            product.setItemName(rs.getString("pd_itemname"));
+            product.setBrandName(rs.getString("pd_brandname"));
+            product.setAmount(rs.getInt("pd_amount"));
+            product.setPrice(rs.getDouble("pd_price"));
+            product.setTotalPrice(rs.getDouble("pd_totalprice"));
+            product.setImageUrl(rs.getString("pd_image_url"));
+            
+            products.getProductsList().add(product);
+        }
+        return products;
+    }
 	
 	@Override
 	public ProductsCommonInformation getProductsCommonInfo(String username, String orderNumber) {
@@ -524,7 +544,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
         ResultSet resultSet = null;
         ConnectionDB.connectSQL();
         String query = "SELECT bsp.pd_categorytitle"
-                + ", bsp.pd_itemtitle, bsp.pd_itemname, bsp.pd_brandname, bsp.pd_amount, bsp.pd_price, bsp.pd_totalprice "
+                + ", bsp.pd_itemtitle, bsp.pd_itemname, bsp.pd_brandname, bsp.pd_amount, bsp.pd_price, bsp.pd_totalprice, bsp.pd_image_url "
                 + "FROM BUYING_SERVICE bs, BUYING_SERVICE_PRODUCT bsp WHERE (bs.userid = ? AND bs.orderid = ?) AND (bs.object_id = bsp.fk_buying_service)";
         ProductsInformation productsInfo = new ProductsInformation();
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -532,7 +552,7 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
             psmt.setString(1, userid);
             psmt.setString(2, orderid);
             resultSet = psmt.executeQuery();
-            productsInfo = writeProductsInformation(resultSet, productsInfo);
+            productsInfo = writeProductsInformationBuyingService(resultSet, productsInfo);
         } catch (SQLException e) {
             String error = "Error fetching products data for buyingService";
             LOGGER.error(error, e);

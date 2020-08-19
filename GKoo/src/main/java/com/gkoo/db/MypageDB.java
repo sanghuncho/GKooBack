@@ -253,9 +253,9 @@ public class MypageDB {
     /// BuyingService ///
     /////////////////////
     private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT bs.object_id, bs.orderid, bs.buying_price, bs.ship_price, "
-            + "bs.buying_service_state, bs.order_date FROM BUYING_SERVICE bs WHERE bs.userid=? ORDER BY bs.orderid DESC";
+            + "bs.buying_service_state, bs.order_date, bs.main_image_url FROM BUYING_SERVICE bs WHERE bs.userid=? ORDER BY bs.orderid DESC";
     
-    private static final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ? ";
+    private static final String GET_PRODUCTS_NAME = "SELECT pd_itemname FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ? ";
 
     public static List<BuyingOrderData> getOrderDataBuyingService(String userid) {
         List<BuyingOrderData> buyingOrderDataList = new ArrayList<>();
@@ -287,6 +287,8 @@ public class MypageDB {
             buyingOrderData.setDeliveryPayment(rs.getDouble("ship_price"));
             buyingOrderData.setBuyingServiceState(rs.getInt("buying_service_state"));
             buyingOrderData.setOrderDate(rs.getDate("order_date"));
+            buyingOrderData.setMainImageUrl(rs.getString("main_image_url"));
+            
             buyingOrderDataList.add(buyingOrderData);
         }
         return buyingOrderDataList;
@@ -304,7 +306,7 @@ public class MypageDB {
                 psmt.setInt(1, data.getObjectid());
                 resultSet = psmt.executeQuery();
                 while (resultSet.next()) {
-                    products.add(resultSet.getString("pd_itemtitle"));
+                    products.add(resultSet.getString("pd_itemname"));
                 }
             } catch (SQLException e) {
                 String error = "Error fetching product information";

@@ -290,7 +290,18 @@ create table payment_history_deposit (
 INSERT INTO payment_history_transfer (userid, payment_date, transfer_deposit_payment, buying_payment, shipping_payment, orderid, pd_itemname )
 	VALUES ('m', '2020-07-11', 35000, 35000, 0, '20200725144934', 'speaker');
 
+
+ALTER TABLE buying_service_product
+ADD COLUMN pd_image_url text;
+
+ALTER TABLE buying_service
+ADD COLUMN main_image_url text;
+
 ====================================================== 
 ========= Dont forget the Queries in PROD ============
-========= Check the tables with PROD DB  ============= 
+========= Check the tables with PROD DB  =============
+========= 1. Here create 2. dev runs 3. prod runs ====
 ====================================================== 
+
+dev: C:/Users/sanghuncho/Programme/PostgreSQL/gkoo_postgre_history.sql
+prod: C:/GKoo/PostgreDB/gkoo_postgre_history.sql

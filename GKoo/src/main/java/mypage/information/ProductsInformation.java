@@ -30,11 +30,12 @@ public class ProductsInformation {
 		private int amount;
 		private double price;
 		private double totalPrice;
+		private String imageUrl;
 		
 		public Product() {}
 		
 		public Product(String category, String itemTitle, String brandName, String itemName,
-				int amount, double price, double totalPrice) {
+				int amount, double price, double totalPrice, String imageUrl) {
 			this.categoryTitle = category;
 			this.itemTitle = itemTitle;
 			this.brandName = brandName;
@@ -42,6 +43,7 @@ public class ProductsInformation {
 			this.amount = amount;
 			this.price = price;
 			this.totalPrice = totalPrice;
+			this.setImageUrl(imageUrl);
 		}
 		
 		public String getCategoryTitle() {
@@ -99,5 +101,13 @@ public class ProductsInformation {
 		public void setTotalPrice(double totalPrice) {
 			this.totalPrice = totalPrice;
 		}
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
 	}
 }
