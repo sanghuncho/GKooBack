@@ -253,7 +253,7 @@ public class MypageDB {
     /// BuyingService ///
     /////////////////////
     private static final String FETTCH_ORDER_DATA_BUYINGSERVICE = "SELECT bs.object_id, bs.orderid, bs.buying_price, bs.ship_price, "
-            + "bs.buying_service_state, bs.order_date, bs.main_image_url FROM BUYING_SERVICE bs WHERE bs.userid=? ORDER BY bs.orderid DESC";
+            + "bs.buying_service_state, bs.order_date, bs.main_image_url, bs.trackingnr_kor FROM BUYING_SERVICE bs WHERE bs.userid=? ORDER BY bs.orderid DESC";
     
     private static final String GET_PRODUCTS_NAME = "SELECT pd_itemname FROM BUYING_SERVICE_PRODUCT WHERE fk_buying_service = ? ";
 
@@ -288,6 +288,7 @@ public class MypageDB {
             buyingOrderData.setBuyingServiceState(rs.getInt("buying_service_state"));
             buyingOrderData.setOrderDate(rs.getDate("order_date"));
             buyingOrderData.setMainImageUrl(rs.getString("main_image_url"));
+            buyingOrderData.setDeliveryTracking(rs.getString("trackingnr_kor"));
             
             buyingOrderDataList.add(buyingOrderData);
         }

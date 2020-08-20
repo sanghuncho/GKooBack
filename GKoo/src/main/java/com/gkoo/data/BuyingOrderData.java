@@ -11,6 +11,7 @@ public class BuyingOrderData {
     private int buyingServiceState;
     private Date orderDate;
     private String mainImageUrl;
+    private String deliveryTracking;
     
     public BuyingOrderData(){}
     
@@ -76,5 +77,13 @@ public class BuyingOrderData {
 
     public void setMainImageUrl(String mainImageUrl) {
         this.mainImageUrl = mainImageUrl;
+    }
+
+    public String getDeliveryTracking() {
+        return deliveryTracking;
+    }
+
+    public void setDeliveryTracking(String deliveryTracking) {
+        this.deliveryTracking = deliveryTracking;
     }
 }
