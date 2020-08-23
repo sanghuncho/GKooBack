@@ -368,9 +368,10 @@ public class MypageDetailsImpl implements MypageDetailsDAO {
 	
     @Override
     public MypageDetailData getMypageDetailData(String userid, String orderid) {
+        CustomerData customerData = CustomerDB.getCustomerData(userid);
         RecipientData recipientData = getRecipientInfo(userid, orderid);
         ProductsCommonInformation productsCommonInformation = getProductsCommonInfo(userid, orderid);  
-        return new MypageDetailData(recipientData, productsCommonInformation);
+        return new MypageDetailData(recipientData, productsCommonInformation, customerData);
     }
 
     /////////////////////

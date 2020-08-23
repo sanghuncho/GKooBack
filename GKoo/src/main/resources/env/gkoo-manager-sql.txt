@@ -8,7 +8,7 @@ payment_state
 결제요청(2) - 무통장입금신청
 결제완료(3) - 결제확인됨
 
-orderstate - ship_state
+orderstate = ship_state
 입고대기 (1),
 입고완료 (2),
 결제요청 (3),
@@ -18,14 +18,20 @@ orderstate - ship_state
 국내배송 (7),
 배송완료 (8)
 
+배송대행 신청한 모든 회웜 보여주기
+	- 입고대기 (1)
+	SELECT orderstate.id, orderstate.userid, customer.name_kor, orderstate.orderid, orderstate.ship_state, orderstate.order_date
+		FROM ORDERSTATE orderstate, CUSTOMER customer where ship_state=1 and orderstate.userid = customer.userid;
+
+//deprecated - already saved during registering - 22.08.2020
 상품도착전 - 결제창 숨김
 UPDATE payment SET payment_state = 0 
 WHERE paymentid = ;
 
 상품 도착, 배송비 미정상태
-- 입고완료 (2)
-UPDATE orderstate SET ship_state = 2 
-WHERE orderid = ' ';
+	- 입고완료 (2)
+	UPDATE orderstate SET ship_state = 2 
+	WHERE orderid = ' ';
 
 상품 도착, 배송비 책정후
 1) UPDATE orderstate SET ship_state = 3, box_actual_weight = , box_volume_weight = , ship_price =  WHERE orderid = '';

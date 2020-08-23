@@ -91,7 +91,7 @@ public class MypageDB {
         List<String> products = new ArrayList<>();
         ResultSet resultSet = null;
         
-        final String GET_PRODUCTS_NAME = "SELECT pd_itemtitle FROM PRODUCT WHERE orderid=?";
+        final String GET_PRODUCTS_NAME = "SELECT pd_itemname FROM PRODUCT WHERE orderid=?";
         
         ConnectionDB.connectSQL();
         try (Connection conn = ConnectionDB.getConnectInstance();
@@ -99,7 +99,8 @@ public class MypageDB {
             psmt.setString(1, orderId);
             resultSet = psmt.executeQuery();
             while (resultSet.next()) {
-                products.add(resultSet.getString("pd_itemtitle"));
+                //ToDo : check the lengh of toal itemname 
+                products.add(resultSet.getString("pd_itemname"));
             }
         } catch (SQLException e) {
             String error = "Error fetching product information";

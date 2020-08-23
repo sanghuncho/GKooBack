@@ -64,6 +64,10 @@ public class CustomerStatusController {
         return customerstatusService.getCustomerStatus(userid);
     }
 
+    
+	/**
+	 * 마이페이지/개인정보
+	 */
 	@CrossOrigin(origins = {ServicePath.MYPAGE_DEV, ServicePath.MYPAGE_PROD, ServicePath.MYPAGE_PERSONAL_DEV, ServicePath.MYPAGE_PERSONAL_PROD})
     @RequestMapping("/fetchuserbaseinfo/{userid}")
     public UserBaseInfo requestUserBaseInfo(HttpServletRequest request, @PathVariable String userid) throws SQLException {
