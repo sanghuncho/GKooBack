@@ -297,6 +297,15 @@ ADD COLUMN pd_image_url text;
 ALTER TABLE buying_service
 ADD COLUMN main_image_url text;
 
+create table auction_bid (
+    object_id serial primary key,
+    userid VARCHAR(50) NOT NULL,
+    product_url text,
+    auctionBidDate date,
+    bid_value numeric,
+    auction_message text,
+);
+
 ====================================================== 
 ========= Dont forget the Queries in PROD ============
 ========= Check the tables with PROD DB  =============
