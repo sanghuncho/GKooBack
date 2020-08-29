@@ -306,6 +306,9 @@ create table auction_bid (
     auction_message text,
 );
 
+ALTER TABLE auction_bid
+ADD COLUMN deleted BOOLEAN;
+
 ====================================================== 
 ========= Dont forget the Queries in PROD ============
 ========= Check the tables with PROD DB  =============

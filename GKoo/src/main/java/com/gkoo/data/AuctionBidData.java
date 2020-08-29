@@ -1,13 +1,16 @@
 package com.gkoo.data;
 
 import java.time.LocalDate;
+import com.gkoo.enums.AuctionResult;
 
 public class AuctionBidData {
     private int objectid;
+    private String userid;
     private String productUrl;
     private double bidValue;
     private String auctionMessage;
     private LocalDate auctionBidDate;
+    private AuctionResult auctionResult ;
     
     public AuctionBidData() {
     }
@@ -19,8 +22,8 @@ public class AuctionBidData {
         this.objectid = objectid;
     }
     
-    public LocalDate getAuctionBidDate() {
-        return auctionBidDate;
+    public java.sql.Date getAuctionBidDate() {
+        return java.sql.Date.valueOf(auctionBidDate);
     }
     
     public void setAuctionBidDate(LocalDate auctionBidDate) {
@@ -49,5 +52,21 @@ public class AuctionBidData {
     
     public void setAuctionMessage(String auctionMessage) {
         this.auctionMessage = auctionMessage;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public AuctionResult getAuctionResult() {
+        return auctionResult;
+    }
+
+    public void setAuctionResult(AuctionResult auctionResult) {
+        this.auctionResult = auctionResult;
     }
 }

@@ -18,6 +18,7 @@ public class ServicePath {
 	public static final String MYPAGE_SHIPPING_ADDRESS_DEV       = HOST_ADDRESS_DEV + "/mypageShippingAddressPane";
 	public static final String MYPAGE_PERSONAL_DEV               = HOST_ADDRESS_DEV + "/mypagePersonal";
 	public static final String PAYMENT_HISTORY_DEV               = HOST_ADDRESS_DEV + "/paymentHistory";
+	public static final String AUCTION_SERVICE_DEV               = HOST_ADDRESS_DEV + "/auctionService";
 	
 	public static final String BUYING_SERVICE_PROD               = HOST_ADDRESS_PROD + "/buyingservice";
 	public static final String BUYING_SERVICE_REGIST_PROD        = HOST_ADDRESS_PROD + "/buyingServiceRegistration";
@@ -32,4 +33,5 @@ public class ServicePath {
     public static final String MYPAGE_SHIPPING_ADDRESS_PROD      = HOST_ADDRESS_PROD + "/mypageShippingAddressPane";
     public static final String MYPAGE_PERSONAL_PROD              = HOST_ADDRESS_PROD + "/mypagePersonal";
     public static final String PAYMENT_HISTORY_PROD              = HOST_ADDRESS_PROD + "/paymentHistory";
+    public static final String AUCTION_SERVICE_PROD              = HOST_ADDRESS_PROD  + "/auctionService";
 }
