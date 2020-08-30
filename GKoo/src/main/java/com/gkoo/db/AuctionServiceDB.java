@@ -22,7 +22,7 @@ public class AuctionServiceDB {
     
     private static final String CREATE_AUCTION_BID = 
             "INSERT INTO auction_bid (userid, product_url, auction_bid_date, bid_value, auction_message, auction_result) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String FETCH_AUCTION_BID_LIST = "SELECT * FROM AUCTION_BID WHERE USERID = ?"; 
+    private static final String FETCH_AUCTION_BID_LIST = "SELECT * FROM AUCTION_BID WHERE USERID = ? ORDER BY object_id DESC"; 
     private static final String DELETE_AUCTION_BID_SERVICE = "UPDATE auction_bid SET deleted = true where object_id = ? and userid = ?";
     
     public static ResponseEntity<?> requestAuctionBidService(AuctionBidData bidData){
@@ -76,15 +76,15 @@ public class AuctionServiceDB {
                         auctionBidData.setAuctionBidDate(DateUtil.toLocalDate(rs.getDate("auction_bid_date")));
                         auctionBidData.setAuctionMessage(rs.getString("auction_message"));
                         auctionBidData.setAuctionResult(AuctionResult.getAuctionResult(rs.getInt("auction_result")));
+                        auctionBidDataList.add(auctionBidData);
                     }
                 } catch (SQLException e) {
                     String error = "Error fetching auctionData";
                     LOGGER.error(error, e);
                 }
-                auctionBidDataList.add(auctionBidData);
             }
         } catch (SQLException e) {
-            String error = "Error fetching paymentData";
+            String error = "Error fetching auctionDataList";
             LOGGER.error(error, e);
         }
         return auctionBidDataList;

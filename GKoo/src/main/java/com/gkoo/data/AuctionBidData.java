@@ -10,7 +10,7 @@ public class AuctionBidData {
     private double bidValue;
     private String auctionMessage;
     private LocalDate auctionBidDate;
-    private AuctionResult auctionResult ;
+    private AuctionResult auctionResult;
     
     public AuctionBidData() {
     }

@@ -32,8 +32,9 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public ResponseEntity<?> deleteAuctionBidService(HashMap<String, Object>[] data) {
         AuctionBidData bidData = new AuctionBidData();
-        bidData.setObjectid(Integer.parseInt(data[0].get("objectid").toString()));
+        int objectid = Integer.parseInt(data[0].get("objectid").toString());
+        bidData.setObjectid(objectid);
         bidData.setUserid(data[1].get("userid").toString());
-        return null;
+        return AuctionServiceDB.deleteAuctionBidService(bidData);
     }
 }
