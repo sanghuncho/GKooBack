@@ -87,13 +87,15 @@ public class MypageController {
         return mypageService.getDeliveryKoreaDataBuyingService(userid);
     }
     
-    //구매대행 물품 결제
+    //구매대행 물품 결제 내역 불러오기
+    ////@deprecated 27.09.2020 마이페이지 구매대행 아래 3가지 표 데이터
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
     @RequestMapping("/paymentProductBuyingService/{userid}")
     public List<PaymentData> requestPaymentProductBuyingService(HttpServletRequest request, @PathVariable String userid) throws SQLException  {
         return mypageService.getPaymentProductBuyingService(userid);
     }
     
+    //구매대행 물품 결제하기 27.09.2020 detail controller 옮기기
     @CrossOrigin(origins = {ServicePath.MYPAGE_BUYING_SERVICE_DEV, ServicePath.MYPAGE_BUYING_SERVICE_PROD})
     @RequestMapping(value = "/updatePaymentProductBuyingService/{userid}", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<?> updatePaymentProductBuyingService(@RequestBody HashMap<String, Object>[] data, HttpServletRequest request, @PathVariable String userid) throws SQLException  {
