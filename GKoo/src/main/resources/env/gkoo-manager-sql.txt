@@ -179,3 +179,53 @@ UPDATE orderstate SET ship_state = 5, trackingnr_kor = '' WHERE orderid = '';
 		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
 
 
+========  구매대행 에러 또는 직접 구매대행 입력시 ========
+
+----[CREATE_BUYING_SERVICE]
+//구매대행 결제대기  PRODUCT_PAYMENT_READY(1),
+insert into buying_service(userid, orderid, buying_price, buying_service_state, shop_url, order_date, product_list_total_price) 
+values (
+	'id', 
+	'orderid', 
+	00, 
+	1,
+	'www.gkoo.co.kr',
+	'2020-00-00',
+	00.00
+) RETURNING buying_service.object_id; 
+
+buying_service.object_id == object_id == fk_buying_service == 23
+
+----[CREATE_BUYING_SERVICE_RECIPIENT]
+insert into buying_service_recipient(name_kor, name_eng, transit_nr, 
+									 phonenumber_first, phonenumber_second, zip_code, address, userComment, fk_buying_service) 
+values ('홍길동', '', 'P11111111111', '010-0000-0000', '', '00000', '주소', '', [object_id]);
+
+----[CREATE_BUYING_SERVICE] 입금확인후
+//구매대행 결제완료 PRODUCT_PAYMENT_COMPLETION(2),
+UPDATE buying_service SET buying_service_state = 2 
+		WHERE object_id = [object_id];
+		
+----[CREATE_BUYING_SERVICE_PAYMENT]
+	--구매대행 결제대기    
+    --PRODUCT_PAYMENT_READY(1),
+    
+    --구매대행 결제완료(관리자결제확인함)
+    --PRODUCT_PAYMENT_COMPLETION(2)
+insert into buying_service_payment(buying_service_payment_state, fk_buying_service,  
+								   buying_deposit_ownername, payment_art, buying_deposit_payment, buying_payment_date) 
+								   values(2, [object_id], '홍길동', 1, 000, '2020-00-00')	
+
+----[CREATE_BUYING_PRODUCT]
+insert into buying_service_product(pd_categorytitle, pd_itemtitle, pd_brandname, pd_itemname, pd_amount, pd_price, 
+								   pd_totalprice, fk_buying_service)
+values('[목록]서적/CD', '책/잡지류', 'Digimon', 'Data Squad Manga Comic', 1, 00.00,   00.00, [object_id])
+
+
+---- 메인페이지 대표이미지 URL 링크걸기
+UPDATE buying_service SET main_image_url = 'image.jpg'
+		WHERE object_id = [object_id];
+		
+---- 상세페이지 이미지 URL 링크걸기
+UPDATE buying_service_product SET pd_image_url = 'image.jpg'
+		WHERE fk_buying_service = [object_id];
