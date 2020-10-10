@@ -99,8 +99,15 @@ UPDATE orderstate SET ship_state = 5, trackingnr_kor = '' WHERE orderid = '';
     
     //전체 결제완료 , 해외배송중이면 전제결제로 변경
     BUYING_SERVICE_PAYMENT_COMPLETION(5);
-    
 
+##############################################################################
+##### 결제수단  
+ 
+ case 0: "선택";
+ case 1: "무통장입금";
+ case 2: "카드결제(준비중)"
+
+##############################################################################
 
 구매대행 결제 신청 (결제수단, 입금자명 기입)
 
@@ -175,11 +182,12 @@ UPDATE orderstate SET ship_state = 5, trackingnr_kor = '' WHERE orderid = '';
 		trackingnr_kor = ['TRACKING_NUMBER']
 		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
 	
-	UPDATE buying_service_payment SET buying_service_payment_state = 5, 
+	UPDATE buying_service_payment SET buying_service_payment_state = 5
 		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
 
-
-========  구매대행 에러 또는 직접 구매대행 입력시 ========
+##############################################################################
+########  구매대행 에러 또는 직접 구매대행 입력시 ########
+##############################################################################
 
 ----[CREATE_BUYING_SERVICE]
 //구매대행 결제대기  PRODUCT_PAYMENT_READY(1),
@@ -229,3 +237,60 @@ UPDATE buying_service SET main_image_url = 'image.jpg'
 ---- 상세페이지 이미지 URL 링크걸기
 UPDATE buying_service_product SET pd_image_url = 'image.jpg'
 		WHERE fk_buying_service = [object_id];
+
+---- 결제 내역 업데이트 : 결제 히스토리	
+insert into payment_history_transfer(userid, payment_date, transfer_deposit_payment, buying_payment, orderid, pd_itemname) 
+values (
+	'', 
+	'2020-00-00',
+	000,
+	000,
+	'',
+	'itemname'
+)
+
+##############################################################################
+######## 배송비 입금확인  ########
+##############################################################################
+
+배송비 및 부피무게 저장
+	UPDATE buying_service SET ship_price = 13000,
+		box_actual_weight = 1, 
+		box_volume_weight = 1, 
+		buying_service_state = 3 
+		WHERE object_id = 23;
+	UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE fk_buying_service = 23;
+	
+	
+배송비 및 부피무게 저장확인 [buying_service_state =3(배송비 및 추가서비스 결제요청) and buying_service_payment_state = 3(배송비 및 추가 결제요청)]
+	SELECT bs.object_id, bs.userid, bs.orderid, bs.buying_price, bs.order_date, bs.ship_price, bs.box_actual_weight, bs.box_volume_weight, bs.buying_service_state,
+		bsp.buying_service_payment_state FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.object_id = [BUYING_SERVICE_OBJ_ID];	
+
+배송비 입금자 및 입금액 저장
+	UPDATE buying_service SET buying_service_state = 4 
+		WHERE object_id = 23;
+	
+	-- 배송비 결제 신청안했을 경우 배송비 입금자이름 및 결제수단 메뉴얼 저장해야함
+	UPDATE buying_service_payment SET buying_service_payment_state = 4, 
+		shipping_deposit_ownername = '김다희',
+		payment_art_shipping_price = 1, 
+		shipping_deposit_payment = 13000, 
+		shipping_payment_date = '2020-10-06'
+		WHERE fk_buying_service = 23;
+		
+배송비 입금자 및 입금액 저장 확인
+	SELECT bs.object_id, userid, orderid, ship_price, shipping_deposit_payment, shipping_deposit_ownername,shipping_payment_date, payment_art_shipping_price,
+	buying_price, buying_deposit_payment, buying_deposit_ownername, payment_art, order_date 
+		FROM BUYING_SERVICE bs, BUYING_SERVICE_PAYMENT bsp WHERE bs.object_id = bsp.fk_buying_service and bs.buying_service_state=4;
+
+배송 송장번호 수령
+UPDATE buying_service SET buying_service_state = 5,
+		trackingnr_kor = '383794951370'
+		WHERE object_id = 23;
+	
+UPDATE buying_service_payment SET buying_service_payment_state = 5
+		WHERE fk_buying_service = 23;
+		
+		
+		
+		
