@@ -292,5 +292,34 @@ UPDATE buying_service_payment SET buying_service_payment_state = 5
 		WHERE fk_buying_service = 23;
 		
 		
-		
+
+##############################################################################
+######## 경매입찰 후 결과  ########
+##############################################################################
+
+
+//입찰접수
+//BID_READY(1),
+    
+//입찰완료
+//BID_COMPLETED(2),
+
+//유찰
+//AUCTION_FAILED(3),
+
+//낙찰
+//AUCTION_SUCCESS(4),
+
+//URL 에러
+//URL_UNKNOWN(5);
+
+######## 유찰시 ########
+
+UPDATE auction_bid SET auction_result= 3
+		WHERE object_id = [] and userid = [''];
+
+######## 낙찰시 ########
+	
+UPDATE auction_bid SET auction_result= 4
+		WHERE object_id = [] and userid = [''];	
 		
