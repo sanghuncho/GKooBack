@@ -254,12 +254,12 @@ values (
 ##############################################################################
 
 배송비 및 부피무게 저장
-	UPDATE buying_service SET ship_price = 13000,
-		box_actual_weight = 1, 
-		box_volume_weight = 1, 
+	UPDATE buying_service SET ship_price = 21000,
+		box_actual_weight = 1.7, 
+		box_volume_weight = 3, 
 		buying_service_state = 3 
-		WHERE object_id = 23;
-	UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE fk_buying_service = 23;
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
+	UPDATE buying_service_payment SET buying_service_payment_state = 3 WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
 	
 	
 배송비 및 부피무게 저장확인 [buying_service_state =3(배송비 및 추가서비스 결제요청) and buying_service_payment_state = 3(배송비 및 추가 결제요청)]
@@ -268,15 +268,15 @@ values (
 
 배송비 입금자 및 입금액 저장
 	UPDATE buying_service SET buying_service_state = 4 
-		WHERE object_id = 23;
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
 	
 	-- 배송비 결제 신청안했을 경우 배송비 입금자이름 및 결제수단 메뉴얼 저장해야함
 	UPDATE buying_service_payment SET buying_service_payment_state = 4, 
-		shipping_deposit_ownername = '김다희',
+		shipping_deposit_ownername = '이름',
 		payment_art_shipping_price = 1, 
-		shipping_deposit_payment = 13000, 
-		shipping_payment_date = '2020-10-06'
-		WHERE fk_buying_service = 23;
+		shipping_deposit_payment = 100000, 
+		shipping_payment_date = '2020-00-00'
+		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
 		
 배송비 입금자 및 입금액 저장 확인
 	SELECT bs.object_id, userid, orderid, ship_price, shipping_deposit_payment, shipping_deposit_ownername,shipping_payment_date, payment_art_shipping_price,
@@ -285,11 +285,11 @@ values (
 
 배송 송장번호 수령
 UPDATE buying_service SET buying_service_state = 5,
-		trackingnr_kor = '383794951370'
-		WHERE object_id = 23;
+		trackingnr_kor = '0000000'
+		WHERE object_id = [BUYING_SERVICE_OBJ_ID];
 	
 UPDATE buying_service_payment SET buying_service_payment_state = 5
-		WHERE fk_buying_service = 23;
+		WHERE fk_buying_service = [BUYING_SERVICE_OBJ_ID];
 		
 		
 
