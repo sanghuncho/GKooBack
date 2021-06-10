@@ -1,6 +1,6 @@
 {
   "realm" : "gkoo",
-  "auth-server-url" : "http://www.gkoo.co.kr/auth",
+  "auth-server-url" : "https://www.gkoo.co.kr/auth",
   "resource" : "version_0_1_0",
   "public-client":true,
   "enable-cors" : true,
